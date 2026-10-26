@@ -1202,9 +1202,16 @@ html.presenting body {
   margin: 0;
 }
 
-.overview__head .btn {
-  flex-shrink: 0;
+.overview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin-left: auto;
+}
+
+.overview__actions .btn {
+  flex-shrink: 0;
 }
 
 .overview {
@@ -2340,6 +2347,42 @@ html.presenting body {
 
 .overview__card.is-skipped:hover {
   color: var(--text);
+}
+
+/* Choosing slides: each card shows a tick box for whether the short talk plays it. */
+.overview__num {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.overview__check {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--text-3);
+  border-radius: 4px;
+}
+
+.overview__card[aria-pressed='true'] .overview__check {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.overview__card[aria-pressed='true'] .overview__check::after {
+  content: '';
+  width: 4px;
+  height: 8px;
+  margin-top: -2px;
+  border: solid var(--bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.overview__note code {
+  font-family: var(--mono);
+  font-size: 0.85em;
 }
 
 .overview__full {
