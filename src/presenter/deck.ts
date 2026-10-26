@@ -396,23 +396,44 @@ function timed(slides: Slide[]): Slide[] {
 }
 
 // ---------- Full deck and short talk ----------
-// The full deck keeps every slide for reading. The short talk plays only the slides listed in talk.json,
-// in deck order, and works out its own "New word" notes, quiz numbers and timings.
+// The full deck keeps every slide for reading. The short talk plays only the slides picked for it, in deck order,
+// and works out its own "New word" notes, quiz numbers and timings. talk.json sets the default pick; the
+// presenter's overview lets people choose their own.
 export type Length = 'short' | 'full'
 
 const story = storied(build())
 
-function shortTalk(): Slide[] {
-  const wanted = new Set(talk.slides)
-  if (import.meta.env?.DEV) for (const id of wanted) if (!story.some((s) => s.id === id)) console.warn(`[deck] talk.json lists "${id}", which is not a slide.`)
+export const slideIds = story.map((s) => s.id)
+
+if (import.meta.env?.DEV) for (const id of talk.slides) if (!slideIds.includes(id)) console.warn(`[deck] talk.json lists "${id}", which is not a slide.`)
+
+// The default short talk, in deck order, without ids that are not slides.
+export const defaultTalk = slideIds.filter((id) => talk.slides.includes(id))
+
+function shortTalk(ids: readonly string[]): Slide[] {
+  const wanted = new Set(ids)
   const picked = story.filter((s) => wanted.has(s.id))
   const quizzes = picked.filter((s) => s.kind === 'quiz')
   return picked.map((s) => (s.kind === 'quiz' ? { ...s, number: quizzes.indexOf(s) + 1, total: quizzes.length } : s))
 }
 
 export const fullDeck = timed(withNewWords(story))
-export const shortDeck = timed(withNewWords(shortTalk()))
-export const deckFor = (length: Length) => (length === 'short' ? shortDeck : fullDeck)
+
+// Short talks are rebuilt only when the pick changes.
+const talks = new Map<string, Slide[]>()
+function talkDeck(ids: readonly string[]): Slide[] {
+  const key = ids.join(' ')
+  let deck = talks.get(key)
+  if (!deck) {
+    deck = timed(withNewWords(shortTalk(ids)))
+    talks.set(key, deck)
+  }
+  return deck
+}
+
+// An empty pick would leave nothing to present, so it falls back to the default talk.
+export const deckFor = (length: Length, ids: readonly string[] = defaultTalk) =>
+  length === 'full' ? fullDeck : talkDeck(ids.length ? ids : defaultTalk)
 
 export const slideSeconds = (slide: Slide) => slide.readSeconds ?? 0
 

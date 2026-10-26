@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { talk } from '../content'
-import type { Length, Slide } from './deck'
+import { defaultTalk, slideIds, type Length, type Slide } from './deck'
 
 // Slide transitions and designs live in the presenter, but the finale lets people change them from a slide.
 export const TRANSITIONS = [
@@ -53,6 +53,33 @@ export function saveLength(length: Length) {
     // Storage blocked: the choice lasts for this visit.
   }
 }
+
+const TALK_KEY = 'cfg-talk'
+
+// The slides in the short talk: the presenter's own pick if they made one, else talk.json.
+// Ids that are no longer slides (the content changed) are dropped.
+export function readTalk(): string[] {
+  try {
+    const saved: unknown = JSON.parse(localStorage.getItem(TALK_KEY) ?? 'null')
+    if (!Array.isArray(saved)) return defaultTalk
+    const ids = slideIds.filter((id) => saved.includes(id))
+    return ids.length ? ids : defaultTalk
+  } catch {
+    return defaultTalk
+  }
+}
+
+// Saving the default pick clears the saved one, so later changes to talk.json show up.
+export function saveTalk(ids: readonly string[]) {
+  try {
+    if (sameTalk(ids, defaultTalk)) localStorage.removeItem(TALK_KEY)
+    else localStorage.setItem(TALK_KEY, JSON.stringify(ids))
+  } catch {
+    // Storage blocked: the pick lasts for this visit.
+  }
+}
+
+export const sameTalk = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((id, i) => id === b[i])
 
 export interface DeckControls {
   // The slides being presented, short or full.

@@ -32,6 +32,7 @@ Phase: all phases done (PR 1 app, PR 2 polish + docs).
 
 - Fixed text overlapping the Asha/Ben strip: slide children no longer shrink (flex-shrink: 0), so tall content can't spill over the story. Daily loop is a wide oval on slides; New words show one label; tighter request-flow and snowball spacing on slides. Checked for overlaps at 8 window sizes, both decks.
 - Finale: "Thank you for your patience" is now the last slide (both decks). The peel copies the "One more thing…" slide and no longer replays when the slide animates out or is revisited, which had flashed "Questions?".
+- Choose slides: the overview's "Choose slides" mode ticks slides in or out of the short talk. The pick is saved in localStorage (cfg-talk), cleared when it matches talk.json; Reset restores it; "Copy for talk.json" copies the ids. Checked in headless Chrome: add, reload, reset, removing the current slide.
 
 ## Next
 - Set `siteUrl` in meta.json once the guide is hosted, so the phone QR code points at the real address.

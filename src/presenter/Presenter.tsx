@@ -2,9 +2,10 @@ import { useEffect, useEffectEvent, useRef, useState, type CSSProperties } from 
 import { meta, sections } from '../content'
 import { celebrate } from '../components/confetti'
 import { ThemeMenu } from '../components/ThemeMenu'
+import { CopyButton } from '../components/ui'
 import { navigate } from '../router'
-import { deckFor, formatDuration, fullDeck, indexIn, secondsFrom, slideSeconds, totalSeconds, type Length, type Slide } from './deck'
-import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, readLength, saveLength, type Design, type Transition } from './controls'
+import { defaultTalk, deckFor, formatDuration, fullDeck, indexIn, secondsFrom, slideSeconds, totalSeconds, type Length, type Slide } from './deck'
+import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, readLength, readTalk, sameTalk, saveLength, saveTalk, type Design, type Transition } from './controls'
 import { SlideView } from './Slide'
 import './presenter.css'
 
@@ -65,7 +66,8 @@ function save(key: string, value: string) {
 
 export function Presenter({ slide }: { slide: number }) {
   const [length, setLength] = useState<Length>(readLength)
-  const deck = deckFor(length)
+  const [talk, setTalk] = useState<string[]>(readTalk)
+  const deck = deckFor(length, talk)
   const LAST = deck.length - 1
   const clamp = (n: number) => Math.min(Math.max(n, 0), LAST)
   const index = clamp(slide - 1)
@@ -127,11 +129,22 @@ export function Presenter({ slide }: { slide: number }) {
   // Switch between the short talk and the full deck, staying on the same slide (or the next one in the talk).
   function chooseLength(l: Length, at = current.id) {
     if (l === length && at === current.id) return
-    const to = indexIn(deckFor(l), at)
+    const to = indexIn(deckFor(l, talk), at)
     setLength(l)
     saveLength(l)
     setBlank(false)
     setPos({ index: to, step: 0, dir: pos.dir })
+    navigate({ kind: 'present', slide: to + 1 }, { replace: true })
+  }
+
+  // Change which slides the short talk plays. While presenting it, stay on this slide, or the next one still in it.
+  function chooseTalk(ids: string[]) {
+    setTalk(ids)
+    saveTalk(ids)
+    if (length !== 'short') return
+    const next = deckFor('short', ids)
+    const to = indexIn(next, current.id)
+    setPos({ index: to, step: next[to].id === current.id ? pos.step : 0, dir: pos.dir })
     navigate({ kind: 'present', slide: to + 1 }, { replace: true })
   }
 
@@ -313,7 +326,7 @@ export function Presenter({ slide }: { slide: number }) {
                 <select value={length} onChange={(e) => chooseLength(e.target.value as Length)}>
                   {LENGTHS.map((l) => (
                     <option key={l.id} value={l.id}>
-                      {l.label} ({deckFor(l.id).length})
+                      {l.label} ({deckFor(l.id, talk).length})
                     </option>
                   ))}
                 </select>
@@ -438,6 +451,8 @@ export function Presenter({ slide }: { slide: number }) {
           <Overview
             deck={deck}
             length={length}
+            talk={talk}
+            onTalk={chooseTalk}
             current={current.id}
             onPick={(id) => {
               setOverlay('none')
@@ -481,16 +496,44 @@ export function Presenter({ slide }: { slide: number }) {
   )
 }
 
-function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; length: Length; current: string; onPick: (id: string) => void; onClose: () => void }) {
+function Overview({
+  deck,
+  length,
+  talk,
+  onTalk,
+  current,
+  onPick,
+  onClose,
+}: {
+  deck: Slide[]
+  length: Length
+  talk: string[]
+  onTalk: (ids: string[]) => void
+  current: string
+  onPick: (id: string) => void
+  onClose: () => void
+}) {
   const active = useRef<HTMLButtonElement>(null)
+  // Choosing slides: a click adds a slide to the short talk or takes it out, instead of going to it.
+  const [choosing, setChoosing] = useState(false)
+  const inTalk = new Set(talk)
+  const talkSlides = deckFor('short', talk)
   // The short talk still shows every slide, with the ones it skips dimmed, so any of them is one click away.
-  const shown = length === 'short' ? fullDeck : deck
-  const label = LENGTHS.find((l) => l.id === length)?.label
+  const shown = length === 'short' || choosing ? fullDeck : deck
+  const listed = choosing ? talkSlides : deck
+  const label = choosing ? LENGTHS[0].label : LENGTHS.find((l) => l.id === length)?.label
+  const custom = !sameTalk(talk, defaultTalk)
 
   useEffect(() => {
     active.current?.focus({ preventScroll: true })
     active.current?.scrollIntoView({ block: 'center' })
   }, [])
+
+  function toggle(id: string) {
+    // Keep at least one slide, so there is always something to present.
+    if (inTalk.has(id) && talk.length === 1) return
+    onTalk(fullDeck.map((s) => s.id).filter((x) => (x === id ? !inTalk.has(x) : inTalk.has(x))))
+  }
 
   return (
     <div className="presenter__overlay presenter__overlay--overview" role="dialog" aria-modal="true" aria-label="All slides">
@@ -498,18 +541,42 @@ function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; l
         <h2>
           {label}{' '}
           <span className="overview__total">
-            · {deck.length} slides, about {formatDuration(totalSeconds(deck))} to read
+            · {listed.length} slides, about {formatDuration(totalSeconds(listed))} to read
           </span>
         </h2>
-        <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
-          Close
-          <kbd>Esc</kbd>
-        </button>
+        <div className="overview__actions">
+          {choosing && (
+            <>
+              <CopyButton text={JSON.stringify(talk, null, 2)} label="Copy for talk.json" />
+              <button type="button" className="btn btn--ghost btn--sm" onClick={() => onTalk(defaultTalk)} disabled={!custom}>
+                Reset
+              </button>
+            </>
+          )}
+          <button type="button" className={`btn btn--sm ${choosing ? 'btn--primary' : 'btn--outline'}`} onClick={() => setChoosing((c) => !c)} aria-pressed={choosing}>
+            {choosing ? 'Done' : 'Choose slides'}
+          </button>
+          <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
+            Close
+            <kbd>Esc</kbd>
+          </button>
+        </div>
       </div>
-      {length === 'short' && <p className="overview__note">Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.</p>}
-      <ol className="overview">
+      {choosing ? (
+        <p className="overview__note">
+          Click a slide to add it to the {LENGTHS[0].label.toLowerCase()} or take it out. Your pick is saved in this browser
+          {custom ? '; Reset goes back to the default.' : '.'} To share it, copy it into <code>src/content/talk.json</code>.
+        </p>
+      ) : (
+        length === 'short' && (
+          <p className="overview__note">
+            {custom ? 'Your own pick of slides. ' : ''}Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.
+          </p>
+        )
+      )}
+      <ol className={`overview${choosing ? ' is-choosing' : ''}`}>
         {shown.map((s, i) => {
-          const at = deck.findIndex((d) => d.id === s.id)
+          const at = listed.findIndex((d) => d.id === s.id)
           const skipped = at === -1
           const isCurrent = s.id === current
           return (
@@ -519,10 +586,14 @@ function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; l
                 type="button"
                 className={`overview__card overview__card--${s.kind}${isCurrent ? ' is-current' : ''}${skipped ? ' is-skipped' : ''}`}
                 aria-current={isCurrent ? 'true' : undefined}
-                onClick={() => onPick(s.id)}
+                aria-pressed={choosing ? !skipped : undefined}
+                onClick={() => (choosing ? toggle(s.id) : onPick(s.id))}
               >
                 <span className="overview__meta">
-                  <span className="overview__num">{skipped ? <span className="overview__full">Full deck</span> : at + 1}</span>
+                  <span className="overview__num">
+                    {choosing && <span className="overview__check" aria-hidden="true" />}
+                    {skipped ? <span className="overview__full">{choosing ? 'Not in talk' : 'Full deck'}</span> : at + 1}
+                  </span>
                   <span className="overview__time">
                     <span className="visually-hidden">Time to read: </span>
                     {formatDuration(slideSeconds(s))}
