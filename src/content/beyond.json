@@ -1,0 +1,44 @@
+[
+  {
+    "id": "bey-commit",
+    "title": "Commit messages",
+    "body": "The sparkle button in the Source Control commit box drafts a message from your changes. Edit it before committing. Team style can go in github.copilot.chat.commitMessageGeneration.instructions.",
+    "tags": ["commit", "source control"],
+    "sourceUrl": "https://code.visualstudio.com/docs/editing/copilot-smart-actions"
+  },
+  {
+    "id": "bey-terminal",
+    "title": "Terminal inline chat",
+    "body": "⌘I / Ctrl+I in the terminal turns a description into a shell command. ⌘Enter / Ctrl+Enter runs it; ⌥Enter / Alt+Enter inserts it so you can check it first.",
+    "tags": ["terminal", "shell", "inline chat"],
+    "sourceUrl": "https://code.visualstudio.com/docs/chat/inline-chat"
+  },
+  {
+    "id": "bey-terminal-fix",
+    "title": "Fix a failed command",
+    "body": "After a command fails, a sparkle Quick Fix appears in the terminal gutter. One click, with only that failure as context.",
+    "tags": ["terminal", "fix"],
+    "sourceUrl": "https://code.visualstudio.com/docs/editing/copilot-smart-actions"
+  },
+  {
+    "id": "bey-smart",
+    "title": "Smart actions",
+    "body": "Right-click in the editor and choose Generate Code for Review, Fix, Generate Docs or Generate Tests, without writing a prompt.",
+    "tags": ["smart actions", "tests", "docs"],
+    "sourceUrl": "https://code.visualstudio.com/docs/editing/copilot-smart-actions"
+  },
+  {
+    "id": "bey-review",
+    "title": "Copilot code review on PRs",
+    "body": "Add Copilot as a reviewer on a GitHub pull request. It leaves comments, follows your instruction files, doesn’t count as an approval, and uses AI credits.",
+    "tags": ["code review", "pull request", "github"],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/agents/code-review"
+  },
+  {
+    "id": "bey-cloud",
+    "title": "Copilot cloud agent",
+    "body": "Assign a GitHub issue to Copilot, or delegate from VS Code chat, and it works in the cloud and opens a pull request for your review. Best for small, well-described issues.",
+    "tags": ["cloud agent", "coding agent", "issues"],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ctx-history",
+    "title": "Chat history",
+    "body": "Every prompt and reply in the current chat goes back to the model with each new prompt. Old, unrelated turns still count and still steer answers.",
+    "example": "Ten turns about a CSS bug, then a question about the API: Copilot still sees the CSS.",
+    "tags": ["context", "history", "tokens"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/sessions/manage-sessions"
+  },
+  {
+    "id": "ctx-attached",
+    "title": "What you attach",
+    "body": "Files, folders, symbols, #selection, images and anything you paste. Attach the two files that matter, not the whole folder.",
+    "example": "#selection plus one test file beats pasting 400 lines.",
+    "tags": ["context", "attach", "files"],
+    "sourceUrl": "https://code.visualstudio.com/docs/chat/copilot-chat-context"
+  },
+  {
+    "id": "ctx-instructions",
+    "title": "Instruction files",
+    "body": "copilot-instructions.md, matching *.instructions.md files and AGENTS.md are added to requests automatically. Useful, but every line is sent every time.",
+    "example": "A 30-line instructions file is fine. A 600-line one taxes every prompt.",
+    "tags": ["context", "instructions", "tokens"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "ctx-tools",
+    "title": "Tool output in Agent mode",
+    "body": "When the agent reads files, searches, runs tests or fetches a page, the results land in the context too. Long test logs and broad searches fill it fast.",
+    "example": "One failing test run can add thousands of tokens of log output.",
+    "tags": ["context", "agent", "tools", "tokens"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/reference/tools-reference"
+  },
+  {
+    "id": "ctx-billing",
+    "title": "You pay per token",
+    "body": "Copilot bills in GitHub AI credits, based on the model and the tokens used (input, output and cached). An agent task is charged for every model call it makes. Inline suggestions as you type are not billed in credits on paid plans.",
+    "example": "The same question costs more in a bloated chat than in a fresh one.",
+    "tags": ["billing", "credits", "tokens", "cost"],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals"
+  },
+  {
+    "id": "ctx-window",
+    "title": "Watch the context window control",
+    "body": "A control in the chat input shows how full the context window is. Hover it for the token breakdown and the AI credits the session has used. When it fills, VS Code compacts the conversation automatically and early details get fuzzy.",
+    "example": "Don’t wait for auto-compaction: start a new chat or /compact with a focus first.",
+    "tags": ["context window", "compact", "tokens", "credits"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/sessions/manage-sessions"
+  }
+]

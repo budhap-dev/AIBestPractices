@@ -1,0 +1,66 @@
+[
+  {
+    "id": "tpl-bug",
+    "title": "Fix a bug",
+    "mode": "Agent",
+    "body": "Reproduce first, then fix, so you know the fix is real.",
+    "prompt": "#[file] #[test file]\nBug: [what happens] when [steps]. Expected: [what should happen].\nFirst add a failing test that reproduces it. Then fix it with the smallest change.\nDon’t change: [public API / other modules].\nDone when: the new test and all existing tests in [folder] pass.\nReply in 5 lines max: cause, fix, files changed.",
+    "tags": ["bug", "fix", "tests"]
+  },
+  {
+    "id": "tpl-feature",
+    "title": "Plan a feature",
+    "mode": "Plan",
+    "body": "Agree the plan, then implement it one step at a time in Agent.",
+    "prompt": "/plan [Feature in one sentence].\nUsers: [who]. Must: [requirements]. Must not: [limits].\nRelevant code: #[file] #[file]\nGive me: files to change, steps in order, risks, and what to test. No code yet. Max 20 lines.",
+    "tags": ["feature", "plan"]
+  },
+  {
+    "id": "tpl-refactor",
+    "title": "Refactor safely",
+    "mode": "Agent",
+    "body": "Behaviour stays the same, and the tests prove it.",
+    "prompt": "#[file]\nRefactor [function/module] to [goal, e.g. remove duplication / split into smaller functions].\nBehaviour must not change. Keep the public signatures.\nRun [test command] before and after and show both summary lines.",
+    "tags": ["refactor", "tests"]
+  },
+  {
+    "id": "tpl-tests",
+    "title": "Write tests",
+    "mode": "Agent",
+    "body": "Name the cases you care about, or you get the obvious ones only.",
+    "prompt": "#[file]\nWrite [framework] tests for [function].\nCover: happy path, [edge case], [edge case], and invalid input.\nFollow the style of #[existing test file]. No snapshot tests.\nRun them and fix only the tests, not the code, unless you find a real bug. Tell me if you do.",
+    "tags": ["tests", "unit tests"]
+  },
+  {
+    "id": "tpl-explain",
+    "title": "Explain unfamiliar code",
+    "mode": "Ask",
+    "body": "Ask for the level of detail you need, and keep it short.",
+    "prompt": "#selection\nExplain what this does for someone new to [area].\nThen list: inputs, outputs, side effects, and anything surprising.\nMax 10 lines.",
+    "tags": ["explain", "onboarding"]
+  },
+  {
+    "id": "tpl-review",
+    "title": "Review my changes",
+    "mode": "Ask",
+    "body": "A quick second pair of eyes before you open a PR. Save it as a prompt file.",
+    "prompt": "#changes\nReview these changes as a senior engineer.\nList at most 8 issues, most serious first: bugs, missing tests, security, naming.\nOne line each with file and line. No summary, no praise.",
+    "tags": ["review", "#changes", "pull request"]
+  },
+  {
+    "id": "tpl-error",
+    "title": "Fix a failing command",
+    "mode": "Agent",
+    "body": "Hand over the output by reference, not by pasting.",
+    "prompt": "#terminalLastCommand\nThe command above failed. Find the root cause and fix it.\nDon’t change [config/dependencies] without asking.\nRe-run the command to confirm and show the last 5 lines.",
+    "tags": ["error", "terminal", "logs"]
+  },
+  {
+    "id": "tpl-commit",
+    "title": "Commit message",
+    "mode": "Ask",
+    "body": "Or use the sparkle button in the Source Control commit box.",
+    "prompt": "#changes\nWrite a commit message: a summary line under 60 characters in the imperative, a blank line, then up to 3 bullet points on why. No file lists.",
+    "tags": ["commit", "git"]
+  }
+]

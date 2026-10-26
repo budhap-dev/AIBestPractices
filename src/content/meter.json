@@ -1,0 +1,18 @@
+{
+  "capacity": 128000,
+  "baseline": 2000,
+  "models": [
+    { "id": "auto", "label": "Auto", "relativeCost": 0.9 },
+    { "id": "standard", "label": "Standard model", "relativeCost": 1 },
+    { "id": "large", "label": "Large reasoning model", "relativeCost": 5 }
+  ],
+  "actions": [
+    { "id": "ask", "label": "Ask a question", "detail": "A short prompt and a medium answer", "kind": "history", "tokens": 1500, "calls": 1 },
+    { "id": "follow", "label": "Follow-up", "detail": "Another turn on the same topic", "kind": "history", "tokens": 2500, "calls": 1 },
+    { "id": "files", "label": "Attach 2 files", "detail": "Two source files attached with #, then a question", "kind": "files", "tokens": 8000, "calls": 1 },
+    { "id": "log", "label": "Paste a 2,000-line log", "detail": "A whole build log pasted into the chat", "kind": "files", "tokens": 30000, "calls": 1 },
+    { "id": "codebase", "label": "#codebase search", "detail": "A whole-project search adds many snippets", "kind": "tools", "tokens": 15000, "calls": 1 },
+    { "id": "agent", "label": "Agent runs tests", "detail": "Reads files, runs tests, reads the output: several model calls", "kind": "tools", "tokens": 18000, "calls": 3 },
+    { "id": "switch", "label": "Switch to an unrelated task", "detail": "A new topic in the same chat", "kind": "history", "tokens": 3000, "calls": 1, "drift": true }
+  ]
+}

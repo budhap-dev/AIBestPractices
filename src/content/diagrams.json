@@ -1,0 +1,367 @@
+{
+  "request": {
+    "steps": [
+      {
+        "title": "You write a prompt",
+        "body": "A question or a task, typed in the chat."
+      },
+      {
+        "title": "Copilot packs the context",
+        "body": "Your prompt goes in with everything else the model needs to see.",
+        "show": "packed"
+      },
+      {
+        "title": "The model reads tokens",
+        "body": "Text is split into small chunks. Every chunk counts towards the window and the bill.",
+        "show": "tokens"
+      },
+      {
+        "title": "It writes a reply",
+        "body": "Or, as an agent, asks to use a tool: read a file, run a command."
+      },
+      {
+        "title": "Results go back into the context",
+        "body": "Tool output and the reply join the history, and the next request carries them all."
+      }
+    ],
+    "packed": [
+      "Instruction files",
+      "Chat history",
+      "Attached files",
+      "Your prompt"
+    ],
+    "tokens": [
+      "fix",
+      " the",
+      " log",
+      "in",
+      " bug",
+      " in",
+      " auth",
+      ".ts"
+    ],
+    "tokensNote": "Illustrative split: each model splits text its own way.",
+    "loop": "Agent mode repeats steps 2 to 5 until the task is done"
+  },
+  "modes": [
+    {
+      "mode": "Ask",
+      "does": "Reads your code and answers",
+      "changes": "Nothing",
+      "cost": "Lowest"
+    },
+    {
+      "mode": "Plan",
+      "does": "Researches and writes a plan",
+      "changes": "Nothing until you agree",
+      "cost": "Medium"
+    },
+    {
+      "mode": "Agent",
+      "does": "Edits files and runs commands",
+      "changes": "Your code",
+      "cost": "Highest"
+    }
+  ],
+  "chatFlow": {
+    "start": "The chat is getting long",
+    "questions": [
+      {
+        "question": "Has the task changed?",
+        "yes": "new-chat",
+        "yesDetail": "/clear, then carry over the decisions in a sentence or two."
+      },
+      {
+        "question": "Is the context window about half full?",
+        "yes": "summarise",
+        "yesDetail": "/compact keep the API contract and open issues"
+      }
+    ],
+    "otherwise": "continue",
+    "otherwiseDetail": "Short prompts, brief replies."
+  },
+  "memory": {
+    "requests": [
+      "Edit a React component",
+      "Fix a SQL migration",
+      "Run /review-changes",
+      "Ask about a CSS bug"
+    ],
+    "lanes": [
+      {
+        "label": "Every request",
+        "files": [
+          {
+            "name": "copilot-instructions.md",
+            "on": [
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ]
+      },
+      {
+        "label": "When matching files are in play",
+        "files": [
+          {
+            "name": "react.instructions.md",
+            "on": [
+              true,
+              false,
+              false,
+              true
+            ]
+          },
+          {
+            "name": "sql.instructions.md",
+            "on": [
+              false,
+              true,
+              false,
+              false
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Only when you run it",
+        "files": [
+          {
+            "name": "review-changes.prompt.md",
+            "on": [
+              false,
+              false,
+              true,
+              false
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "Always-on files ride along with every request, so keep them short. Specialist rules cost nothing until their files are in play."
+  },
+  "thenNow": {
+    "scenarios": [
+      {
+        "id": "before",
+        "label": "Before AI"
+      },
+      {
+        "id": "well",
+        "label": "AI used well"
+      },
+      {
+        "id": "careless",
+        "label": "AI used carelessly"
+      }
+    ],
+    "activities": [
+      {
+        "label": "Searching forums and docs",
+        "hours": [
+          3,
+          1,
+          1
+        ]
+      },
+      {
+        "label": "Writing boilerplate",
+        "hours": [
+          4,
+          1,
+          0.5
+        ]
+      },
+      {
+        "label": "Writing tests",
+        "hours": [
+          3,
+          1,
+          0.5
+        ]
+      },
+      {
+        "label": "Debugging",
+        "hours": [
+          4,
+          2,
+          6
+        ]
+      },
+      {
+        "label": "Review and rework",
+        "hours": [
+          2,
+          2,
+          5
+        ]
+      }
+    ],
+    "unit": "hours",
+    "verdict": "Careless use feels fast at the start, then pays it back in debugging and rework.",
+    "note": "Illustrative hours for one ordinary feature, not a measurement."
+  },
+  "contextStack": {
+    "kinds": [
+      {
+        "id": "instructions",
+        "label": "Instruction files"
+      },
+      {
+        "id": "history",
+        "label": "Chat history"
+      },
+      {
+        "id": "files",
+        "label": "Attached files"
+      },
+      {
+        "id": "tools",
+        "label": "Tool output"
+      },
+      {
+        "id": "prompt",
+        "label": "Your prompt"
+      }
+    ],
+    "requests": [
+      {
+        "label": "1st prompt",
+        "blocks": [
+          {
+            "kind": "instructions",
+            "tokens": 2000
+          },
+          {
+            "kind": "files",
+            "tokens": 6000
+          },
+          {
+            "kind": "prompt",
+            "tokens": 300
+          }
+        ]
+      },
+      {
+        "label": "2nd prompt",
+        "blocks": [
+          {
+            "kind": "instructions",
+            "tokens": 2000
+          },
+          {
+            "kind": "history",
+            "tokens": 8000
+          },
+          {
+            "kind": "tools",
+            "tokens": 4000
+          },
+          {
+            "kind": "prompt",
+            "tokens": 200
+          }
+        ]
+      },
+      {
+        "label": "3rd prompt",
+        "blocks": [
+          {
+            "kind": "instructions",
+            "tokens": 2000
+          },
+          {
+            "kind": "history",
+            "tokens": 14000
+          },
+          {
+            "kind": "files",
+            "tokens": 3000
+          },
+          {
+            "kind": "prompt",
+            "tokens": 200
+          }
+        ]
+      },
+      {
+        "label": "4th prompt",
+        "blocks": [
+          {
+            "kind": "instructions",
+            "tokens": 2000
+          },
+          {
+            "kind": "history",
+            "tokens": 20000
+          },
+          {
+            "kind": "tools",
+            "tokens": 9000
+          },
+          {
+            "kind": "prompt",
+            "tokens": 200
+          }
+        ]
+      }
+    ],
+    "note": "Illustrative tokens. The whiteboard is wiped only when you start a new chat."
+  },
+  "dailyLoop": {
+    "centre": "One task, one chat",
+    "steps": [
+      "Fresh chat",
+      "Pick the role and model",
+      "Focused context",
+      "Plan it",
+      "Small, checked steps",
+      "Review the diff",
+      "Commit, then clear"
+    ],
+    "back": "Then the next task starts with a clean whiteboard"
+  },
+  "approvalGate": {
+    "ask": {
+      "title": "The agent asks",
+      "body": "It wants to run a command and shows it to you first.",
+      "command": "npm test -- auth"
+    },
+    "check": {
+      "title": "You check",
+      "body": "Is it the command you expected, on the files you meant?",
+      "options": [
+        "Allow once",
+        "Allow for this session",
+        "Deny"
+      ]
+    },
+    "run": {
+      "title": "Then it runs",
+      "body": "The output goes back into the context, and the agent carries on."
+    },
+    "bypass": "Global auto-approve removes the gate for every tool. VS Code warns that it disables critical security protections."
+  },
+  "prefixes": [
+    {
+      "key": "/",
+      "name": "Slash command",
+      "does": "Runs an action or a saved prompt",
+      "example": "/clear"
+    },
+    {
+      "key": "#",
+      "name": "# mention",
+      "does": "Attaches exactly the context you name",
+      "example": "#problems"
+    },
+    {
+      "key": "@",
+      "name": "@ participant",
+      "does": "Sends the question to a specialist",
+      "example": "@terminal how do I list open ports?"
+    }
+  ]
+}

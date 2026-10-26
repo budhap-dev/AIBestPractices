@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mem-repo",
+    "title": "Repository instructions",
+    "path": ".github/copilot-instructions.md",
+    "when": "Always on. Conventions every request in this repo should follow.",
+    "body": "Added to chat requests automatically. Keep it to the rules that matter most; every line is sent with every prompt. /init can draft one for you.",
+    "example": "# Project rules\n- TypeScript strict; no `any`.\n- React function components and hooks only.\n- Tests live next to the code: foo.ts → foo.test.ts (Vitest).\n- Use the logger in src/lib/log.ts, never console.log.\n\n# How to reply\n- Keep replies short: what changed and what to check.\n- Don't add dependencies without asking.",
+    "tags": ["instructions", "copilot-instructions.md", "memory"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "mem-path",
+    "title": "Path-specific instructions",
+    "path": ".github/instructions/*.instructions.md",
+    "when": "Only when matching files are in play, e.g. SQL migrations or tests.",
+    "body": "The applyTo glob in the front matter decides when the file is used, so specialist rules don’t cost tokens on unrelated work.",
+    "example": "---\napplyTo: \"db/migrations/**/*.sql\"\n---\n- Every migration must be reversible: include a down step.\n- Never drop a column in the same release that stops using it.\n- Name files YYYYMMDDHHMM_short_description.sql.",
+    "tags": ["instructions", "applyTo", "glob"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "mem-prompt",
+    "title": "Prompt files",
+    "path": ".github/prompts/*.prompt.md",
+    "when": "Prompts you run again and again: reviews, release notes, new endpoints.",
+    "body": "Run one with /name in chat. The front matter can set the agent, model and tools, so a cheap model can handle routine prompts. /create-prompt writes one for you.",
+    "example": "---\nname: review-diff\ndescription: Review my uncommitted changes\nagent: ask\n---\nReview #changes as a senior engineer.\nList at most 8 issues, most serious first: bugs, missing tests, security, naming.\nOne line each with file:line. No praise, no summary.",
+    "tags": ["prompt files", "reuse", "/name"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/prompt-files"
+  },
+  {
+    "id": "mem-agent",
+    "title": "Custom agents",
+    "path": ".github/agents/*.agent.md",
+    "when": "A role with its own rules and tools, like a reviewer that can’t edit.",
+    "body": "Formerly called custom chat modes. Pick one from the Agent dropdown. Limiting tools keeps it safe and keeps tool output out of the context.",
+    "example": "---\ndescription: Read-only reviewer for pull requests\ntools: ['search', 'read']\n---\nYou review code. Never edit files.\nCheck: correctness, tests, security, naming, dead code.\nReply as a numbered list, most serious first, max 10 items.",
+    "tags": ["custom agents", "chat modes", "tools"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents"
+  },
+  {
+    "id": "mem-agents-md",
+    "title": "AGENTS.md",
+    "path": "AGENTS.md",
+    "when": "Repos shared with other AI tools that also read AGENTS.md.",
+    "body": "A root AGENTS.md is used as context by default (chat.useAgentsMdFile). Use it instead of copilot-instructions.md if your team uses several AI tools. Don’t keep both saying the same thing.",
+    "example": "# AGENTS.md\n## Build and test\n- npm ci && npm test\n- npm run lint must pass before commit.\n\n## Conventions\n- API handlers in src/api/<resource>.ts, one per resource.\n- Errors: throw AppError from src/lib/errors.ts.",
+    "tags": ["AGENTS.md", "instructions"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "mem-skills",
+    "title": "Agent skills",
+    "path": ".github/skills/<name>/SKILL.md",
+    "when": "A repeatable procedure with steps and supporting files, like a release checklist.",
+    "body": "Skills are folders with a SKILL.md and any scripts or templates it needs. Run one with /<name>.",
+    "example": "---\nname: release-notes\ndescription: Draft release notes from merged PRs\n---\n1. List PRs merged since the last tag.\n2. Group them: Features, Fixes, Internal.\n3. One line per PR, user-facing wording, link the PR.",
+    "tags": ["skills", "SKILL.md"],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+  }
+]

@@ -1,0 +1,109 @@
+{
+  "steps": [
+    {
+      "id": "step-fresh",
+      "title": "Start a fresh chat for the task",
+      "body": "One task, one chat. Type /clear or press ⌘N / Ctrl+N in the Chat view. Old turns from other work cost tokens on every prompt and pull answers off course.",
+      "prompt": "/clear",
+      "tags": ["new chat", "clear", "tokens"],
+      "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+    },
+    {
+      "id": "step-role",
+      "title": "Choose the role and the model",
+      "body": "Ask to understand, Plan to design, Agent to change. Leave the model on Auto for everyday work; pick a large reasoning model only for genuinely hard problems.",
+      "tags": ["mode", "model", "auto", "cost"],
+      "sourceUrl": "https://code.visualstudio.com/docs/agents/concepts/language-models"
+    },
+    {
+      "id": "step-context",
+      "title": "Give focused context",
+      "body": "Attach the files that matter with #, use #problems or #terminalLastCommand instead of pasting output, and say what Copilot can’t see in the code.",
+      "prompt": "#problems Fix only these type errors. Don’t change anything else.",
+      "tags": ["context", "attach", "#problems"],
+      "sourceUrl": "https://code.visualstudio.com/docs/chat/copilot-chat-context"
+    },
+    {
+      "id": "step-plan",
+      "title": "Plan anything bigger than a small fix",
+      "body": "For multi-file work, ask for a plan, correct it, then implement. Fixing a plan costs a few lines; fixing the wrong implementation costs a whole agent run.",
+      "prompt": "/plan Move session storage from cookies to Redis. List the files to change, the order, and the risks. No code yet.",
+      "tags": ["plan"],
+      "sourceUrl": "https://code.visualstudio.com/docs/agents/agent-types/local-agents"
+    },
+    {
+      "id": "step-small",
+      "title": "Build in small, checked steps",
+      "body": "Implement one step at a time and have Copilot run the tests or build after each. Ask for short replies so the history stays small.",
+      "prompt": "Do step 1 only. Then run npm test and show me just the summary line.",
+      "tags": ["agent", "tests", "steps"]
+    },
+    {
+      "id": "step-review",
+      "title": "Review the diff like a pull request",
+      "body": "Read every change before you keep it. Check names, edge cases and anything you didn’t ask for. If you can’t explain a line, don’t keep it.",
+      "tags": ["review", "diff"]
+    },
+    {
+      "id": "step-finish",
+      "title": "Commit, then clear",
+      "body": "Commit small. Use the sparkle button in the Source Control commit box for a draft message and edit it. Then /clear before the next task.",
+      "tags": ["commit", "clear"],
+      "sourceUrl": "https://code.visualstudio.com/docs/editing/copilot-smart-actions"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec-new",
+      "action": "new-chat",
+      "title": "The task has changed",
+      "signals": [
+        "You are moving to unrelated work",
+        "Copilot repeated the same mistake after two corrections",
+        "Most of the context is about things you no longer need"
+      ],
+      "body": "Start fresh with /clear and a better prompt. Carry over only the decisions, in a sentence or two.",
+      "tags": ["new chat", "clear", "two strikes"],
+      "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+    },
+    {
+      "id": "dec-compact",
+      "action": "summarise",
+      "title": "Same task, crowded window",
+      "signals": [
+        "The context window control is past about half",
+        "You still need earlier decisions",
+        "Answers are getting slower or vaguer"
+      ],
+      "body": "Use /compact with a focus, e.g. “/compact keep the API contract and open issues”. Want to try a different approach without losing this one? /fork copies the chat instead.",
+      "tags": ["compact", "summarise", "fork"],
+      "sourceUrl": "https://code.visualstudio.com/docs/agents/run/sessions/manage-sessions"
+    },
+    {
+      "id": "dec-continue",
+      "action": "continue",
+      "title": "It’s going well",
+      "signals": [
+        "Same task, still focused",
+        "The context window has plenty of room",
+        "Answers are sharp and on target"
+      ],
+      "body": "Keep going, but keep prompts short and ask for brief replies so the window stays small.",
+      "tags": ["continue"]
+    }
+  ],
+  "checklist": [
+    { "id": "ck-fresh", "phase": "Start", "label": "New chat for this task (/clear)" },
+    { "id": "ck-role", "phase": "Start", "label": "Right role (Ask / Plan / Agent) and model (Auto unless hard)" },
+    { "id": "ck-files", "phase": "Start", "label": "Attached only the files that matter" },
+    { "id": "ck-done", "phase": "Start", "label": "Said what “done” looks like" },
+    { "id": "ck-plan", "phase": "During", "label": "Agreed a plan before any multi-file change" },
+    { "id": "ck-tests", "phase": "During", "label": "Ran tests or the build after each step" },
+    { "id": "ck-window", "phase": "During", "label": "Compacted or restarted before the window filled" },
+    { "id": "ck-strikes", "phase": "During", "label": "Two wrong answers? Started over with a better prompt" },
+    { "id": "ck-diff", "phase": "Finish", "label": "Read every line of the diff" },
+    { "id": "ck-secrets", "phase": "Finish", "label": "No secrets or customer data in any prompt" },
+    { "id": "ck-commit", "phase": "Finish", "label": "Small commit with a message I checked" },
+    { "id": "ck-clear", "phase": "Finish", "label": "/clear before the next task" }
+  ]
+}

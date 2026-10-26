@@ -1,0 +1,608 @@
+[
+  {
+    "id": "term-model",
+    "group": "ai",
+    "title": "AI model",
+    "short": "The program that writes Copilot’s answers.",
+    "body": "The program that writes Copilot’s answers. It learned patterns from huge amounts of text and code, and predicts a useful reply to what you send. Copilot lets you choose between several models.",
+    "analogy": "A very well-read colleague who has never seen your project.",
+    "match": [
+      "(?<!mental )\\bmodels?\\b"
+    ],
+    "tags": [
+      "llm",
+      "model"
+    ]
+  },
+  {
+    "id": "term-reasoning",
+    "group": "ai",
+    "title": "Reasoning model",
+    "short": "A model that thinks step by step first: slower and pricier.",
+    "body": "A model that works through a problem step by step before it answers. Better on genuinely hard problems, but slower, and each request costs more.",
+    "analogy": "Asking a colleague to sit down and think it through, rather than answer off the top of their head.",
+    "match": [
+      "reasoning models?"
+    ],
+    "tags": [
+      "model",
+      "cost"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/concepts/language-models"
+  },
+  {
+    "id": "term-prompt",
+    "group": "ai",
+    "title": "Prompt",
+    "short": "What you type to Copilot.",
+    "body": "What you type to Copilot: a question, a task or an instruction. The clearer it is, the fewer rounds you need.",
+    "analogy": "The brief you give a contractor.",
+    "match": [
+      "prompts?\\b",
+      "prompting"
+    ],
+    "tags": [
+      "prompt"
+    ]
+  },
+  {
+    "id": "term-context",
+    "group": "ai",
+    "title": "Context",
+    "short": "Everything the model sees when it answers.",
+    "body": "Everything Copilot sends to the model with your prompt: the chat so far, files you attach, instruction files and tool results. The model only knows what is in the context. It has no other memory of your project.",
+    "analogy": "A whiteboard. Whatever is written on it is all the model can see.",
+    "match": [
+      "context"
+    ],
+    "tags": [
+      "context"
+    ]
+  },
+  {
+    "id": "term-token",
+    "group": "ai",
+    "title": "Token",
+    "short": "The chunk of text models read and bill in.",
+    "body": "The unit models read, and the unit usage is measured in. A token is a chunk of text, often part of a word: in English, a token is roughly three-quarters of a word on average. Code and symbols usually take more.",
+    "analogy": "Syllables. Long or unusual words take several.",
+    "match": [
+      "tokens?\\b"
+    ],
+    "tags": [
+      "token",
+      "billing"
+    ]
+  },
+  {
+    "id": "term-window",
+    "group": "ai",
+    "title": "Context window",
+    "short": "The most context a model can take at once.",
+    "body": "The most context a model can take in one request, measured in tokens. As a chat nears the limit, older parts get summarised or dropped and answers get worse.",
+    "analogy": "The size of the whiteboard.",
+    "match": [
+      "context windows?",
+      "the window\\b"
+    ],
+    "tags": [
+      "context window"
+    ]
+  },
+  {
+    "id": "term-history",
+    "group": "ai",
+    "title": "Chat history",
+    "short": "Every prompt and reply in the current chat.",
+    "body": "Every prompt and reply in the current chat. It is sent again with each new prompt, which is why long chats get slower and cost more.",
+    "analogy": "Rereading the whole email thread before every reply.",
+    "match": [
+      "(chat )?history"
+    ],
+    "tags": [
+      "history",
+      "session"
+    ]
+  },
+  {
+    "id": "term-agent",
+    "group": "ai",
+    "title": "Agent",
+    "short": "Copilot acting, not just answering.",
+    "body": "A Copilot role that doesn’t just answer. It works out the steps, edits files, runs commands and checks the results, repeating until the task is done or it needs you.",
+    "analogy": "A junior developer you supervise, rather than a search engine.",
+    "match": [
+      "agents?\\b",
+      "AGENTS"
+    ],
+    "tags": [
+      "agent mode"
+    ]
+  },
+  {
+    "id": "term-tool",
+    "group": "ai",
+    "title": "Tool",
+    "short": "An action an agent can take.",
+    "body": "An action an agent can take, such as reading a file, searching the code, running a terminal command or fetching a web page. Whatever a tool returns is added to the context.",
+    "analogy": "The agent’s hands and eyes.",
+    "match": [
+      "tools?\\b(?!bar)"
+    ],
+    "tags": [
+      "tools"
+    ]
+  },
+  {
+    "id": "term-hallucination",
+    "group": "ai",
+    "title": "Hallucination",
+    "short": "A confident answer that is wrong.",
+    "body": "A confident answer that is wrong, such as a function, setting or package that doesn’t exist. Models predict likely text. They don’t check facts unless a tool, a test or you do.",
+    "analogy": "A colleague bluffing instead of saying “I don’t know”.",
+    "match": [
+      "hallucinat",
+      "invent(s|ed)? "
+    ],
+    "tags": [
+      "accuracy"
+    ]
+  },
+  {
+    "id": "term-credits",
+    "group": "ai",
+    "title": "AI credits",
+    "short": "How Copilot usage is billed.",
+    "body": "How Copilot measures usage: each request costs credits based on the model and the tokens used. Bigger models and bigger contexts cost more.",
+    "analogy": "A phone plan billed by the minute, where some numbers cost more to call.",
+    "match": [
+      "(AI )?credits?\\b",
+      "bill(s|ed|ing)?\\b"
+    ],
+    "tags": [
+      "billing",
+      "cost"
+    ],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals"
+  },
+  {
+    "id": "term-auto",
+    "group": "copilot",
+    "title": "Auto (model)",
+    "short": "A setting that picks a suitable model for each request.",
+    "body": "A choice in the model picker. Copilot routes each request to a suitable model and saves pricey reasoning models for hard problems. Paid plans get a small discount for using it.",
+    "analogy": "Letting the sat-nav choose the route instead of always taking the motorway.",
+    "match": [
+      "\\bAuto\\b(?!-)"
+    ],
+    "tags": [
+      "model",
+      "auto",
+      "cost"
+    ],
+    "caseSensitive": true,
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/concepts/language-models"
+  },
+  {
+    "id": "term-suggestion",
+    "group": "copilot",
+    "title": "Inline suggestion",
+    "short": "Grey ghost text offered as you type.",
+    "body": "The grey “ghost text” Copilot offers as you type in the editor. Press Tab to accept it, or keep typing to ignore it.",
+    "analogy": "Autocomplete on your phone, for whole lines of code.",
+    "match": [
+      "inline suggestions?",
+      "ghost text"
+    ],
+    "tags": [
+      "completions"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/editing/ai-powered-suggestions"
+  },
+  {
+    "id": "term-inline-chat",
+    "group": "copilot",
+    "title": "Inline chat",
+    "short": "A small chat box that opens right where your cursor is.",
+    "body": "A chat box that opens in the editor or terminal, right at your cursor, and works on what you selected. Small context, quick answers.",
+    "analogy": "Asking the person next to you, instead of booking a meeting.",
+    "match": [
+      "inline chat"
+    ],
+    "tags": [
+      "inline chat"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/chat/inline-chat"
+  },
+  {
+    "id": "term-slash",
+    "group": "copilot",
+    "title": "Slash command",
+    "short": "A shortcut you type after /, such as /clear.",
+    "body": "A shortcut you type in the chat box after a forward slash, such as /clear to start a new chat or /plan to plan a task. Your saved prompt files run the same way.",
+    "analogy": "Keyboard shortcuts, but typed as words.",
+    "match": [
+      "slash commands?",
+      "(?<![\\w/.])/[a-z<]"
+    ],
+    "tags": [
+      "slash",
+      "commands"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+  },
+  {
+    "id": "term-hash",
+    "group": "copilot",
+    "title": "# mention",
+    "short": "Type # to attach a file, the errors or other context.",
+    "body": "Type # in the chat box to attach exactly the context you mean: a file, your selection, the errors in the Problems panel or the last terminal command.",
+    "analogy": "Stapling the relevant page to your question.",
+    "match": [
+      "#-mention",
+      "(?<![\\w&])#[a-zA-Z]",
+      "(?<=\\s)#(?=[\\s,.])"
+    ],
+    "tags": [
+      "#",
+      "context"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/chat/copilot-chat-context"
+  },
+  {
+    "id": "term-at",
+    "group": "copilot",
+    "title": "@ participant",
+    "short": "Type @ to ask a specialist, such as @terminal.",
+    "body": "Type @ in the chat box to send your question to a specialist that knows one area well, such as @vscode for editor settings or @terminal for shell commands.",
+    "analogy": "Asking for the expert in that area by name.",
+    "match": [
+      "participants?\\b",
+      "(?<![\\w.])@[a-z]"
+    ],
+    "tags": [
+      "@",
+      "participants"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+  },
+  {
+    "id": "term-instructions",
+    "group": "copilot",
+    "title": "Instruction file",
+    "short": "Team rules Copilot adds to every request.",
+    "body": "A Markdown file in your repo, such as .github/copilot-instructions.md, whose rules Copilot adds to requests automatically. You write the team’s conventions once instead of in every prompt.",
+    "analogy": "The onboarding notes you hand every new starter.",
+    "match": [
+      "instructions? files?",
+      "copilot-instructions",
+      "\\.instructions\\.md"
+    ],
+    "tags": [
+      "instructions",
+      "team"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "term-prompt-file",
+    "group": "copilot",
+    "title": "Prompt file",
+    "short": "A saved prompt in the repo that anyone can run with /name.",
+    "body": "A Markdown file ending in .prompt.md, saved in the repo, that holds a prompt you use again and again. Anyone on the team runs it by typing / and its name.",
+    "analogy": "A saved email template.",
+    "match": [
+      "prompt files?",
+      "\\.prompt\\.md"
+    ],
+    "tags": [
+      "prompt files"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/prompt-files"
+  },
+  {
+    "id": "term-front-matter",
+    "group": "copilot",
+    "title": "Front matter",
+    "short": "Settings between --- lines at the top of a Markdown file.",
+    "body": "A short block of settings between two --- lines at the very top of a Markdown file. In prompt and instruction files it sets things like the name, the model or which files the rules apply to.",
+    "analogy": "The label on the front of a folder.",
+    "match": [
+      "front matter"
+    ],
+    "tags": [
+      "front matter"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/prompt-files"
+  },
+  {
+    "id": "term-glob",
+    "group": "copilot",
+    "title": "applyTo glob",
+    "short": "A file pattern that says which files some rules are for.",
+    "body": "A file pattern, such as db/migrations/**/*.sql, set as applyTo in an instruction file’s front matter. The rules are only sent when matching files are in play.",
+    "analogy": "A label saying “for the kitchen only”.",
+    "match": [
+      "applyTo",
+      "glob\\b"
+    ],
+    "tags": [
+      "applyTo",
+      "glob"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+  },
+  {
+    "id": "term-custom-agent",
+    "group": "copilot",
+    "title": "Custom agent",
+    "short": "An agent role you define, with its own rules and tools.",
+    "body": "An agent role saved as a .agent.md file, with its own instructions and a chosen set of tools, such as a reviewer that can read code but never edit it. Pick it from the Agent picker.",
+    "analogy": "A job description for one particular task.",
+    "match": [
+      "custom agents?",
+      "\\.agent\\.md"
+    ],
+    "tags": [
+      "custom agents"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents"
+  },
+  {
+    "id": "term-skill",
+    "group": "copilot",
+    "title": "Agent skill",
+    "short": "A folder of steps and files the agent can follow on request.",
+    "body": "A folder with a SKILL.md file that describes a repeatable procedure, plus any scripts or templates it needs. Run it with / and its name.",
+    "analogy": "A recipe card with the ingredients clipped to it.",
+    "match": [
+      "skills?\\b",
+      "SKILL\\.md"
+    ],
+    "tags": [
+      "skills"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features"
+  },
+  {
+    "id": "term-compact",
+    "group": "copilot",
+    "title": "Compaction",
+    "short": "Shrinking the chat into a short summary.",
+    "body": "Replacing a long chat history with a short summary, so it takes fewer tokens. /compact does it when you ask; VS Code also does it automatically when the window fills.",
+    "analogy": "Wiping the whiteboard but keeping a sticky note of the key points.",
+    "match": [
+      "compact",
+      "summari[sz]"
+    ],
+    "tags": [
+      "compact",
+      "summary"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/sessions/manage-sessions"
+  },
+  {
+    "id": "term-checkpoint",
+    "group": "copilot",
+    "title": "Checkpoint",
+    "short": "A restore point Copilot saves before each chat request.",
+    "body": "A restore point that VS Code saves before each chat request. Restoring one rewinds the files and the chat, but not commands the agent has already run.",
+    "analogy": "The undo history in a document, but per request.",
+    "match": [
+      "checkpoints?"
+    ],
+    "tags": [
+      "checkpoints",
+      "undo"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/chat/chat-checkpoints"
+  },
+  {
+    "id": "term-approval",
+    "group": "copilot",
+    "title": "Tool approval",
+    "short": "The moment you allow or deny what the agent wants to do.",
+    "body": "Before the agent runs a command or uses a tool, VS Code can ask you first. You allow it once, for the session, or deny it. Auto-approve skips the question.",
+    "analogy": "A contractor asking before knocking down a wall.",
+    "match": [
+      "approv"
+    ],
+    "tags": [
+      "approvals",
+      "permissions"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals"
+  },
+  {
+    "id": "term-sandbox",
+    "group": "copilot",
+    "title": "Sandbox",
+    "short": "A fenced-off space where commands can’t reach everything.",
+    "body": "A fenced-off space for the commands the agent runs, limiting which files and network addresses they can reach. In VS Code it is a preview setting.",
+    "analogy": "A playpen: the agent can play, but can’t wander off.",
+    "match": [
+      "sandbox"
+    ],
+    "tags": [
+      "sandbox",
+      "security"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals"
+  },
+  {
+    "id": "term-mcp",
+    "group": "copilot",
+    "title": "MCP server",
+    "short": "An add-on that gives the agent extra tools.",
+    "body": "An add-on that gives the agent extra tools, such as access to a database, an issue tracker or a browser. MCP stands for Model Context Protocol.",
+    "analogy": "A plug-in adapter that lets the agent use one more system.",
+    "match": [
+      "MCP"
+    ],
+    "caseSensitive": true,
+    "tags": [
+      "mcp",
+      "tools"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/copilot/customization/mcp-servers"
+  },
+  {
+    "id": "term-exclusion",
+    "group": "copilot",
+    "title": "Content exclusion",
+    "short": "An admin setting that hides chosen files from Copilot.",
+    "body": "A setting that Business and Enterprise admins use to keep chosen files away from Copilot. It does not cover Agent mode, so the agent can still read them.",
+    "analogy": "A “staff only” sign on a door that one visitor ignores.",
+    "match": [
+      "content exclusion",
+      "excluded files"
+    ],
+    "tags": [
+      "content exclusion"
+    ],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/context/content-exclusion"
+  },
+  {
+    "id": "term-referencing",
+    "group": "copilot",
+    "title": "Code referencing",
+    "short": "Shows where a suggestion matches public code, and its licence.",
+    "body": "When a suggestion matches code in a public repository, code referencing shows you where it came from and under which licence, so you can decide whether you may use it.",
+    "analogy": "A citation at the bottom of an essay.",
+    "match": [
+      "code referencing",
+      "public code"
+    ],
+    "tags": [
+      "public code",
+      "licence"
+    ],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/completions/code-referencing"
+  },
+  {
+    "id": "term-cloud-agent",
+    "group": "copilot",
+    "title": "Cloud agent",
+    "short": "A Copilot agent that works on GitHub’s servers, not your laptop.",
+    "body": "A Copilot agent that works on a task on GitHub’s servers, then opens a pull request for you to review. You hand it a GitHub issue or delegate from VS Code chat.",
+    "analogy": "Sending a task to a colleague in another office, who sends back the finished change.",
+    "match": [
+      "cloud agent"
+    ],
+    "tags": [
+      "cloud agent"
+    ],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+  },
+  {
+    "id": "term-diff",
+    "group": "code",
+    "title": "Diff",
+    "short": "A before-and-after view of a change.",
+    "body": "A view of exactly what changed in a file: removed lines and added lines. Reading the diff is how you check Copilot’s work before you keep it.",
+    "analogy": "Tracked changes in a Word document.",
+    "match": [
+      "diffs?\\b"
+    ],
+    "tags": [
+      "review"
+    ]
+  },
+  {
+    "id": "term-repo",
+    "group": "code",
+    "title": "Repository",
+    "short": "The project folder and its full Git history.",
+    "body": "The project’s folder and its full history of changes, kept by Git and usually shared on GitHub. Often shortened to repo.",
+    "analogy": "A shared drive that remembers every version of every file.",
+    "match": [
+      "repo(s|sitory|sitories)?\\b"
+    ],
+    "tags": [
+      "repo",
+      "git"
+    ]
+  },
+  {
+    "id": "term-commit",
+    "group": "code",
+    "title": "Commit",
+    "short": "A saved snapshot of your changes, with a message.",
+    "body": "A saved snapshot of your changes in Git, with a short message saying why. Small commits make a bad change easy to undo.",
+    "analogy": "A save point in a game.",
+    "match": [
+      "commit(s|ted|ting)?\\b"
+    ],
+    "tags": [
+      "commit",
+      "git"
+    ]
+  },
+  {
+    "id": "term-pr",
+    "group": "code",
+    "title": "Pull request",
+    "short": "A proposed change that teammates review before it’s merged.",
+    "body": "A request to merge your changes into the main code, where teammates (and Copilot code review) can read the diff, comment and approve. Often shortened to PR.",
+    "analogy": "Handing a draft to an editor before it goes to print.",
+    "match": [
+      "[Pp]ull requests?",
+      "\\bPRs?\\b"
+    ],
+    "tags": [
+      "pull request",
+      "pr"
+    ],
+    "caseSensitive": true
+  },
+  {
+    "id": "term-terminal",
+    "group": "code",
+    "title": "Terminal",
+    "short": "The command line inside VS Code.",
+    "body": "The command line built into VS Code, where you run builds, tests and Git. Agents can run commands there too, which is why approvals matter.",
+    "analogy": "Talking to the computer in typed sentences instead of clicks.",
+    "match": [
+      "terminal"
+    ],
+    "tags": [
+      "terminal",
+      "shell"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/chat/inline-chat"
+  },
+  {
+    "id": "term-ci",
+    "group": "code",
+    "title": "CI check",
+    "short": "An automatic build and test run on every pull request.",
+    "body": "An automatic build and test run that GitHub (or another service) does on every push or pull request. A red check means something failed.",
+    "analogy": "A spell-checker that runs before anything is printed.",
+    "match": [
+      "\\bCI\\b",
+      "failing checks?"
+    ],
+    "tags": [
+      "ci",
+      "checks"
+    ],
+    "caseSensitive": true,
+    "sourceUrl": "https://docs.github.com/en/copilot/tutorials/explore-pull-requests"
+  },
+  {
+    "id": "term-merge",
+    "group": "code",
+    "title": "Merge conflict",
+    "short": "Two branches changed the same lines; someone must choose.",
+    "body": "When two branches change the same lines, Git can’t combine them on its own and asks you to choose. Copilot can propose a resolution for you to review.",
+    "analogy": "Two people editing the same paragraph of a shared document.",
+    "match": [
+      "merge conflicts?"
+    ],
+    "tags": [
+      "git",
+      "merge"
+    ],
+    "sourceUrl": "https://code.visualstudio.com/docs/editing/copilot-smart-actions"
+  }
+]

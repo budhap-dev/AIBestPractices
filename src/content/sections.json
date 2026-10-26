@@ -1,0 +1,86 @@
+[
+  {
+    "id": "why",
+    "nav": "Why it matters",
+    "title": "AI can halve the work, or quietly double it",
+    "intro": "Building a feature used to mean hours of searching, boilerplate, tests and debugging. AI coding assistants can take a big share of that away, but only when they are used well. Here is the before, the after and the catch."
+  },
+  {
+    "id": "key-terms",
+    "nav": "Key terms",
+    "title": "New to AI? Start with these words",
+    "intro": "Copilot’s docs talk about context, tokens and agents as if everyone knows them. Here is what each word means in plain English, with an everyday comparison, and what actually happens when you press Enter."
+  },
+  {
+    "id": "mental-model",
+    "nav": "How context works",
+    "title": "Context is a whiteboard, and you pay for every word on it",
+    "intro": "Each time you send a prompt, Copilot re-sends everything in the chat: history, attached files, instruction files and tool output. Copilot now bills in AI credits by tokens, so a crowded chat is slower, less accurate and costs more for the same question."
+  },
+  {
+    "id": "prompt-cost",
+    "nav": "Prompt cost",
+    "title": "A vague prompt snowballs",
+    "intro": "Every follow-up re-sends the whole chat. A vague prompt needs more rounds, and each round carries everything before it, so the cost grows faster than the conversation. Here is the same bug fixed with two different prompts."
+  },
+  {
+    "id": "modes",
+    "nav": "Chat modes",
+    "title": "Pick the right role before you type",
+    "intro": "The Agent picker in the chat input switches between Ask, Plan and Agent. Choosing the right one up front saves a round of rework and a lot of tokens."
+  },
+  {
+    "id": "cheat-sheet",
+    "nav": "Cheat sheet",
+    "title": "Commands, context and shortcuts",
+    "intro": "The ones worth remembering. Type / for commands and # to attach context. Shortcuts follow your OS; switch below."
+  },
+  {
+    "id": "workflow",
+    "nav": "Daily workflow",
+    "title": "A routine for every task",
+    "intro": "Seven steps that keep the context focused and the output reviewable. Use the checklist at the end until the habits stick."
+  },
+  {
+    "id": "dos-donts",
+    "nav": "Do’s and don’ts",
+    "title": "Do’s and don’ts",
+    "intro": "The habits that separate people who get good results cheaply from people who fight Copilot all day."
+  },
+  {
+    "id": "team-memory",
+    "nav": "Team memory",
+    "title": "Write it down once, not in every prompt",
+    "intro": "Instruction files, prompt files and custom agents live in the repo, so the whole team gets the same conventions without retyping them. Keep the always-on files short: they are sent with every request."
+  },
+  {
+    "id": "templates",
+    "nav": "Prompt templates",
+    "title": "Prompts that land first time",
+    "intro": "Copy a template, fill in the brackets, or build your own below. Good prompts name the files, the goal, the limits and how you will know it is done."
+  },
+  {
+    "id": "quiz",
+    "nav": "Test yourself",
+    "title": "What would you do?",
+    "intro": "Short scenarios from everyday work. Pick an answer to see why."
+  },
+  {
+    "id": "security",
+    "nav": "Security",
+    "title": "Stay safe with an agent in your editor",
+    "intro": "Agent mode can read files, run commands and fetch pages. Know what it can do, keep approvals on, and never share what you would not paste into a public issue."
+  },
+  {
+    "id": "beyond",
+    "nav": "Beyond the editor",
+    "title": "Copilot outside the chat panel",
+    "intro": "Smaller features that save time every day, from commit messages to pull request reviews."
+  },
+  {
+    "id": "wrap-up",
+    "nav": "Wrap-up",
+    "title": "Seven habits to take away",
+    "intro": "If you remember nothing else, remember these. Each one links back to the page with the detail."
+  }
+]

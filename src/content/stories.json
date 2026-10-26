@@ -1,0 +1,472 @@
+{
+  "title": {
+    "scene": "desk"
+  },
+  "agenda": {
+    "scene": "map"
+  },
+  "section-why": {
+    "scene": "clock",
+    "hook": "Asha and Ben both use AI every day. Only one of the two gets home on time."
+  },
+  "why-then": {
+    "scene": "clock",
+    "helps": "Asha remembers the two-day features, so Asha knows which parts AI should speed up: the searching, the boilerplate and the first draft of the tests.",
+    "wrong": "Ben assumes AI makes every step faster, even the thinking, and skips the parts that used to catch bugs: careful debugging and a real review."
+  },
+  "diagram-then-now": {
+    "scene": "fork",
+    "helps": "Asha hands the slow, repetitive parts to AI and still checks every change. The feature ships in a day, and nothing comes back.",
+    "wrong": "Ben accepts the first answer to save time. The feature looks done by lunch, then takes two more days of debugging and rework."
+  },
+  "why-research": {
+    "scene": "rocket",
+    "helps": "Asha reads the headline and the small print: the gains came from clear tasks, clear goals and developers checking the results.",
+    "wrong": "Ben quotes the 56% to the team, expects it on every task, then can’t explain why the sprint still slips."
+  },
+  "why-catch": {
+    "scene": "gauge",
+    "helps": "Asha times real work instead of trusting a feeling, and notices when a chat with AI costs more time than it saves.",
+    "wrong": "Ben feels faster with AI, so Ben never checks. In the study, that feeling was wrong by almost 40 percentage points."
+  },
+  "why-factors": {
+    "scene": "target",
+    "helps": "Asha checks five things before every task: focused context, a clear prompt, the right mode, a careful review and an eye on the cost.",
+    "wrong": "Ben relies on the model being clever. Without the five habits, a clever model just produces confident mistakes faster."
+  },
+  "why-handover": {
+    "scene": "fork",
+    "helps": "Asha is on the right side of the line, and it isn’t talent. It is five habits, practised until each one is automatic.",
+    "wrong": "Ben is on the wrong side, working hard and staying late. Nothing in this session is harder than Ben’s current routine."
+  },
+  "section-key-terms": {
+    "scene": "book",
+    "hook": "Ben nodded along when someone said “context window”. Asha asked what it meant."
+  },
+  "diagram-request": {
+    "scene": "chat",
+    "helps": "Asha knows each request sends the whole context again, so Asha keeps it lean, and every answer stays fast and sharp.",
+    "wrong": "Ben thinks Copilot remembers the project between chats. It doesn’t, so Ben’s answers keep missing details that were never sent."
+  },
+  "key-terms-cards-0": {
+    "scene": "book",
+    "helps": "Asha leaves the model on Auto for everyday work and writes a clear prompt. Simple tasks come back quickly and cost little.",
+    "wrong": "Ben picks the biggest reasoning model to rename a variable. It thinks for a minute and costs several times more for the same result."
+  },
+  "key-terms-cards-1": {
+    "scene": "whiteboard",
+    "helps": "Asha attaches only the two files that matter. Fewer tokens on the whiteboard means quicker, sharper answers.",
+    "wrong": "Ben attaches the whole folder “just in case”. The context window fills with noise, and the answer misses the actual bug."
+  },
+  "key-terms-cards-2": {
+    "scene": "terminal",
+    "helps": "Asha starts a fresh chat for each task, so the history holds only what matters and every tool result is relevant.",
+    "wrong": "Ben keeps one chat for the whole week. Every prompt drags along days of history, and the agent keeps mixing up tasks."
+  },
+  "key-terms-cards-3": {
+    "scene": "gauge",
+    "helps": "Asha checks any unfamiliar function against the docs before using it, and glances at the credits used once a day.",
+    "wrong": "Ben trusts a confident answer that calls a function that doesn’t exist, then spends an afternoon and a pile of credits chasing it."
+  },
+  "section-mental-model": {
+    "scene": "whiteboard",
+    "hook": "Ben’s chat has been open since Monday. Asha starts a fresh one for every task."
+  },
+  "mental-model-cards-0": {
+    "scene": "folder",
+    "helps": "Asha attaches one test file with #selection instead of pasting 400 lines. Every prompt starts small and stays on topic.",
+    "wrong": "Ben asks about the API in a chat full of CSS. The old turns ride along, and the answer drifts back to styling."
+  },
+  "mental-model-cards-1": {
+    "scene": "terminal",
+    "helps": "Asha keeps the instruction file to 30 lines and asks the agent for just the summary line of the test run.",
+    "wrong": "Ben’s 600-line instruction file rides along with every prompt, and a full test log follows it. Every question pays for both."
+  },
+  "mental-model-cards-2": {
+    "scene": "gauge",
+    "helps": "Asha glances at the context window control and compacts at half full, while the details are still sharp.",
+    "wrong": "Ben ignores the control until it fills. Automatic compaction kicks in, and the morning’s decisions get fuzzy."
+  },
+  "diagram-context-stack": {
+    "scene": "stack",
+    "helps": "Asha knows the history grows with every prompt, so Asha asks for short replies and starts fresh between tasks.",
+    "wrong": "Ben’s fourth prompt sends nearly four times the tokens of the first, for a one-line question. Ben pays for the whole pile."
+  },
+  "facts-mental-model": {
+    "scene": "bulb",
+    "helps": "Asha drags a screenshot of the broken layout straight into the chat. One picture replaces a paragraph of description.",
+    "wrong": "Ben describes the layout bug in three paragraphs, and Copilot fixes the wrong element twice."
+  },
+  "section-prompt-cost": {
+    "scene": "snowball",
+    "hook": "Asha types one careful prompt. Ben types five quick ones, and pays for every one."
+  },
+  "diagram-snowball": {
+    "scene": "snowball",
+    "helps": "Asha names the files, the symptom and the test. Two rounds, one fix, done before the coffee cools.",
+    "wrong": "Ben types “fix the login bug” and spends five rounds steering. Each round re-sends everything before it, so the cost snowballs."
+  },
+  "diagram-anatomy": {
+    "scene": "target",
+    "helps": "Asha’s prompt has five parts: where, symptom, evidence, limits and done when. Copilot has nothing left to guess.",
+    "wrong": "Ben leaves out the limits. Copilot “helpfully” rewrites three other files, and the review takes longer than the fix."
+  },
+  "section-modes": {
+    "scene": "roles",
+    "hook": "Asha asks before changing anything. Ben lets the agent loose on every question."
+  },
+  "diagram-modes": {
+    "scene": "roles",
+    "helps": "Asha climbs only as high as the task needs: Ask to understand, Plan to agree, Agent to change.",
+    "wrong": "Ben uses Agent for everything, even questions. Simple answers arrive with file edits nobody asked for, and a bigger bill."
+  },
+  "mode-ask": {
+    "scene": "chat",
+    "helps": "Asha uses Ask to understand a tricky hook before touching it. Nothing changes, and the answer costs little.",
+    "wrong": "Ben asks the agent why a component re-renders and gets an answer plus three edited files to undo."
+  },
+  "mode-plan": {
+    "scene": "map",
+    "helps": "Asha asks for a plan, spots a wrong assumption in line three, and fixes it with one sentence.",
+    "wrong": "Ben skips the plan. The agent builds the wrong design across eight files, and Ben throws the whole run away."
+  },
+  "mode-agent": {
+    "scene": "terminal",
+    "helps": "Asha gives the agent one agreed step, the files and the test to run. The change is small and easy to review.",
+    "wrong": "Ben tells the agent “build the feature”. It reads half the project, edits twenty files and burns through credits."
+  },
+  "mode-edit": {
+    "scene": "broom",
+    "helps": "Asha reads an old guide, sees “Edit mode” and simply uses Agent instead.",
+    "wrong": "Ben spends twenty minutes hunting for Edit mode, then switches a hidden setting back on instead of just using Agent."
+  },
+  "section-cheat-sheet": {
+    "scene": "keyboard",
+    "hook": "Ben pastes logs into the chat. Asha types # and picks exactly what Copilot needs."
+  },
+  "diagram-prefixes": {
+    "scene": "keyboard",
+    "helps": "Asha types # and picks #problems instead of pasting errors. Copilot gets exactly the errors, nothing more.",
+    "wrong": "Ben pastes the whole terminal output, warnings and all. Copilot chases a harmless warning instead of the real error."
+  },
+  "cheat-slash-0": {
+    "scene": "broom",
+    "helps": "Asha types /clear between tasks. Each new task starts on a clean whiteboard, cheap and focused.",
+    "wrong": "Ben never clears. The CSS chat from Monday is still steering Thursday’s database answers."
+  },
+  "cheat-slash-1": {
+    "scene": "magnifier",
+    "helps": "Asha selects the function and types /tests. The tests arrive next to the code, ready to review.",
+    "wrong": "Ben describes the function in a paragraph and asks for tests. Copilot guesses which function, and tests the wrong one."
+  },
+  "cheat-slash-2": {
+    "scene": "book",
+    "helps": "Asha runs /init in a new repo and gets a starter instruction file in a minute.",
+    "wrong": "Ben writes the same project rules into every prompt by hand, and forgets a different one each time."
+  },
+  "cheat-slash-3": {
+    "scene": "folder",
+    "helps": "Asha runs /review-changes, the team’s saved prompt, before every pull request. Same checks every time, in one word.",
+    "wrong": "Ben retypes a long review prompt from memory, and quietly drops a different check each time."
+  },
+  "cheat-context-0": {
+    "scene": "magnifier",
+    "helps": "Asha types #problems instead of copying compiler errors. Copilot sees the exact errors, with file and line.",
+    "wrong": "Ben retypes an error message from memory, gets one word wrong, and Copilot fixes a problem that doesn’t exist."
+  },
+  "cheat-context-1": {
+    "scene": "terminal",
+    "helps": "Asha selects the three error lines and uses #terminalSelection. The prompt stays tiny and on point.",
+    "wrong": "Ben copies 1,500 lines of build log into the chat. Every later prompt pays for that log again."
+  },
+  "cheat-context-2": {
+    "scene": "whiteboard",
+    "helps": "Asha knows where the code lives, so Asha attaches the file directly and saves #codebase for genuine unknowns.",
+    "wrong": "Ben uses #codebase for everything. Each search pulls in dozens of snippets and slows every answer."
+  },
+  "cheat-participant-0": {
+    "scene": "roles",
+    "helps": "Asha asks @terminal for a shell command and gets an answer in the right syntax first time.",
+    "wrong": "Ben asks a general chat for a PowerShell command and gets a bash answer to translate by hand."
+  },
+  "cheat-shortcut-0": {
+    "scene": "keyboard",
+    "helps": "Asha opens inline chat on the selection for small edits. Tiny context, instant answer.",
+    "wrong": "Ben opens the full Chat view, explains which function, pastes it in and waits. For a two-line change."
+  },
+  "cheat-shortcut-1": {
+    "scene": "desk",
+    "helps": "Asha accepts a suggestion one word at a time when only half of it is right.",
+    "wrong": "Ben accepts the whole grey suggestion with Tab, then deletes half of it. Every time."
+  },
+  "cheat-setting-0": {
+    "scene": "gauge",
+    "helps": "Asha hovers the context window control before a big question and compacts first if it is past half.",
+    "wrong": "Ben has never noticed the control. The window fills, compaction kicks in, and early decisions quietly disappear."
+  },
+  "cheat-setting-1": {
+    "scene": "chat",
+    "helps": "Asha reopens yesterday’s chat from the sessions list instead of explaining the whole bug again.",
+    "wrong": "Ben starts a new chat and re-explains the bug from scratch, then attaches the same files all over again."
+  },
+  "facts-cheat-sheet": {
+    "scene": "bulb",
+    "helps": "Asha pops chat into its own window on the second monitor. Code on one screen, conversation on the other.",
+    "wrong": "Ben squeezes chat into a narrow sidebar and scrolls back and forth all day."
+  },
+  "section-workflow": {
+    "scene": "loop",
+    "hook": "Asha follows the same seven steps every time. Ben improvises, and it shows."
+  },
+  "diagram-daily-loop": {
+    "scene": "loop",
+    "helps": "Asha runs the same loop for every task and ends with commit, then clear. The next task always starts clean.",
+    "wrong": "Ben skips steps when busy, which is always. Tasks blur into one long chat and one huge commit."
+  },
+  "workflow-steps-0": {
+    "scene": "broom",
+    "helps": "Asha starts each task with /clear, picks the role and attaches two files. Set-up takes ten seconds.",
+    "wrong": "Ben continues yesterday’s chat on Agent with the biggest model. The first answer is slow, expensive and confused."
+  },
+  "workflow-steps-1": {
+    "scene": "target",
+    "helps": "Asha agrees a plan, then builds one step at a time with a test run after each. Problems show up while small.",
+    "wrong": "Ben asks for everything at once. Forty changed files later, the tests fail and nobody knows which change broke the build."
+  },
+  "workflow-steps-2": {
+    "scene": "branch",
+    "helps": "Asha reads every line of the diff, commits small, then clears. Any bad change is one commit away from undone.",
+    "wrong": "Ben skims the diff and commits a day’s work at once. Finding the line that broke production takes the next morning."
+  },
+  "diagram-chat-flow": {
+    "scene": "fork",
+    "helps": "When a chat gets long, Asha asks two questions: has the task changed, and is the window half full? The answers say what to do.",
+    "wrong": "Ben keeps going no matter what. Answers get vaguer, slower and pricier, and Ben blames the model."
+  },
+  "workflow-cards-0": {
+    "scene": "whiteboard",
+    "helps": "Asha compacts with a focus, “keep the API contract”, so the summary keeps what matters.",
+    "wrong": "Ben argues with a confused chat for an hour instead of starting over with one clear prompt."
+  },
+  "facts-workflow": {
+    "scene": "bulb",
+    "helps": "Asha sees the agent heading the wrong way and steers it mid-task, without losing the work so far.",
+    "wrong": "Ben waits for the agent to finish a wrong approach, then asks it to undo everything."
+  },
+  "section-dos-donts": {
+    "scene": "scales",
+    "hook": "Small habits, big difference: here is what Asha does and Ben doesn’t."
+  },
+  "dd-context-cost-0": {
+    "scene": "gauge",
+    "helps": "Asha’s chats are short and focused, so each prompt carries little and costs little.",
+    "wrong": "Ben’s day-long chat means every small question pays for hours of old conversation."
+  },
+  "dd-context-cost-1": {
+    "scene": "whiteboard",
+    "helps": "Asha attaches files directly and lets an everyday model do everyday work.",
+    "wrong": "Ben reaches for #codebase and the biggest model out of habit, and the monthly bill shows it."
+  },
+  "dd-prompting-0": {
+    "scene": "target",
+    "helps": "Asha writes the goal, the limits and “done when” into every prompt, and saves the best ones as prompt files.",
+    "wrong": "Ben types “make it better”. Copilot guesses what better means, and Ben spends three rounds explaining."
+  },
+  "dd-prompting-1": {
+    "scene": "chat",
+    "helps": "Asha asks for replies in five lines. The answers are quicker to read and cheaper to carry forward.",
+    "wrong": "Ben corrects the same mistake a third time in a muddled chat. The wrong attempts keep pulling the answer back."
+  },
+  "dd-reviewing-0": {
+    "scene": "magnifier",
+    "helps": "Asha asks Copilot to run the tests and show the result, then reads the diff before committing.",
+    "wrong": "Ben ships a package name the model invented. The build breaks in CI, in front of the whole team."
+  },
+  "dd-security-0": {
+    "scene": "shield",
+    "helps": "Asha keeps tool approvals on and uses fake data in prompts. Nothing leaves the machine that shouldn’t.",
+    "wrong": "Ben pastes a real customer record to reproduce a bug and turns on global auto-approve. One afternoon, two policy breaches."
+  },
+  "facts-dos-donts": {
+    "scene": "bulb",
+    "helps": "Asha restores a checkpoint to undo a bad edit, and still commits often, because a checkpoint can’t undo commands.",
+    "wrong": "Ben trusts Restore Checkpoint to undo a migration the agent already ran. The files rewind; the database doesn’t."
+  },
+  "section-team-memory": {
+    "scene": "folder",
+    "hook": "Ben types “use our logger” in every prompt. Asha wrote it down once."
+  },
+  "diagram-memory": {
+    "scene": "folder",
+    "helps": "Asha puts the SQL rules in a file that only applies to migrations. React work never pays for those rules.",
+    "wrong": "Ben puts every rule for every language in the always-on file. Each prompt carries pages of rules it doesn’t need."
+  },
+  "team-memory-cards-0": {
+    "scene": "book",
+    "helps": "Asha writes the team’s rules once in a short instruction file. Every teammate’s Copilot follows the rules from then on.",
+    "wrong": "Ben types “use the logger, not console.log” in every prompt, and forgets it on the one that matters."
+  },
+  "team-memory-cards-1": {
+    "scene": "roles",
+    "helps": "Asha creates a read-only reviewer agent. It can search and read but never edit, so reviews stay safe.",
+    "wrong": "Ben keeps AGENTS.md and copilot-instructions.md saying slightly different things. Copilot gets both, and contradicts itself."
+  },
+  "facts-team-memory": {
+    "scene": "bulb",
+    "helps": "Asha shares a Space with the team’s design docs, so everyone’s Copilot starts from the same context.",
+    "wrong": "Ben pastes the same design doc into chat every week, for every teammate who asks."
+  },
+  "section-templates": {
+    "scene": "chat",
+    "hook": "Asha keeps a drawer of prompts that work. Ben starts from a blank box every time."
+  },
+  "tpl-bug": {
+    "scene": "magnifier",
+    "helps": "Asha asks for a failing test first, then the fix. The test proves the bug is really gone.",
+    "wrong": "Ben asks for a fix with no test. The bug returns two weeks later, and a customer spots it first."
+  },
+  "tpl-feature": {
+    "scene": "map",
+    "helps": "Asha’s plan prompt names the users, the musts and the must-nots. The plan arrives in twenty lines and fits the real need.",
+    "wrong": "Ben asks for a feature in one line and gets a plan for a different feature."
+  },
+  "tpl-refactor": {
+    "scene": "loop",
+    "helps": "Asha runs the tests before and after the refactor and compares the summary lines. Same behaviour, cleaner code.",
+    "wrong": "Ben refactors without a test run, and a quiet behaviour change ships with the tidy code."
+  },
+  "tpl-tests": {
+    "scene": "shield",
+    "helps": "Asha names the edge cases that matter. The tests cover expired links, not just the happy path.",
+    "wrong": "Ben asks for “some tests” and gets five copies of the obvious one."
+  },
+  "tpl-explain": {
+    "scene": "book",
+    "helps": "Asha asks for inputs, outputs and side effects in ten lines. Unfamiliar code makes sense in five minutes.",
+    "wrong": "Ben asks “what does this do?” and gets a 600-word essay that buries the one surprising side effect."
+  },
+  "tpl-review": {
+    "scene": "magnifier",
+    "helps": "Asha runs a saved review prompt before every pull request and fixes the two real issues it finds.",
+    "wrong": "Ben opens the pull request straight away. A reviewer finds the same two issues a day later."
+  },
+  "tpl-error": {
+    "scene": "terminal",
+    "helps": "Asha hands over #terminalLastCommand and asks for the root cause. The fix comes with a re-run as proof.",
+    "wrong": "Ben describes the error from memory, gets a fix for a different error, and applies it anyway."
+  },
+  "tpl-commit": {
+    "scene": "branch",
+    "helps": "Asha lets Copilot draft the commit message from #changes, then edits it to say why.",
+    "wrong": "Ben commits with “wip” for the fifth time today. Nobody, including Ben, can tell what changed."
+  },
+  "facts-templates": {
+    "scene": "bulb",
+    "helps": "Asha edits an earlier prompt instead of arguing. VS Code rewinds the changes from that point and tries again.",
+    "wrong": "Ben piles correction on correction, and the bad first attempt stays in the chat, steering every answer."
+  },
+  "section-quiz": {
+    "scene": "question",
+    "hook": "Your turn: what would Asha do?"
+  },
+  "q-switch": {
+    "scene": "question"
+  },
+  "q-long": {
+    "scene": "question"
+  },
+  "q-log": {
+    "scene": "question"
+  },
+  "q-strikes": {
+    "scene": "question"
+  },
+  "q-model": {
+    "scene": "question"
+  },
+  "q-plan": {
+    "scene": "question"
+  },
+  "q-conventions": {
+    "scene": "question"
+  },
+  "q-secret": {
+    "scene": "question"
+  },
+  "q-exclusion": {
+    "scene": "question"
+  },
+  "q-review": {
+    "scene": "question"
+  },
+  "section-security": {
+    "scene": "shield",
+    "hook": "Ben clicked “always allow” to save time. Asha still reads every command."
+  },
+  "diagram-approval": {
+    "scene": "gate",
+    "helps": "Asha reads each command before allowing it, and allows routine ones for the session only.",
+    "wrong": "Ben switched on global auto-approve on day one. The agent then ran a clean-up script on the wrong folder."
+  },
+  "security-cards-0": {
+    "scene": "shield",
+    "helps": "Asha swaps the real API key for a placeholder before asking for help. Copilot fixes the loading code just the same.",
+    "wrong": "Ben pastes the .env file to show the problem. The key has to be rotated, and the incident report takes longer than the bug."
+  },
+  "security-cards-1": {
+    "scene": "gate",
+    "helps": "Asha keeps the agent away from excluded folders and checks the licence when code referencing flags a match.",
+    "wrong": "Ben assumes content exclusion protects the payments folder in Agent mode. It doesn’t."
+  },
+  "facts-security": {
+    "scene": "bulb",
+    "helps": "Asha installs MCP servers only from sources the team trusts, after reading what each one can do.",
+    "wrong": "Ben installs the first MCP server a blog recommends. It can run any code on Ben’s laptop."
+  },
+  "section-beyond": {
+    "scene": "cloud",
+    "hook": "Copilot drafts Asha’s commit messages. Ben still types “fix stuff”."
+  },
+  "beyond-cards-0": {
+    "scene": "terminal",
+    "helps": "Asha describes a shell command in plain words in the terminal and checks it before running.",
+    "wrong": "Ben searches the web for the right flags, copies a command from a forum and runs it unchecked."
+  },
+  "beyond-cards-1": {
+    "scene": "cloud",
+    "helps": "Asha assigns a small, well-described issue to the cloud agent and reviews its pull request over coffee.",
+    "wrong": "Ben hands the cloud agent a vague issue called “improve performance” and gets back a pull request nobody can review."
+  },
+  "facts-beyond": {
+    "scene": "bulb",
+    "helps": "Asha clicks Explain error on a failing check and has the cause in a minute.",
+    "wrong": "Ben scrolls through 3,000 lines of CI log looking for the one red line."
+  },
+  "section-wrap-up": {
+    "scene": "flag",
+    "hook": "Seven habits separate Asha’s week from Ben’s."
+  },
+  "summary": {
+    "scene": "flag",
+    "helps": "Asha picks one habit a week, starting with /clear between tasks. By the end of the month, all seven are automatic.",
+    "wrong": "Ben tries to change everything at once on Monday, and is back to old habits by Wednesday."
+  },
+  "end": {
+    "scene": "chat"
+  },
+  "one-more-thing": {
+    "scene": "sparkle"
+  },
+  "live-numbers": {
+    "scene": "sparkle"
+  },
+  "live-controls": {
+    "scene": "desk"
+  },
+  "build-prompt": {
+    "scene": "rocket"
+  },
+  "thanks": {
+    "scene": "flag"
+  }
+}

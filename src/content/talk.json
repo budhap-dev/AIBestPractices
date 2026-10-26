@@ -1,0 +1,32 @@
+{
+  "label": "Short talk",
+  "note": "The slides to present live, by slide id. Everything else stays in the full deck and the guide for people to read afterwards. Slides play in deck order, whatever the order here.",
+  "slides": [
+    "title",
+    "diagram-then-now",
+    "why-research",
+    "why-catch",
+    "why-factors",
+    "why-handover",
+    "diagram-request",
+    "diagram-context-stack",
+    "diagram-snowball",
+    "diagram-anatomy",
+    "diagram-modes",
+    "diagram-prefixes",
+    "diagram-daily-loop",
+    "diagram-chat-flow",
+    "diagram-memory",
+    "q-switch",
+    "q-log",
+    "q-review",
+    "diagram-approval",
+    "summary",
+    "end",
+    "one-more-thing",
+    "live-numbers",
+    "live-controls",
+    "build-prompt",
+    "thanks"
+  ]
+}

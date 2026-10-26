@@ -1,0 +1,38 @@
+[
+  {
+    "id": "mode-ask",
+    "title": "Ask",
+    "body": "Answers questions and researches your codebase without changing anything.",
+    "useWhen": "you want to understand code, compare approaches or check an idea before touching files.",
+    "example": "#selection Why does this hook re-render on every keystroke? Answer in under 5 lines.",
+    "tags": ["ask", "mode", "question"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/agent-types/local-agents"
+  },
+  {
+    "id": "mode-plan",
+    "title": "Plan",
+    "body": "Researches the task and writes an implementation plan for you to review before any code changes. You can also start it with /plan.",
+    "useWhen": "the change touches more than one or two files, or you are not sure of the approach yet.",
+    "example": "/plan Add rate limiting to the public API routes. List the files you would change and the risks. No code yet.",
+    "tags": ["plan", "mode", "design"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/agent-types/local-agents"
+  },
+  {
+    "id": "mode-agent",
+    "title": "Agent",
+    "body": "Implements changes: edits files, runs commands and checks the result. The most capable role and the most expensive, because every file read and tool run adds tokens.",
+    "useWhen": "you know what you want, the plan is agreed and you can name the files and how to check it worked.",
+    "example": "Implement step 1 of the plan only. Run npm test afterwards and show me the summary line.",
+    "tags": ["agent", "mode", "edit", "tools"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/agent-types/local-agents"
+  },
+  {
+    "id": "mode-edit",
+    "title": "Edit (deprecated)",
+    "body": "Edit mode is deprecated and hidden by default. Use Agent for multi-file edits. If you really need it back, set chat.editMode.hidden to false.",
+    "useWhen": "you are following an older guide that mentions it. Translate “Edit mode” to Agent.",
+    "example": "Setting: \"chat.editMode.hidden\": false",
+    "tags": ["edit", "mode", "deprecated"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/reference/ai-settings"
+  }
+]

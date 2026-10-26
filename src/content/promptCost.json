@@ -1,0 +1,36 @@
+{
+  "note": "Illustrative input tokens for one bug fix in Agent mode, counting one model call per round. Real agent rounds make several calls, so real totals are higher.",
+  "instructions": 2000,
+  "scenarios": [
+    {
+      "id": "vague",
+      "label": "Vague prompt",
+      "prompt": "fix the login bug",
+      "outcome": "Five rounds, two wrong fixes and a broken sign-up form.",
+      "rounds": [
+        { "you": "fix the login bug", "copilot": "Searches the project, reads nine files and changes the form validation.", "added": 24000, "reply": 1500 },
+        { "you": "no, it’s the token [pastes a 2,000-line log]", "copilot": "Rewrites the login handler.", "added": 30000, "reply": 1500 },
+        { "you": "still failing", "copilot": "Runs the whole test suite and reads the output.", "added": 14000, "reply": 2000 },
+        { "you": "it’s in the refresh code, try again", "copilot": "Re-reads the auth files and edits refresh.ts.", "added": 9000, "reply": 2000 },
+        { "you": "now sign-up is broken", "copilot": "Reverts the validation change from round 1.", "added": 6000, "reply": 1500 }
+      ]
+    },
+    {
+      "id": "focused",
+      "label": "Focused prompt",
+      "prompt": "#refresh.ts #refresh.test.ts refreshToken() logs users out after 15 minutes…",
+      "outcome": "Two rounds, one fix, tests passing.",
+      "rounds": [
+        { "you": "The focused prompt below", "copilot": "Reads the two files and #problems, then fixes the expiry check.", "added": 7000, "reply": 1200 },
+        { "you": "Run the auth tests and show the result.", "copilot": "Runs the auth tests: all pass.", "added": 2500, "reply": 600 }
+      ]
+    }
+  ],
+  "anatomy": [
+    { "kind": "where", "label": "Where", "text": "#refresh.ts #refresh.test.ts" },
+    { "kind": "symptom", "label": "Symptom", "text": "refreshToken() logs users out after 15 minutes, even when the refresh token is still valid." },
+    { "kind": "evidence", "label": "Evidence", "text": "The failing test is in #problems." },
+    { "kind": "limits", "label": "Limits", "text": "Change only refresh.ts and keep its exports." },
+    { "kind": "done", "label": "Done when", "text": "the auth tests pass. Reply in 5 lines." }
+  ]
+}

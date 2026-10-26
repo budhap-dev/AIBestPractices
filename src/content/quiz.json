@@ -1,0 +1,110 @@
+[
+  {
+    "id": "q-switch",
+    "scenario": "You’ve spent an hour fixing a CSS bug with Copilot. Now you need help writing a SQL migration.",
+    "options": [
+      { "text": "Ask in the same chat; Copilot already knows the project.", "correct": false },
+      { "text": "Type /clear and start the migration in a fresh chat.", "correct": true },
+      { "text": "Use /compact, then ask about the migration.", "correct": false }
+    ],
+    "why": "Unrelated work gets a new chat. The CSS history would be re-sent and billed with every migration prompt and could steer answers. /compact is for staying on the same task.",
+    "tags": ["clear", "new chat"]
+  },
+  {
+    "id": "q-long",
+    "scenario": "Same feature, two hours in. The context window control is at 70% and you still need the API decisions you made early on.",
+    "options": [
+      { "text": "Keep going; VS Code will compact automatically.", "correct": false },
+      { "text": "/compact keep the API decisions and open questions", "correct": true },
+      { "text": "/clear and start over from scratch.", "correct": false }
+    ],
+    "why": "A focused /compact keeps what you choose. Automatic compaction keeps whatever it guesses, and /clear would lose decisions you still need.",
+    "tags": ["compact", "context window"]
+  },
+  {
+    "id": "q-log",
+    "scenario": "Your build failed with a 1,500-line log in the terminal. How do you get help?",
+    "options": [
+      { "text": "Copy the whole log into the chat.", "correct": false },
+      { "text": "Select the error lines and use #terminalSelection, or #terminalLastCommand.", "correct": true },
+      { "text": "Describe the error from memory.", "correct": false }
+    ],
+    "why": "Reference the output instead of pasting it, and select only the relevant lines when you can. The whole log costs tokens on every later prompt too.",
+    "tags": ["logs", "terminal"]
+  },
+  {
+    "id": "q-strikes",
+    "scenario": "Copilot has got the same function wrong twice, even after your corrections.",
+    "options": [
+      { "text": "Correct it a third time, more firmly.", "correct": false },
+      { "text": "Switch to the largest model and keep going in this chat.", "correct": false },
+      { "text": "/clear and write a better prompt with the constraint it kept missing.", "correct": true }
+    ],
+    "why": "The wrong attempts are now in the context and keep pulling it back. A fresh chat with a clearer prompt usually fixes it, and costs less than a big model on a polluted history.",
+    "tags": ["two strikes", "clear"]
+  },
+  {
+    "id": "q-model",
+    "scenario": "You need to rename a prop across five components.",
+    "options": [
+      { "text": "Pick the most powerful reasoning model to be safe.", "correct": false },
+      { "text": "Leave the model on Auto, or use a rename refactor (F2) if the editor can do it.", "correct": true },
+      { "text": "Use Plan mode first.", "correct": false }
+    ],
+    "why": "Routine work doesn’t need an expensive model, and the editor’s own rename is free and exact. Save big models and planning for hard problems.",
+    "tags": ["model", "auto", "cost"]
+  },
+  {
+    "id": "q-plan",
+    "scenario": "You need to add audit logging across eight services and you’re not sure of the approach.",
+    "options": [
+      { "text": "Agent: “Add audit logging everywhere.”", "correct": false },
+      { "text": "Plan first: list files, order and risks, then implement step by step in Agent.", "correct": true },
+      { "text": "Ask: “What is audit logging?”", "correct": false }
+    ],
+    "why": "Fixing a plan costs a few lines; undoing a wide, wrong agent run costs a lot of tokens and time.",
+    "tags": ["plan", "agent"]
+  },
+  {
+    "id": "q-conventions",
+    "scenario": "You type “use our logger, not console.log” in nearly every prompt.",
+    "options": [
+      { "text": "Add it to .github/copilot-instructions.md once.", "correct": true },
+      { "text": "Keep typing it; it works.", "correct": false },
+      { "text": "Write a 500-line style guide into the instructions file.", "correct": false }
+    ],
+    "why": "Instruction files are applied automatically. But they’re sent on every request, so keep them short and to the point.",
+    "tags": ["instructions", "memory"]
+  },
+  {
+    "id": "q-secret",
+    "scenario": "A test fails because of a bad API key. You want Copilot’s help.",
+    "options": [
+      { "text": "Paste the .env file so it can see the key.", "correct": false },
+      { "text": "Share the error and the code that reads the key, with the value replaced by a placeholder.", "correct": true },
+      { "text": "Turn on auto-approve so the agent can read .env itself.", "correct": false }
+    ],
+    "why": "Secrets never go into prompts. Copilot doesn’t need the value to fix how it’s loaded.",
+    "tags": ["secrets", "security"]
+  },
+  {
+    "id": "q-exclusion",
+    "scenario": "Your admin has set content exclusion for /payments. You run Agent mode on a nearby feature.",
+    "options": [
+      { "text": "The agent can’t read /payments, so you don’t need to think about it.", "correct": false },
+      { "text": "Content exclusion isn’t supported in Agent mode, so keep the agent away from /payments and watch its file reads.", "correct": true }
+    ],
+    "why": "GitHub’s docs say content exclusion doesn’t apply in Edit and Agent modes. Don’t rely on it there.",
+    "tags": ["content exclusion", "agent", "security"]
+  },
+  {
+    "id": "q-review",
+    "scenario": "The agent finished and says “All tests pass.”",
+    "options": [
+      { "text": "Keep the changes and commit.", "correct": false },
+      { "text": "Check the test output yourself, read the diff, then commit.", "correct": true }
+    ],
+    "why": "Trust, but verify. Read every change and see the real test result before it goes anywhere.",
+    "tags": ["review", "tests"]
+  }
+]

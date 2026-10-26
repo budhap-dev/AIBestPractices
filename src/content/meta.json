@@ -1,0 +1,17 @@
+{
+  "product": "Copilot Field Guide",
+  "headline": "Get more from GitHub Copilot, every day.",
+  "tagline": "Short, practical habits for GitHub Copilot in VS Code: get answers faster, spend less, and ship code you understand and trust.",
+  "closing": "Keep the guide open next to your editor, and come back to the cheat sheet whenever you need it.",
+  "company": "ABC Company",
+  "owner": "Budhaditya Pandit (Budha)",
+  "endUsers": "ABC Company developers who use GitHub Copilot in VS Code, from first-week users to daily power users. They keep the guide open next to their editor as an everyday reference.",
+  "demoAudience": "ABC Company engineering teams in a live session: developers, tech leads and engineering managers with mixed Copilot experience.",
+  "readingWordsPerMinute": 200,
+  "lastReviewed": "15 Oct 2026",
+  "policyUrl": "",
+  "copilotVersionNote": "Checked against the VS Code and GitHub Copilot docs on 14 Oct 2026. Copilot changes monthly: items marked “Needs verification” are listed in VERIFY.md.",
+  "repoUrl": "https://github.com/budhap-dev/AIBestPractices",
+  "buildPrompt": "prompts/build-this-app.md",
+  "siteUrl": ""
+}

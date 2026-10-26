@@ -1,0 +1,132 @@
+{
+  "feature": "Add a password reset flow to a web app",
+  "then": [
+    {
+      "id": "then-search",
+      "title": "Searching forums and docs",
+      "body": "Which library? How does its API work? Why does the example not compile? One search result at a time.",
+      "tags": ["before", "research"]
+    },
+    {
+      "id": "then-boilerplate",
+      "title": "Writing boilerplate",
+      "body": "Routes, forms, validation and an email template. Necessary, repetitive and slow to type.",
+      "tags": ["before", "boilerplate"]
+    },
+    {
+      "id": "then-tests",
+      "title": "Writing tests",
+      "body": "Happy path, expired links, unknown emails. The first thing to slip when a deadline is close.",
+      "tags": ["before", "tests"]
+    },
+    {
+      "id": "then-debug",
+      "title": "Debugging",
+      "body": "Read the stack trace, add logging, run it again, repeat.",
+      "tags": ["before", "debugging"]
+    },
+    {
+      "id": "then-review",
+      "title": "Review and rework",
+      "body": "A colleague reads the change, asks good questions, and you fix what they find.",
+      "tags": ["before", "review"]
+    }
+  ],
+  "thenNote": "Roughly two working days for one ordinary feature.",
+  "research": [
+    {
+      "id": "find-peng",
+      "figure": "56%",
+      "title": "faster on a set task",
+      "body": "In GitHub’s 2022 controlled experiment, developers with Copilot wrote an HTTP server in JavaScript 56% faster than developers without it.",
+      "source": "Peng et al., 2023",
+      "sourceUrl": "https://arxiv.org/abs/2302.06590",
+      "tags": ["research", "speed"]
+    },
+    {
+      "id": "find-cui",
+      "figure": "26%",
+      "title": "more tasks finished at work",
+      "body": "Field trials with 4,867 developers at Microsoft, Accenture and a Fortune 100 company found about 26% more completed tasks with Copilot.",
+      "source": "Cui, Demirer et al., 2025",
+      "sourceUrl": "https://www.microsoft.com/en-us/research/?p=1148213",
+      "tags": ["research", "throughput"]
+    },
+    {
+      "id": "find-google",
+      "figure": "21%",
+      "title": "less time on a complex task",
+      "body": "In Google’s internal trial with 96 engineers, AI features cut the time spent on a complex enterprise task by about 21%.",
+      "source": "Paradis et al., 2024",
+      "sourceUrl": "https://arxiv.org/abs/2410.12944",
+      "tags": ["research", "speed"]
+    }
+  ],
+  "catch": [
+    {
+      "id": "find-metr",
+      "figure": "19%",
+      "title": "slower, while feeling faster",
+      "body": "Experienced open-source developers using early-2025 AI assistants took 19% longer on real issues in their own projects, yet believed afterwards that they had been 20% faster.",
+      "source": "METR, July 2025 (a 2026 follow-up with newer assistants points to a speed-up, but METR calls that data unreliable)",
+      "sourceUrl": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/",
+      "tags": ["research", "slower"]
+    },
+    {
+      "id": "find-dora",
+      "figure": "−7.2%",
+      "title": "delivery stability",
+      "body": "In the 2024 DORA survey, every 25% more AI adoption went with 7.2% lower delivery stability and 1.5% lower delivery throughput.",
+      "source": "DORA, Accelerate State of DevOps 2024",
+      "sourceUrl": "https://services.google.com/fh/files/misc/2024_final_dora_report.pdf",
+      "tags": ["research", "stability"]
+    },
+    {
+      "id": "find-so",
+      "figure": "46%",
+      "title": "don’t trust the output",
+      "body": "84% of developers use or plan to use AI assistants, but more of them distrust the accuracy of what it produces (46%) than trust it (33%).",
+      "source": "Stack Overflow Developer Survey 2025",
+      "sourceUrl": "https://survey.stackoverflow.co/2025/ai",
+      "tags": ["research", "trust"]
+    }
+  ],
+  "factors": [
+    {
+      "id": "factor-context",
+      "section": "mental-model",
+      "title": "Focused context",
+      "body": "Give it the two files that matter, not the whole project or a pasted log.",
+      "tags": ["context"]
+    },
+    {
+      "id": "factor-prompt",
+      "section": "prompt-cost",
+      "title": "Clear prompts",
+      "body": "Say where, what is wrong, the limits and what done looks like.",
+      "tags": ["prompt"]
+    },
+    {
+      "id": "factor-mode",
+      "section": "modes",
+      "title": "The right mode",
+      "body": "Ask to understand, Plan to design, Agent to change.",
+      "tags": ["mode"]
+    },
+    {
+      "id": "factor-review",
+      "section": "dos-donts",
+      "title": "Reviewing the output",
+      "body": "Read every change and see the tests pass before you keep it.",
+      "tags": ["review"]
+    },
+    {
+      "id": "factor-cost",
+      "section": "workflow",
+      "title": "Keeping the cost down",
+      "body": "A fresh chat per task and an everyday model for everyday work.",
+      "tags": ["cost"]
+    }
+  ],
+  "handover": "The rest of this session is how to be on the right side of that line."
+}

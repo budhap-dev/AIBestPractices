@@ -1,0 +1,2363 @@
+/* ---------- Presenter mode ----------
+   A 16:9 frame scales with the window; every size inside it is in em, set from the frame width. */
+html.presenting,
+html.presenting body {
+  overflow: hidden;
+}
+
+.presenter {
+  --t: 0.7s;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.22, 0.8, 0.24, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  color: var(--text);
+  /* The stage behind the slide, like the grey canvas around a slide in a presentation app. */
+  --deck-bg:
+    radial-gradient(70vw 60vh at 92% -8%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(60vw 50vh at -8% 108%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    color-mix(in srgb, var(--text) 7%, var(--bg-base));
+  background: var(--deck-bg);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.presenter:focus {
+  outline: none;
+}
+
+.presenter.is-idle {
+  cursor: none;
+}
+
+/* ---------- Bars ---------- */
+.presenter__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px clamp(12px, 2.5vw, 24px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.presenter.is-idle .presenter__bar--top:not(:focus-within),
+.presenter.is-idle .presenter__nav:not(:focus-within) {
+  opacity: 0;
+}
+
+.presenter.is-idle .presenter__bar--top:not(:focus-within) {
+  transform: translateY(-8px);
+}
+
+.presenter__where {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0;
+  min-width: 0;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.presenter__product {
+  font-weight: 700;
+}
+
+.presenter__section {
+  color: var(--accent);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.presenter__section::before {
+  content: '/ ';
+  color: var(--text-3);
+}
+
+.presenter__tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Design and transition pickers: one pill that sits with the icon buttons. */
+.presenter__pickers {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-right: 4px;
+  padding: 0 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.presenter__select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding-left: 10px;
+  border-radius: 999px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.presenter__select + .presenter__select {
+  margin-left: 5px;
+}
+
+.presenter__select + .presenter__select::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--border);
+}
+
+.presenter__select:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.presenter__select:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.presenter__select svg {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.presenter__select-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+.presenter__select select {
+  appearance: none;
+  height: 32px;
+  padding: 0 26px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.presenter__select select:focus {
+  outline: none;
+}
+
+.presenter__select option {
+  color: var(--text);
+  background: var(--surface);
+  font-weight: 400;
+}
+
+.presenter__chevron {
+  position: absolute;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+}
+
+.presenter__exit {
+  margin-left: 6px;
+}
+
+.presenter__exit kbd {
+  font-size: 0.65rem;
+  padding: 0 4px;
+}
+
+.presenter__bar--top {
+  top: 0;
+}
+
+.presenter__bar--bottom {
+  bottom: 0;
+  justify-content: flex-end;
+  padding-top: 6px;
+  padding-bottom: 14px;
+}
+
+.presenter__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.4s;
+}
+
+.presenter__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.presenter__time svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.presenter__left {
+  color: var(--text-3);
+}
+
+.presenter__count {
+  min-width: 64px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.presenter__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.presenter__progress-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 60%, transparent), var(--accent));
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.presenter__tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--bg);
+  opacity: 0.7;
+}
+
+/* ---------- Stage & frame ---------- */
+.presenter__stage {
+  position: absolute;
+  inset: 0;
+  container: stage / size;
+  perspective: 1800px;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  animation-duration: var(--t);
+  animation-timing-function: var(--ease);
+  animation-fill-mode: both;
+}
+
+.slide--leave {
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide--enter {
+  z-index: 1;
+}
+
+.slide__frame {
+  position: relative;
+  /* Leave room for the toolbar above and the controls below, like the canvas around a slide. */
+  width: min(calc(100cqw - 48px), calc((100cqh - 116px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container: frame / inline-size;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--slide-bg);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.08),
+    0 18px 50px -12px rgb(0 0 0 / 0.35);
+}
+
+.slide__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 3.6cqw 5cqw 4.6cqw;
+  font-size: max(12px, 1.8cqw);
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+/* Portrait phones and narrow windows: drop the 16:9 frame and let the slide scroll. */
+@media (max-aspect-ratio: 1/1), (max-width: 640px) {
+  .slide__frame {
+    width: 100cqw;
+    height: 100cqh;
+    aspect-ratio: auto;
+  }
+
+  .slide__inner {
+    justify-content: flex-start;
+    padding: 64px 16px 72px;
+    font-size: clamp(15px, 4.4cqw, 20px);
+  }
+
+  .slide__center {
+    margin-block: auto;
+  }
+
+  .deck-cards,
+  .deck-compare,
+  .deck-table__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .deck-table__row {
+    gap: 0.2em;
+  }
+
+  .agenda {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
+
+  .slide__hero {
+    font-size: 2.2em;
+  }
+
+  .presenter__product,
+  .presenter__pickers,
+  .presenter__left {
+    display: none;
+  }
+}
+
+/* ---------- Transitions between slides ---------- */
+[data-transition='slide'] .slide--enter {
+  animation-name: slide-in;
+}
+
+[data-transition='slide'] .slide--leave {
+  animation-name: slide-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(calc(var(--dir) * 100%));
+  }
+}
+
+@keyframes slide-out {
+  to {
+    transform: translateX(calc(var(--dir) * -100%));
+  }
+}
+
+[data-transition='fade'] .slide--enter {
+  animation-name: fade-in;
+}
+
+[data-transition='fade'] .slide--leave {
+  animation-name: fade-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+[data-transition='zoom'] .slide--enter {
+  animation-name: zoom-in;
+}
+
+[data-transition='zoom'] .slide--leave {
+  animation-name: zoom-out;
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(calc(1 - var(--dir) * 0.2));
+  }
+}
+
+@keyframes zoom-out {
+  to {
+    opacity: 0;
+    transform: scale(calc(1 + var(--dir) * 0.25));
+  }
+}
+
+[data-transition='flip'] .slide--enter {
+  animation-name: flip-in;
+}
+
+[data-transition='flip'] .slide--leave {
+  animation-name: flip-out;
+}
+
+@keyframes flip-in {
+  from {
+    transform: rotateY(calc(var(--dir) * -180deg)) scale(0.8);
+  }
+  50% {
+    transform: rotateY(calc(var(--dir) * -90deg)) scale(0.8);
+  }
+}
+
+@keyframes flip-out {
+  50% {
+    transform: rotateY(calc(var(--dir) * 90deg)) scale(0.8);
+  }
+  to {
+    transform: rotateY(calc(var(--dir) * 180deg)) scale(0.8);
+  }
+}
+
+/* Transitions that cover or uncover a slide need it to be opaque. */
+:is([data-transition='page'], [data-transition='wipe'], [data-transition='circle'], [data-transition='cube']) .slide {
+  background: var(--deck-bg);
+}
+
+/* Page turn: going forward, the current page lifts from its left edge and turns over the new one.
+   Going back, the previous page turns back down on top. */
+[data-transition='page'] .slide {
+  transform-origin: left center;
+  animation-duration: 0.9s;
+  animation-timing-function: cubic-bezier(0.45, 0.05, 0.3, 1);
+}
+
+[data-transition='page'][data-dir='next'] .slide--leave {
+  z-index: 2;
+  animation-name: page-turn-away;
+}
+
+[data-transition='page'][data-dir='next'] .slide--enter {
+  animation-name: page-uncover;
+}
+
+[data-transition='page'][data-dir='prev'] .slide--enter {
+  z-index: 2;
+  animation-name: page-turn-back;
+}
+
+[data-transition='page'][data-dir='prev'] .slide--leave {
+  animation-name: page-cover;
+}
+
+@keyframes page-turn-away {
+  0% {
+    transform: none;
+    box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  }
+  45% {
+    box-shadow: 40px 0 80px rgb(0 0 0 / 0.3);
+  }
+  100% {
+    transform: rotateY(-180deg);
+    box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  }
+}
+
+@keyframes page-turn-back {
+  0% {
+    transform: rotateY(-180deg);
+    box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  }
+  55% {
+    box-shadow: 40px 0 80px rgb(0 0 0 / 0.3);
+  }
+  100% {
+    transform: none;
+    box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  }
+}
+
+@keyframes page-uncover {
+  from {
+    filter: brightness(0.75);
+  }
+}
+
+@keyframes page-cover {
+  to {
+    filter: brightness(0.75);
+  }
+}
+
+/* Cube: the slides are two faces of a box that turns. */
+[data-transition='cube'] .slide--enter {
+  transform-origin: calc(50% - var(--dir) * 50%) center;
+  animation-name: cube-in;
+}
+
+[data-transition='cube'] .slide--leave {
+  transform-origin: calc(50% + var(--dir) * 50%) center;
+  animation-name: cube-out;
+}
+
+@keyframes cube-in {
+  from {
+    transform: translateX(calc(var(--dir) * 100%)) rotateY(calc(var(--dir) * 90deg));
+    filter: brightness(0.7);
+  }
+}
+
+@keyframes cube-out {
+  to {
+    transform: translateX(calc(var(--dir) * -100%)) rotateY(calc(var(--dir) * -90deg));
+    filter: brightness(0.7);
+  }
+}
+
+/* Wipe: the new slide is revealed edge to edge, the old one drifts back a little. */
+[data-transition='wipe'] .slide--enter {
+  animation-name: wipe-in;
+}
+
+[data-transition='wipe'] .slide--leave {
+  animation-name: drift-out;
+}
+
+@keyframes wipe-in {
+  from {
+    clip-path: inset(0 calc(max(0, -1 * var(--dir)) * 100%) 0 calc(max(0, var(--dir)) * 100%));
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes drift-out {
+  to {
+    transform: translateX(calc(var(--dir) * -12%));
+    opacity: 0.4;
+  }
+}
+
+/* Circle: the new slide opens from the centre like a camera iris. */
+[data-transition='circle'] .slide--enter {
+  animation-name: circle-in;
+}
+
+[data-transition='circle'] .slide--leave {
+  animation-name: settle-out;
+}
+
+@keyframes circle-in {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+
+@keyframes settle-out {
+  to {
+    transform: scale(0.94);
+    opacity: 0.5;
+  }
+}
+
+/* Rise: slides move vertically, like scrolling a document. */
+[data-transition='rise'] .slide--enter {
+  animation-name: rise-in;
+}
+
+[data-transition='rise'] .slide--leave {
+  animation-name: rise-out;
+}
+
+@keyframes rise-in {
+  from {
+    transform: translateY(calc(var(--dir) * 100%));
+    opacity: 0;
+  }
+}
+
+@keyframes rise-out {
+  to {
+    transform: translateY(calc(var(--dir) * -100%));
+    opacity: 0;
+  }
+}
+
+/* ---------- Reveal: intro elements animate in, fragments wait for a key press ---------- */
+.slide--enter .intro {
+  animation: intro-in 0.8s var(--ease-out) both;
+  animation-delay: calc(var(--d, 0) * 110ms + 250ms);
+}
+
+.intro:nth-child(2) {
+  --d: 1;
+}
+
+.intro:nth-child(3) {
+  --d: 2;
+}
+
+.intro:nth-child(4) {
+  --d: 3;
+}
+
+.intro:nth-child(n + 5) {
+  --d: 4;
+}
+
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.9em);
+    filter: blur(6px);
+  }
+}
+
+.frag {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.9em) scale(0.98);
+  filter: blur(6px);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.6s var(--ease-out),
+    filter 0.5s var(--ease-out),
+    background-color 0.4s,
+    border-color 0.4s,
+    visibility 0s 0.6s;
+}
+
+.frag.is-in {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  filter: none;
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.6s var(--ease-out),
+    filter 0.5s var(--ease-out),
+    background-color 0.4s,
+    border-color 0.4s,
+    visibility 0s;
+}
+
+/* ---------- Slide typography ---------- */
+.slide__head {
+  margin-bottom: 1.1em;
+}
+
+.slide__eyebrow {
+  margin: 0 0 0.5em;
+  font-size: 0.65em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.slide__part {
+  color: var(--text-3);
+}
+
+.slide__title {
+  margin: 0;
+  font-size: 1.75em;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  max-width: 28ch;
+}
+
+.slide__hero {
+  margin: 0 0 0.4em;
+  font-size: 3em;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  max-width: 18ch;
+  background: linear-gradient(120deg, var(--text) 35%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.slide__lede {
+  margin: 0 0 0.8em;
+  font-size: 1em;
+  color: var(--text-2);
+  max-width: 46ch;
+}
+
+.slide__audience {
+  margin: 0;
+  padding: 0.5em 0.8em;
+  max-width: 46ch;
+  font-size: 0.72em;
+  color: var(--text-2);
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 70%, transparent);
+  border-radius: 0 0.4em 0.4em 0;
+}
+
+.slide__audience strong {
+  color: var(--accent);
+  margin-right: 0.3em;
+}
+
+.agenda__time {
+  margin-top: -0.6em;
+  font-size: 0.8em;
+}
+
+.slide__by {
+  margin: 1.2em 0 0;
+  font-size: 0.65em;
+  color: var(--text-3);
+}
+
+.slide__tag {
+  align-self: flex-start;
+  margin-bottom: 0.8em;
+  font-size: 0.6em;
+}
+
+.slide kbd {
+  font-size: 0.6em;
+}
+
+.slide :not(pre) > code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Inline commands, #context, paths and settings inside slide text. */
+.slide .rich-code {
+  padding: 0.05em 0.35em;
+  border-radius: 0.3em;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.88em;
+  font-weight: 500;
+}
+
+.slide .rich-kbd {
+  font-size: 0.8em;
+  padding: 0.05em 0.4em;
+  vertical-align: 0.05em;
+}
+
+.slide__title .rich-code {
+  font-weight: 700;
+}
+
+.deck-step .deck-step__try {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: 0.35em 0 0;
+  padding: 0.35em 0.6em;
+  max-width: 70ch;
+  border: 1px solid var(--border);
+  border-radius: 0.4em;
+  background: var(--code-bg);
+  font-size: 0.68em;
+}
+
+.deck-step__try-label {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  color: var(--text-3);
+}
+
+.deck-step__try code {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text);
+}
+
+/* ---------- Section divider ---------- */
+.divider {
+  position: relative;
+}
+
+.divider__num {
+  display: block;
+  margin-bottom: 0.1em;
+  font-size: 5em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.slide--section .slide__hero {
+  font-size: 2.6em;
+  max-width: 22ch;
+}
+
+/* ---------- Agenda ---------- */
+.agenda {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, auto);
+  gap: 0.5em 2em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agenda li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8em;
+  padding: 0.45em 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.agenda__num {
+  font-family: var(--mono);
+  font-size: 0.7em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.agenda__nav {
+  font-size: 1.05em;
+  font-weight: 600;
+}
+
+/* ---------- Cards ---------- */
+.deck-cards {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 0.9em;
+  align-items: start;
+}
+
+.deck-card {
+  padding: 0.9em 1em;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 0.6em;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: 0 0.6em 1.6em rgb(0 0 0 / 0.08);
+}
+
+.deck-card h3 {
+  margin: 0 0 0.4em;
+  font-size: 0.95em;
+}
+
+.deck-card p {
+  margin: 0 0 0.5em;
+  font-size: 0.8em;
+  color: var(--text-2);
+}
+
+.deck-card ul {
+  margin: 0 0 0.6em;
+  padding-left: 1.1em;
+  font-size: 0.8em;
+}
+
+.deck-card__kicker {
+  font-weight: 700;
+  font-size: 0.6em !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent) !important;
+}
+
+.deck-card__code {
+  display: inline-block;
+  margin-bottom: 0.6em;
+  font-size: 0.6em;
+}
+
+.deck-card__example {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 0.6em;
+  color: var(--text-3) !important;
+}
+
+/* ---------- Detail (modes, templates) ---------- */
+.detail__point {
+  margin: 0 0 0.8em;
+  padding: 0.6em 0.9em;
+  font-size: 0.85em;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 0.4em 0.4em 0;
+  max-width: 50ch;
+}
+
+.detail__code .code {
+  margin: 0;
+  max-width: 54em;
+  font-size: 0.85em;
+  box-shadow: 0 0.6em 1.6em rgb(0 0 0 / 0.08);
+}
+
+.detail__code .code pre {
+  font-size: 0.95em;
+}
+
+/* ---------- Table (cheat sheet) ---------- */
+.deck-table {
+  margin: 0;
+}
+
+.deck-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr);
+  gap: 1.2em;
+  align-items: baseline;
+  padding: 0.55em 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.deck-table dt code {
+  font-size: 0.8em;
+  color: var(--accent);
+}
+
+.deck-table dd {
+  margin: 0;
+  font-size: 0.82em;
+  color: var(--text-2);
+}
+
+.deck-table__action {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.deck-table__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+  margin-top: 0.2em;
+}
+
+/* ---------- Steps ---------- */
+.deck-steps {
+  display: grid;
+  gap: 0.6em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deck-step {
+  display: grid;
+  grid-template-columns: 1.8em minmax(0, 1fr);
+  gap: 0.8em;
+  align-items: start;
+}
+
+.deck-step__num {
+  display: grid;
+  place-items: center;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 800;
+  font-size: 0.9em;
+}
+
+.deck-step h3 {
+  margin: 0.15em 0 0.15em;
+  font-size: 0.95em;
+}
+
+.deck-step p {
+  margin: 0;
+  font-size: 0.8em;
+  color: var(--text-2);
+  max-width: 70ch;
+}
+
+/* ---------- Do / don't ---------- */
+.deck-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2em;
+}
+
+.deck-compare__col h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 0 0.3em;
+  font-size: 1em;
+}
+
+.deck-compare__col .dd__icon {
+  width: 1.4em;
+  height: 1.4em;
+  font-size: 0.75em;
+}
+
+.deck-compare__col--dont .dd__icon {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.deck-compare ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deck-compare li {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  gap: 0.1em;
+  padding: 0.4em 0 0.4em 0.7em;
+  border-left: 3px solid var(--good);
+  margin-bottom: 0.35em;
+}
+
+.deck-compare__col--dont li {
+  border-left-color: var(--bad);
+}
+
+.deck-compare li strong {
+  font-size: 0.85em;
+}
+
+.deck-compare li span {
+  font-size: 0.72em;
+  color: var(--text-2);
+}
+
+/* ---------- Quiz ---------- */
+.deck-quiz {
+  display: grid;
+  gap: 0.5em;
+  margin: 0 0 0.8em;
+  padding: 0;
+  list-style: none;
+}
+
+.deck-quiz li {
+  display: flex;
+  gap: 0.7em;
+  align-items: center;
+  padding: 0.6em 0.8em;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5em;
+  background: var(--surface);
+  font-size: 0.88em;
+}
+
+.deck-quiz__letter {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 0.35em;
+  background: var(--surface-2);
+  font-weight: 700;
+  font-size: 0.9em;
+  transition: background-color 0.4s, color 0.4s;
+}
+
+.deck-quiz li.is-correct {
+  border-color: var(--good);
+  background: var(--good-soft);
+  animation: correct 0.6s var(--ease-out);
+}
+
+.deck-quiz li.is-correct .deck-quiz__letter {
+  background: var(--good);
+  color: var(--surface);
+}
+
+.deck-quiz li.is-dim {
+  opacity: 0.45;
+}
+
+@keyframes correct {
+  40% {
+    transform: scale(1.03);
+  }
+}
+
+.deck-quiz__why {
+  margin: 0;
+  padding: 0.7em 0.9em;
+  border-radius: 0.5em;
+  background: var(--accent-soft);
+  font-size: 0.82em;
+}
+
+/* ---------- Blank screen ---------- */
+.presenter__blank {
+  position: absolute;
+  inset: -200px;
+  z-index: 5;
+  background: #000;
+  animation: fade-in 0.3s both;
+}
+
+/* ---------- Overlays ---------- */
+.presenter__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: auto;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  animation: overlay-in 0.3s var(--ease-out) both;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.presenter__overlay--overview {
+  display: block;
+  padding: clamp(16px, 3vw, 40px);
+}
+
+.overview__head {
+  position: sticky;
+  top: calc(-1 * clamp(16px, 3vw, 40px));
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 0 auto 16px;
+  padding: 12px 0;
+  max-width: 1400px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+}
+
+.overview__head h2 {
+  margin: 0;
+}
+
+.overview__head .btn {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.overview li {
+  animation: rise 0.45s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 14ms);
+}
+
+.overview__card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.overview__card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.overview__card--section,
+.overview__card--title,
+.overview__card--end {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.overview__card.is-current {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.overview__total {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.overview__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.overview__time {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.overview__num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.overview__section {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.overview__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.presenter__help {
+  width: min(100%, 480px);
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.25);
+  animation: pop 0.25s var(--ease-out);
+}
+
+.presenter__help h2 {
+  font-size: 1.25rem;
+}
+
+.presenter__help dl {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.presenter__help dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.presenter__help dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.presenter__help dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-2);
+}
+
+/* Reduced motion: slides and points swap instantly. */
+/* Key words on a section's opening slide, linking the deck to the glossary. */
+.divider__terms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+  margin: 1em 0 0;
+  font-size: 0.62em;
+}
+
+.divider__terms-label {
+  margin-right: 0.3em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.divider__term {
+  padding: 0.15em 0.7em;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 50%, var(--border));
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.slide--diagram .slide__diagram:has(.dg-req) {
+  font-size: 0.7em;
+}
+
+/* Size the steps from the slide frame, so a landscape slide keeps five across. */
+.slide .dg-req {
+  container-type: normal;
+}
+
+.slide .dg-req__packed li,
+.slide .dg-req__tok {
+  transition-delay: calc(var(--j) * 90ms + 150ms);
+}
+
+/* ---------- Diagrams, facts and wrap-up in the deck ---------- */
+/* Each press of → reveals one part, so nothing waits on a stagger here. */
+.slide .dg-r,
+.slide .dg-r *,
+.slide .dg-r::before {
+  transition-delay: 0s;
+  animation-delay: 0s;
+}
+
+.slide__diagram {
+  font-size: 0.6em;
+  min-height: 0;
+}
+
+.slide .dg-snow__cols {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2em;
+}
+
+.slide .dg-snow__col {
+  padding: 0.8em 1em;
+}
+
+.slide .dg-snow__rows {
+  gap: 0.35em;
+}
+
+.slide .dg-snow__row {
+  grid-template-columns: 1.6em minmax(0, 1fr);
+}
+
+.slide .dg-snow__round {
+  grid-row: span 2;
+}
+
+.slide .dg-snow__total strong {
+  display: inline;
+  font-size: 1.5em;
+}
+
+.slide .dg-snow__total {
+  margin-top: 0.6em;
+  padding-top: 0.5em;
+}
+
+.slide .dg-snow__verdict {
+  margin-top: 0.6em;
+}
+
+.slide .dg__note {
+  margin-top: 0.35em;
+}
+
+.slide--diagram .slide__diagram:has(.dg-anatomy),
+.slide--diagram .slide__diagram:has(.dg-modes),
+.slide--diagram .slide__diagram:has(.dg-flow),
+.slide--diagram .slide__diagram:has(.dg-memory) {
+  font-size: 0.78em;
+}
+
+.slide .dg-memory .table-wrap {
+  overflow: visible;
+}
+
+/* Table padding scales with the slide, so the diagram fits a small frame as well as a large one. */
+.slide .dg-memory :is(th, td) {
+  padding: 0.4em 0.7em;
+}
+
+.deck-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14em), 1fr));
+  gap: 1.2em;
+}
+
+.deck-fact {
+  position: relative;
+  padding: 1.6em 1.3em 1.1em;
+  border-radius: 0.6em;
+  border: 2px dashed color-mix(in srgb, var(--dg-4) 60%, var(--border));
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--dg-4) 16%, transparent), transparent 60%),
+    radial-gradient(120% 140% at 100% 100%, color-mix(in srgb, var(--dg-5) 12%, transparent), transparent 60%),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.deck-fact.is-in {
+  rotate: -0.5deg;
+}
+
+.deck-fact:nth-child(2).is-in {
+  rotate: 0.6deg;
+}
+
+.deck-fact h3 {
+  margin: 0 0 0.3em;
+  font-size: 1.05em;
+}
+
+.deck-fact p {
+  margin: 0;
+  font-size: 0.82em;
+  color: var(--text-2);
+}
+
+.deck-fact__icon {
+  position: absolute;
+  top: -0.9em;
+  left: 1em;
+  display: grid;
+  place-items: center;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  border: 2px solid var(--dg-4);
+  background: color-mix(in srgb, var(--dg-4) 25%, var(--surface));
+}
+
+.deck-fact__icon svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.deck-fact.is-in .deck-fact__icon {
+  animation: deck-bulb 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+@keyframes deck-bulb {
+  from {
+    scale: 0;
+    rotate: -40deg;
+  }
+}
+
+.deck-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6em 1.4em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78em;
+}
+
+.deck-summary li {
+  display: flex;
+  gap: 0.7em;
+  align-items: flex-start;
+}
+
+.deck-summary li:nth-child(5n + 1) {
+  --c: var(--dg-1);
+}
+
+.deck-summary li:nth-child(5n + 2) {
+  --c: var(--dg-2);
+}
+
+.deck-summary li:nth-child(5n + 3) {
+  --c: var(--dg-3);
+}
+
+.deck-summary li:nth-child(5n + 4) {
+  --c: var(--dg-4);
+}
+
+.deck-summary li:nth-child(5n) {
+  --c: var(--dg-5);
+}
+
+.deck-summary__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  border: 2px solid var(--c);
+  background: color-mix(in srgb, var(--c) 18%, var(--surface));
+  font-weight: 800;
+}
+
+.deck-summary strong {
+  display: block;
+}
+
+.deck-summary li span:last-child {
+  font-size: 0.85em;
+  color: var(--text-2);
+}
+
+@media (max-aspect-ratio: 1/1), (max-width: 640px) {
+  .slide .dg-snow__cols,
+  .deck-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slide__diagram,
+  .slide--diagram .slide__diagram:has(.dg-anatomy),
+  .slide--diagram .slide__diagram:has(.dg-modes),
+  .slide--diagram .slide__diagram:has(.dg-flow),
+  .slide--diagram .slide__diagram:has(.dg-memory) {
+    font-size: 0.8em;
+  }
+
+  .slide .dg-memory .table-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frag,
+  .frag.is-in {
+    filter: none;
+    transform: none;
+  }
+}
+
+/* ---------- Slide designs ----------
+   Like a presentation template: each design sets the slide background, a title accent and the footer.
+   Backgrounds stay close to the surface colour so text keeps its contrast in light and dark. */
+.presenter {
+  --slide-bg: var(--surface);
+}
+
+/* Classic: a clean slide with an accent bar along the top. */
+[data-design='classic'] .slide__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.7cqw;
+  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 35%, var(--slide-bg)));
+}
+
+[data-design='classic'] .slide__frame--section,
+[data-design='classic'] .slide__frame--title,
+[data-design='classic'] .slide__frame--thanks {
+  --slide-bg: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+
+/* Bold: a strong accent band down the left and a large shape in the corner. */
+[data-design='bold'] .slide__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1.6cqw;
+  background: var(--accent);
+}
+
+[data-design='bold'] .slide__frame::after {
+  content: '';
+  position: absolute;
+  right: -14cqw;
+  bottom: -22cqw;
+  width: 42cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+[data-design='bold'] .slide__frame--section::after,
+[data-design='bold'] .slide__frame--title::after,
+[data-design='bold'] .slide__frame--thanks::after {
+  right: -6cqw;
+  bottom: -10cqw;
+  width: 56cqw;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+[data-design='bold'] .slide__eyebrow {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.25em 0.7em;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* Paper: warm, lightly ruled, with a stitched border. */
+[data-design='paper'] .slide__frame {
+  --slide-bg: color-mix(in srgb, #f5e7c8 22%, var(--surface));
+  background:
+    repeating-linear-gradient(180deg, transparent 0 2.95cqw, color-mix(in srgb, var(--accent) 9%, transparent) 2.95cqw 3cqw),
+    var(--slide-bg);
+}
+
+[data-design='paper'] .slide__frame::before {
+  content: '';
+  position: absolute;
+  inset: 1.2cqw;
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+[data-design='paper'] .slide__title,
+[data-design='paper'] .slide__hero {
+  font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  letter-spacing: -0.01em;
+}
+
+/* Blueprint: a fine grid with corner marks. */
+[data-design='blueprint'] .slide__frame {
+  --slide-bg: color-mix(in srgb, var(--accent) 4%, var(--surface));
+  background:
+    linear-gradient(color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 2.5cqw 2.5cqw,
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 2.5cqw 2.5cqw,
+    var(--slide-bg);
+}
+
+[data-design='blueprint'] .slide__frame::before,
+[data-design='blueprint'] .slide__frame::after {
+  content: '';
+  position: absolute;
+  width: 4cqw;
+  height: 4cqw;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+[data-design='blueprint'] .slide__frame::before {
+  top: 1.4cqw;
+  left: 1.4cqw;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+[data-design='blueprint'] .slide__frame::after {
+  right: 1.4cqw;
+  bottom: 1.4cqw;
+  border-left: 0;
+  border-top: 0;
+}
+
+[data-design='blueprint'] .slide__eyebrow,
+[data-design='blueprint'] .slide__foot {
+  font-family: var(--mono);
+}
+
+/* Spotlight: soft accent light from the corners. */
+[data-design='spotlight'] .slide__frame {
+  background:
+    radial-gradient(60% 70% at 100% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, color-mix(in srgb, var(--dg-5) 12%, transparent), transparent 70%),
+    var(--slide-bg);
+}
+
+/* ---------- Slide master: picture, footer, new words and story ---------- */
+.slide__art {
+  position: absolute;
+  z-index: 2;
+  top: 2.8cqw;
+  right: 4cqw;
+  width: 14cqw;
+  height: auto;
+  pointer-events: none;
+}
+
+.has-art .slide__head,
+.has-art > .newwords {
+  padding-right: 15cqw;
+}
+
+/* Cover-style slides: the picture is large and sits beside the words. */
+:is(.slide__frame--title, .slide__frame--section, .slide__frame--end, .slide__frame--statement, .slide__frame--thanks) .slide__art {
+  top: 50%;
+  right: 5cqw;
+  width: 30cqw;
+  translate: 0 -50%;
+}
+
+:is(.slide__frame--title, .slide__frame--section, .slide__frame--end, .slide__frame--statement, .slide__frame--thanks) .slide__inner {
+  padding-right: 38cqw;
+}
+
+.slide__frame--statement .has-art .slide__head {
+  padding-right: 0;
+}
+
+.slide__foot {
+  position: absolute;
+  z-index: 2;
+  left: 5cqw;
+  right: 5cqw;
+  bottom: 1.5cqw;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  font-size: max(9px, 1cqw);
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.newwords {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: -0.5em 0 0.8em;
+  font-size: 0.6em;
+}
+
+.newwords__label {
+  flex: none;
+  margin: 0;
+  font-size: 0.8em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.newwords ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 0.45em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.newword {
+  max-width: 100%;
+  padding: 0.25em 0.65em;
+  border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
+  border-radius: 0.5em;
+  background: color-mix(in srgb, var(--accent-soft) 75%, var(--slide-bg));
+}
+
+.newword dfn {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.newword dfn::after {
+  content: ':';
+}
+
+.newword__short {
+  margin-left: 0.35em;
+  color: var(--text-2);
+}
+
+.slide__center .newwords,
+.divider .newwords {
+  margin: 0.7em 0 0;
+}
+
+.divider__hook {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.82em;
+  font-style: italic;
+  color: var(--text-2);
+}
+
+/* Asha and Ben: the story sits at the foot of every teaching slide, and the content centres above it. */
+.has-story > :first-child {
+  margin-top: auto;
+}
+
+/* The daily loop becomes a wide oval on a slide, so it spends width rather than height. */
+.dg-loop--wide .dg-loop__ring {
+  width: 100%;
+  aspect-ratio: 3.4;
+}
+
+.slide .dg-loop__centre {
+  inset: 34% 38%;
+  border-radius: 999px;
+}
+
+.slide .dg-loop__back {
+  margin-top: 0.4em;
+}
+
+/* The request flow on a slide: a little less air, so it fits with its new words and story. */
+.slide .dg-req__step {
+  padding: 0.7em 0.8em;
+}
+
+.slide .dg-req__loop {
+  margin-top: 0.6em;
+  padding: 0.35em 0.9em;
+}
+
+.slide .dg-req__packed {
+  gap: 0.2em;
+}
+
+.slide .dg-req__packed li {
+  padding-block: 0.12em;
+}
+
+/* Diagram slides need every line they can get. */
+.slide--diagram .slide__head {
+  margin-bottom: 0.9em;
+}
+
+/* Nothing on a slide may squash: a box that shrinks below its content spills over the story. */
+.slide__inner > * {
+  flex-shrink: 0;
+}
+
+.story {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4em;
+  margin-top: auto;
+  padding-top: 1em;
+  font-size: 0.6em;
+  line-height: 1.35;
+}
+
+.story__side {
+  display: flex;
+  gap: 0.7em;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0.6em 0.9em;
+  border-radius: 0.6em;
+  border-left: 0.3em solid var(--c);
+  background: color-mix(in srgb, var(--c) 10%, var(--slide-bg));
+}
+
+.story__side--helps {
+  --c: var(--dg-3);
+}
+
+.story__side--wrong {
+  --c: var(--dg-2);
+}
+
+.story__label {
+  display: block;
+  margin-bottom: 0.1em;
+  font-size: 0.85em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--good);
+}
+
+.story__side--wrong .story__label {
+  color: var(--bad);
+}
+
+.story .avatar {
+  flex: none;
+  width: 2.6em;
+  height: 2.6em;
+}
+
+/* ---------- Research figures ---------- */
+.deck-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));
+  gap: 1em;
+}
+
+.deck-stat {
+  padding: 0.8em 1em;
+  border: 1px solid var(--border);
+  border-top: 0.25em solid var(--c);
+  border-radius: 0.5em;
+  background: var(--surface);
+}
+
+.deck-stats--up {
+  --c: var(--dg-3);
+  --figure: var(--good);
+}
+
+.deck-stats--down {
+  --c: var(--dg-2);
+  --figure: var(--bad);
+}
+
+.deck-stat .deck-stat__figure {
+  margin: 0;
+  font-size: 2.2em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--figure);
+}
+
+.deck-stat h3 {
+  margin: 0.2em 0 0.3em;
+  font-size: 0.85em;
+}
+
+.deck-stat p {
+  margin: 0;
+  font-size: 0.66em;
+  color: var(--text-2);
+}
+
+.deck-stat .deck-stat__source {
+  margin-top: 0.5em;
+  font-size: 0.56em;
+  color: var(--text-3);
+}
+
+/* ---------- Statement ---------- */
+.statement {
+  margin: 0;
+  padding: 0.1em 0 0.1em 0.7em;
+  max-width: 22ch;
+  border-left: 0.14em solid var(--accent);
+  font-size: 1.7em;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- The finale ---------- */
+.slide__frame--teaser {
+  --slide-bg: #07090c;
+  color: #f4f6f8;
+}
+
+.slide__frame--teaser::before,
+.slide__frame--teaser::after {
+  display: none;
+}
+
+.teaser .slide__eyebrow {
+  color: #9fb3c8;
+}
+
+.teaser__title {
+  max-width: none;
+  background: none;
+  color: #fff;
+  font-size: 4em;
+}
+
+.slide--enter .teaser__title {
+  animation: teaser-in 2.4s var(--ease-out) both;
+}
+
+@keyframes teaser-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.25em;
+    filter: blur(12px);
+  }
+}
+
+/* The finale's frame dissolves: the slide peels off and the app shows through. */
+.slide__frame--live {
+  --slide-bg: transparent;
+  box-shadow: none;
+  outline: 2px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: -2px;
+}
+
+.slide__frame--live::before,
+.slide__frame--live::after {
+  display: none;
+}
+
+.peel {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  /* Dressed as the "One more thing…" slide that comes just before. */
+  background: #07090c;
+  color: #fff;
+  box-shadow: 0 20px 60px -10px rgb(0 0 0 / 0.5);
+  transform-origin: 0 0;
+  pointer-events: none;
+  animation: peel 1.8s cubic-bezier(0.55, 0, 0.3, 1) 0.2s both;
+}
+
+.peel::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  aspect-ratio: 1;
+  background: linear-gradient(315deg, transparent 50%, #2a2f38 50%, #12161c);
+  box-shadow: -6px -6px 18px rgb(0 0 0 / 0.2);
+  animation: curl 1.8s cubic-bezier(0.55, 0, 0.3, 1) 0.2s both;
+}
+
+.peel__title {
+  font-size: max(24px, 7.2cqw);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+@keyframes peel {
+  0%,
+  25% {
+    transform: none;
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-12%, 110%) rotate(-24deg);
+    opacity: 0;
+  }
+}
+
+@keyframes curl {
+  0% {
+    width: 0;
+  }
+  25% {
+    width: 22cqw;
+  }
+  100% {
+    width: 40cqw;
+  }
+}
+
+.live-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8em;
+  margin: 0.4em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.live-stat {
+  display: grid;
+  gap: 0.1em;
+  padding: 0.7em 1em;
+  border: 1px solid var(--border);
+  border-radius: 0.6em;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.live-stat strong {
+  font-size: 2.2em;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.live-stat > span {
+  font-size: 0.7em;
+  color: var(--text-2);
+}
+
+.live-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.6em;
+  align-items: center;
+  font-size: 0.7em;
+}
+
+.live-controls fieldset {
+  margin: 0 0 0.9em;
+  padding: 0;
+  border: 0;
+}
+
+.live-controls legend,
+.live-controls__selects span {
+  display: block;
+  margin-bottom: 0.35em;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.live-controls__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+
+.live-controls .swatch,
+.live-controls .seg button,
+.live-controls select {
+  font-size: 0.85em;
+}
+
+.live-controls__selects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.live-controls select {
+  min-width: 9em;
+  padding: 0.35em 0.5em;
+}
+
+.live-controls__qr,
+.prompt-finale__qr {
+  display: grid;
+  justify-items: center;
+  gap: 0.4em;
+  margin: 0;
+  text-align: center;
+}
+
+.live-controls__qr .qr {
+  width: 11em;
+}
+
+.live-controls__qr figcaption,
+.prompt-finale__qr figcaption {
+  max-width: 12em;
+  font-size: 0.8em;
+  color: var(--text-2);
+}
+
+.qr {
+  display: block;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.prompt-finale {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2em;
+  align-items: center;
+}
+
+.prompt-finale__link {
+  font-size: 0.75em;
+}
+
+.prompt-finale__url {
+  margin: 0.5em 0 0;
+  font-family: var(--mono);
+  font-size: 0.55em;
+  color: var(--text-3);
+  overflow-wrap: anywhere;
+}
+
+.prompt-finale__qr .qr {
+  width: 10em;
+}
+
+.prompt-finale__qr figcaption {
+  font-size: 0.6em;
+}
+
+/* Phones and portrait windows: the slide fills the screen, so the picture shrinks and the story stacks. */
+@media (max-aspect-ratio: 1/1), (max-width: 640px) {
+  .slide__frame {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .slide__art,
+  :is(.slide__frame--title, .slide__frame--section, .slide__frame--end, .slide__frame--statement, .slide__frame--thanks) .slide__art {
+    top: 56px;
+    right: 12px;
+    width: 22cqw;
+    translate: none;
+  }
+
+  :is(.slide__frame--title, .slide__frame--section, .slide__frame--end, .slide__frame--statement, .slide__frame--thanks) .slide__inner {
+    padding-right: 16px;
+  }
+
+  .has-art .slide__head,
+  .has-art > .newwords,
+  .slide__center {
+    padding-right: 20cqw;
+  }
+
+  /* Repeated here because the grid rules for these come later in the file and would win. */
+  .deck-cards,
+  .deck-compare,
+  .deck-stats,
+  .deck-table__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .story,
+  .live-stats,
+  .live-controls,
+  .prompt-finale {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slide__foot {
+    display: none;
+  }
+
+  .teaser__title {
+    font-size: 2.6em;
+  }
+}
+
+/* The picture and footer arrive once the slide has peeled away. */
+.has-peel .slide__art,
+.has-peel .slide__foot {
+  animation: art-after-peel 0.5s var(--ease-out) 1.9s both;
+}
+
+@keyframes art-after-peel {
+  from {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peel {
+    display: none;
+  }
+
+  .has-peel .slide__art,
+  .has-peel .slide__foot {
+    animation: none;
+  }
+
+  .slide--enter .teaser__title {
+    animation: none;
+  }
+}
+
+/* ---------- Short talk ---------- */
+.overview__note {
+  max-width: 1400px;
+  margin: -8px auto 14px;
+  font-size: 0.9rem;
+  color: var(--text-2);
+}
+
+/* Slides the short talk skips stay in the overview, quieter, one click from the full deck. */
+.overview__card.is-skipped {
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-2);
+}
+
+.overview__card.is-skipped .overview__title {
+  font-weight: 500;
+}
+
+.overview__card.is-skipped:hover {
+  color: var(--text);
+}
+
+.overview__full {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Mid-size windows: the pickers drop their icons and the bar drops the product name, keeping the section. */
+@media (max-width: 1000px) {
+  .presenter__select-icon,
+  .presenter__product {
+    display: none;
+  }
+
+  .presenter__section::before {
+    content: none;
+  }
+}

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "sec-secrets",
+    "title": "Never share secrets or customer data",
+    "body": "Prompts, attached files and tool output leave your machine. Replace keys, tokens, passwords and personal data with placeholders. Keep .env files out of the agent’s reach.",
+    "tags": ["secrets", "privacy", "data"]
+  },
+  {
+    "id": "sec-permissions",
+    "title": "Keep tool approvals on",
+    "body": "The permissions control in the chat input sets how much the agent can do without asking. Default (manual) permissions show each tool call and terminal command first. Approve for a session rather than “always”.",
+    "tags": ["permissions", "approval", "agent", "autopilot"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals"
+  },
+  {
+    "id": "sec-autoapprove",
+    "title": "Be careful with auto-approve",
+    "body": "chat.tools.global.autoApprove approves every tool, and VS Code warns that it disables critical security protections. The terminal allow list (chat.tools.terminal.autoApprove) is a convenience, not a security boundary.",
+    "tags": ["auto-approve", "terminal", "settings"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals"
+  },
+  {
+    "id": "sec-sandbox",
+    "title": "Sandbox terminal commands",
+    "body": "chat.agent.sandbox.enabled limits the file system and network access of commands the agent runs. It is in preview on macOS, Linux and WSL2.",
+    "tags": ["sandbox", "terminal", "agent"],
+    "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals"
+  },
+  {
+    "id": "sec-exclusion",
+    "title": "Content exclusion has gaps",
+    "body": "Business and Enterprise admins can exclude files from Copilot. It covers inline suggestions and chat, but not Edit or Agent modes, so the agent may still read excluded files.",
+    "tags": ["content exclusion", "admin", "agent"],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/context/content-exclusion"
+  },
+  {
+    "id": "sec-public-code",
+    "title": "Public code matches and licences",
+    "body": "The “Suggestions matching public code” setting blocks matches or allows them with references. When allowed, code referencing shows the source repository and licence so you can decide whether you may use it.",
+    "tags": ["public code", "licence", "code referencing"],
+    "sourceUrl": "https://docs.github.com/en/copilot/concepts/completions/code-referencing"
+  }
+]

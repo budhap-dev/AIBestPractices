@@ -1,0 +1,59 @@
+{
+  "teaser": {
+    "eyebrow": "Before you go",
+    "title": "One more thing…"
+  },
+  "live": {
+    "eyebrow": "Plot twist",
+    "title": "This was never a slide deck",
+    "body": "It is a web app. Every number below is counted from the app itself, right now.",
+    "stats": [
+      {
+        "id": "slides",
+        "label": "slides in the full deck"
+      },
+      {
+        "id": "diagrams",
+        "label": "animated diagrams"
+      },
+      {
+        "id": "pictures",
+        "label": "hand-coded pictures"
+      },
+      {
+        "id": "content",
+        "label": "content files"
+      },
+      {
+        "id": "terms",
+        "label": "glossary terms"
+      },
+      {
+        "id": "facts",
+        "label": "sourced facts"
+      }
+    ]
+  },
+  "controls": {
+    "eyebrow": "It’s live",
+    "title": "Go on, change it",
+    "body": "Pick a colour, a slide design or a transition. The whole app changes, not just this slide.",
+    "colour": "Colour",
+    "appearance": "Appearance",
+    "design": "Slide design",
+    "transition": "Transition",
+    "phone": "Open the guide on your phone"
+  },
+  "prompt": {
+    "eyebrow": "And the best part",
+    "title": "One prompt can build this app",
+    "body": "The stack, the content, every section, presenter mode, the diagrams, the themes and the accessibility rules, written down as a single prompt you can read and reuse.",
+    "link": "Read the prompt on GitHub",
+    "scan": "Scan to read the prompt"
+  },
+  "thanks": {
+    "eyebrow": "That’s a wrap",
+    "title": "Thank you for your patience",
+    "body": "Pick one habit and try it this week. The guide will be here whenever you need it."
+  }
+}

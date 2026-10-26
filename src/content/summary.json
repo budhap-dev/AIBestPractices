@@ -1,0 +1,51 @@
+[
+  {
+    "id": "take-fresh",
+    "section": "mental-model",
+    "title": "One task, one chat",
+    "body": "Every prompt re-sends the whole chat. /clear between tasks, and /compact with a focus when the window fills.",
+    "tags": ["clear", "compact", "context"]
+  },
+  {
+    "id": "take-specific",
+    "section": "prompt-cost",
+    "title": "Be specific the first time",
+    "body": "A vague prompt needs more rounds, and every round carries all the ones before it.",
+    "tags": ["prompt", "tokens"]
+  },
+  {
+    "id": "take-role",
+    "section": "modes",
+    "title": "Pick the role before you type",
+    "body": "Ask to understand, Plan to design, Agent to change. Leave the model on Auto for routine work.",
+    "tags": ["ask", "plan", "agent", "auto"]
+  },
+  {
+    "id": "take-reference",
+    "section": "cheat-sheet",
+    "title": "Reference, don’t paste",
+    "body": "Attach the files that matter with #. Use #problems and #terminalLastCommand instead of walls of text.",
+    "tags": ["context", "paste"]
+  },
+  {
+    "id": "take-steps",
+    "section": "workflow",
+    "title": "Plan, then build in small checked steps",
+    "body": "Correct the plan before any code changes, then have Copilot run the tests after each step.",
+    "tags": ["plan", "tests"]
+  },
+  {
+    "id": "take-memory",
+    "section": "team-memory",
+    "title": "Write conventions down once",
+    "body": "Short instruction files and shared prompt files beat retyping the same rules in every prompt.",
+    "tags": ["instructions", "prompt files"]
+  },
+  {
+    "id": "take-own",
+    "section": "security",
+    "title": "You own every line",
+    "body": "Read each diff like a colleague’s pull request, keep tool approvals on, and never paste secrets.",
+    "tags": ["review", "security", "approvals"]
+  }
+]
