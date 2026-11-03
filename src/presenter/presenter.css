@@ -1202,7 +1202,10 @@ html.presenting body {
   margin: 0;
 }
 
-.overview__head .btn {
+.overview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -2187,8 +2190,7 @@ html.presenting body {
   padding: 0.35em 0.5em;
 }
 
-.live-controls__qr,
-.prompt-finale__qr {
+.live-controls__qr {
   display: grid;
   justify-items: center;
   gap: 0.4em;
@@ -2200,8 +2202,7 @@ html.presenting body {
   width: 11em;
 }
 
-.live-controls__qr figcaption,
-.prompt-finale__qr figcaption {
+.live-controls__qr figcaption {
   max-width: 12em;
   font-size: 0.8em;
   color: var(--text-2);
@@ -2216,29 +2217,108 @@ html.presenting body {
 
 .prompt-finale {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2em;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 1.5em;
   align-items: center;
 }
 
-.prompt-finale__link {
-  font-size: 0.75em;
+/* The whole prompt, readable in place: it scrolls inside the slide and copies in one click. */
+.prompt-finale__code .code {
+  margin: 0;
+  font-size: 0.62em;
+  box-shadow: 0 0.6em 1.6em rgb(0 0 0 / 0.08);
 }
 
-.prompt-finale__url {
-  margin: 0.5em 0 0;
-  font-family: var(--mono);
-  font-size: 0.55em;
-  color: var(--text-3);
+.prompt-finale__code pre {
+  max-height: 17em;
+  overflow: auto;
+  font-size: 1.05em;
   overflow-wrap: anywhere;
 }
 
-.prompt-finale__qr .qr {
-  width: 10em;
+/* ---------- The plot twist ---------- */
+.reveal {
+  display: grid;
+  gap: 0.08em;
 }
 
-.prompt-finale__qr figcaption {
-  font-size: 0.6em;
+.reveal__not {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-3);
+}
+
+/* A hand-drawn strike, so the struck word still reads. */
+.reveal__not::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 52%;
+  height: 0.12em;
+  border-radius: 0.1em;
+  background: var(--bad);
+  rotate: -4deg;
+  transform-origin: left center;
+}
+
+.reveal__is {
+  justify-self: start;
+  background: linear-gradient(100deg, var(--accent) 0%, var(--accent-strong) 35%, var(--accent) 50%, var(--accent-strong) 65%, var(--accent) 100%);
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 1.35em;
+  letter-spacing: -0.03em;
+}
+
+/* On the way forward the peel plays first, then the strike, then the answer, then the rest. */
+.has-peel .reveal__not {
+  animation: not-fade 0.5s var(--ease-out) 2.1s both;
+}
+
+.has-peel .reveal__not::after {
+  animation: strike 0.45s cubic-bezier(0.6, 0, 0.3, 1) 2.1s both;
+}
+
+.has-peel .reveal__is {
+  animation:
+    answer-in 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 2.65s both,
+    shimmer 1.6s ease-in-out 3.3s both;
+}
+
+.has-peel .reveal__body {
+  animation: art-after-peel 0.5s var(--ease-out) 3.2s both;
+}
+
+@keyframes not-fade {
+  from {
+    color: inherit;
+  }
+}
+
+@keyframes strike {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes answer-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em) scale(0.6);
+    filter: blur(10px);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
 }
 
 /* Phones and portrait windows: the slide fills the screen, so the picture shrinks and the story stacks. */
@@ -2316,6 +2396,10 @@ html.presenting body {
   .slide--enter .teaser__title {
     animation: none;
   }
+
+  .has-peel :is(.reveal__not, .reveal__not::after, .reveal__is, .reveal__body) {
+    animation: none;
+  }
 }
 
 /* ---------- Short talk ---------- */
@@ -2340,6 +2424,26 @@ html.presenting body {
 
 .overview__card.is-skipped:hover {
   color: var(--text);
+}
+
+/* Editing the short talk: each card is a toggle, with a tick on the slides it plays. */
+.overview__check {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--text-3);
+  border-radius: 4px;
+}
+
+.overview__card:not(.is-skipped) .overview__check {
+  border-color: var(--accent);
+  background: var(--accent)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+}
+
+.is-editing .overview__num {
+  margin-right: auto;
 }
 
 .overview__full {

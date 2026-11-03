@@ -21,6 +21,7 @@ import openingJson from './opening.json'
 import storiesJson from './stories.json'
 import finaleJson from './finale.json'
 import talkJson from './talk.json'
+import playbookJson from './playbook.json'
 import type {
   ApprovalGate,
   ChecklistItem,
@@ -41,6 +42,7 @@ import type {
   ModeRung,
   ModelTier,
   Opening,
+  Playbook,
   Prefix,
   PromptPart,
   PromptScenario,
@@ -100,6 +102,7 @@ export const diagrams = diagramsJson as {
 export const opening = openingJson as Opening
 export const stories = storiesJson as Record<string, SlideStory>
 export const finale = finaleJson
+export const playbook = playbookJson as Playbook
 // The slides to present in a short live session; the full deck keeps everything.
 export const talk = talkJson as { label: string; note: string; slides: string[] }
 
@@ -144,6 +147,7 @@ const PAGE_CONTENT: Record<string, unknown[]> = {
   quiz: [quiz],
   security: [security, diagrams.approvalGate],
   beyond: [beyond],
+  playbook: [playbook],
   'wrap-up': [takeaways],
 }
 
@@ -188,6 +192,11 @@ export const searchIndex: SearchEntry[] = (() => {
   add('templates', templates, (t: Template) => t.prompt)
   add('security', security)
   add('beyond', beyond)
+  add(
+    'playbook',
+    [...playbook.agents, ...playbook.stack, ...playbook.guardrails, ...playbook.triggers, ...playbook.mcpServers, ...playbook.mcpRules, ...playbook.skills, ...playbook.manual, ...playbook.rollout],
+    (i: Item) => textOf(i).join(' '),
+  )
   add('wrap-up', takeaways)
   add('why', [...opening.then, ...opening.research, ...opening.catch, ...opening.factors])
   add('key-terms', glossary, (t: GlossaryTerm) => `${t.short} ${t.analogy}`)

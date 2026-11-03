@@ -9,6 +9,8 @@ import { PALETTES, setTheme, useTheme, type Mode } from '../theme'
 import { DESIGNS, TRANSITIONS, useDeckControls, type Design, type Transition } from './controls'
 import { formatDuration, fullDeck, totalSeconds, type NewWord, type Slide } from './deck'
 import { RichText } from '../components/RichText'
+// Shown on the last finale slide, so the audience reads the prompt without leaving the app.
+import buildPrompt from '../../prompts/build-this-app.md?raw'
 
 // A fragment is shown once the step count passes its position.
 const frag = (step: number, k: number, extra = '') => `frag${step > k ? ' is-in' : ''}${extra ? ` ${extra}` : ''}`
@@ -25,7 +27,6 @@ const LIVE: Record<string, number> = {
 }
 
 const siteUrl = () => meta.siteUrl || `${location.origin}${location.pathname}`
-const promptUrl = `${meta.repoUrl}/blob/main/${meta.buildPrompt}`
 
 function Head({ eyebrow, title, part }: { eyebrow?: string; title: string; part?: string }) {
   return (
@@ -540,8 +541,17 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
               <span className="peel__title">{finale.teaser.title}</span>
             </div>
           )}
-          <Head eyebrow={finale.live.eyebrow} title={slide.title} />
-          <p className="slide__lede intro">{finale.live.body}</p>
+          {/* The twist: "PowerPoint" is struck out, then the real answer springs in. */}
+          <header className="slide__head">
+            <p className="slide__eyebrow intro">{finale.live.eyebrow}</p>
+            <h2 className="slide__title reveal">
+              <span className="reveal__lead">
+                {finale.live.lead} <s className="reveal__not">{finale.live.not}</s>.
+              </span>
+              <span className="reveal__is">{finale.live.is}</span>
+            </h2>
+          </header>
+          <p className="slide__lede reveal__body">{finale.live.body}</p>
           <ul className="live-stats">
             {finale.live.stats.map((s, i) => (
               <li key={s.id} className={frag(step, i, 'live-stat')}>
@@ -574,18 +584,10 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
           <div>
             <Head eyebrow={finale.prompt.eyebrow} title={slide.title} />
             <p className="slide__lede intro">{finale.prompt.body}</p>
-            <p className="intro">
-              <a className="btn btn--primary prompt-finale__link" href={promptUrl} target="_blank" rel="noreferrer">
-                {finale.prompt.link}
-                <span className="visually-hidden"> (opens in a new tab)</span>
-              </a>
-            </p>
-            <p className="prompt-finale__url intro">{promptUrl.replace(/^https:\/\//, '')}</p>
           </div>
-          <figure className="prompt-finale__qr intro">
-            <QrCode value={promptUrl} label={`QR code: ${finale.prompt.scan}`} />
-            <figcaption>{finale.prompt.scan}</figcaption>
-          </figure>
+          <div className="prompt-finale__code intro">
+            <CodeBlock code={buildPrompt} label={finale.prompt.label} />
+          </div>
         </div>
       )
       break

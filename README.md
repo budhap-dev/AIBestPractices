@@ -30,6 +30,7 @@ Each section has its own page, with previous and next links at the bottom. Pages
 | Test yourself | A scenario quiz. |
 | Security | An **approval gate** diagram, approvals, auto-approve, sandboxing, content exclusion and public code. |
 | Beyond the editor | Commit messages, terminal chat, smart actions, PR review and the cloud agent. |
+| Team playbook | The team layer for our React, React Native and Node.js repos: custom agents to set up, where AI helps in each stack, guardrails in the pipeline and in how we work, when to write or update a rule, which MCP servers to allow, the skills we need, what always stays manual, and the rollout plan. |
 | Wrap-up | Seven takeaways, each linking back to its section. |
 
 Most sections end with **Did you know?** facts, each with a docs link. Each page header carries its section's picture. Small wins get confetti: a right quiz answer, a finished checklist and the end of the deck. Confetti, pictures and diagram animations are still when the system asks for reduced motion.
@@ -38,7 +39,7 @@ Most sections end with **Did you know?** facts, each with a docs link. Each page
 
 Select **Present** in the top bar, or **Present the guide** on the home page, to run the guide as a slide deck. Starting from a section page opens the deck at that section. The deck is built from the same content files, so it stays in sync with the guide.
 
-The deck opens as a **short talk**: 26 slides, about 13 minutes of reading (allow 25 to 30 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 104 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. Edit the running order in `src/content/talk.json`.
+The deck opens as a **short talk**: 35 slides, about 19 minutes of reading (allow 35 to 40 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the team playbook, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 123 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. To change which slides the short talk plays, open the overview and choose **Edit short talk**: click a slide to add it or take it out, and the count and reading time update as you go. Your pick is saved in this browser, and **Reset** goes back to the slides listed in `src/content/talk.json`, which sets the default for everyone.
 
 Each press of → reveals the next point on a slide, then moves to the next slide. Quiz slides show the options one by one and reveal the answer last.
 
@@ -46,7 +47,7 @@ Every slide has a picture from a shared set of hand-coded SVG scenes. Every teac
 
 The deck looks like a presentation: the slide sits on a stage with a footer and slide number, and **D** (or the design picker) switches between five slide designs: Classic, Bold, Paper, Blueprint and Spotlight. Designs work with every colour theme, in light and dark.
 
-After **Questions?** there is a surprise: press → to find out. Its last slides are **One prompt can build this app**, linking to [prompts/build-this-app.md](prompts/build-this-app.md), and a **Thank you for your patience** slide.
+After **Questions?** there is a surprise: press → to find out. The “One more thing…” slide peels away, “PowerPoint” is struck through and **It’s a web app.** springs in with confetti, then live numbers count up from the app itself. Its last slides are **One prompt can build this app**, which shows the whole of [prompts/build-this-app.md](prompts/build-this-app.md) on the slide (scroll it or copy it, no link to the repo), and a **Thank you for your patience** slide.
 
 | Key | Does |
 |---|---|
@@ -62,7 +63,7 @@ After **Questions?** there is a surprise: press → to find out. Its last slides
 | ? | Show the shortcuts |
 | Esc | Leave presenter mode, back to the current section's page |
 
-Every slide shows an estimated time to read in the bottom bar, with the reading time left in the deck. The overview shows each slide's time and the total: about 13 minutes for the short talk, 55 minutes for the full deck. Times assume 200 words per minute; change `readingWordsPerMinute` in `meta.json` to suit your audience.
+Every slide shows an estimated time to read in the bottom bar, with the reading time left in the deck. The overview shows each slide's time and the total: about 19 minutes for the short talk, 66 minutes for the full deck. Times assume 200 words per minute; change `readingWordsPerMinute` in `meta.json` to suit your audience.
 
 On touch screens, swipe left or right. The toolbar hides after a few seconds without mouse movement. Slide layouts live in `src/presenter/deck.ts`.
 
@@ -86,7 +87,15 @@ Other scripts: `npm run build` (type-check and build to `dist/`), `npm run lint`
 
 ## Host it
 
-`npm run build` produces a fully static `dist/` folder with relative paths. Routing uses the URL hash, so the host needs no rewrite rules. Copy it to any internal static host or sub-folder. There's no backend, analytics or external CDN.
+The guide is hosted on **Vercel**, not GitHub Pages, so its address doesn't expose the GitHub account. [vercel.json](vercel.json) pins the build: `npm ci`, `npm run build`, output `dist/`.
+
+```bash
+npx vercel deploy --prod
+```
+
+The first run links the folder to a Vercel project (kept in `.vercel/`, which is git-ignored). Or connect the repo in the Vercel dashboard to deploy every push to `main`.
+
+`npm run build` produces a fully static `dist/` folder with relative paths. Routing uses the URL hash, so any static host works with no rewrite rules. There's no backend, analytics or external CDN.
 
 ## Edit the content
 
@@ -94,7 +103,7 @@ All text lives in typed JSON files in [`src/content/`](src/content). You don't n
 
 | File | Holds |
 |---|---|
-| `meta.json` | Company name, owner, end users, demo audience, reading speed, last-reviewed date, AI policy link, repository link, and `siteUrl` for the "open it on your phone" QR code (empty uses the current address) |
+| `meta.json` | Company name, owner, end users, demo audience, reading speed, last-reviewed date, AI policy link, and `siteUrl` for the "open it on your phone" QR code (empty uses the current address) |
 | `sections.json` | Section order, nav labels, titles and intros |
 | `opening.json` | The Why it matters story: the old way, research figures with sources, the catch and the five factors |
 | `context.json`, `modes.json`, `commands.json` | Mental model cards, chat modes, cheat sheet rows |
@@ -106,7 +115,7 @@ All text lives in typed JSON files in [`src/content/`](src/content). You don't n
 | `glossary.json` | Key terms in three groups (AI, Copilot, coding): one-line definition, full definition, everyday comparison, and `match` patterns that detect the word in any text |
 | `stories.json` | For each slide id: its picture (`scene`), a one-line `hook` for section openers, and Asha's `helps` and Ben's `wrong` lines for teaching slides (30 words each at most; use the names, never pronouns) |
 | `finale.json` | The words on the surprise ending |
-| `talk.json` | The slide ids the short talk presents, in deck order. New word notes, quiz numbers and timings are worked out for the talk on its own |
+| `talk.json` | The slide ids the short talk presents by default, in deck order (presenters can change their own pick from the overview). New word notes, quiz numbers and timings are worked out for the talk on its own |
 | `promptCost.json` | The vague and focused prompt scenarios (illustrative token counts) and the prompt anatomy |
 | `diagrams.json` | Text and numbers for every diagram: request flow, modes staircase, long-chat flowchart, team memory, then and now, context stack, daily loop, approval gate and prefixes |
 | `facts.json` | Did you know? facts, each tied to a section and a source |

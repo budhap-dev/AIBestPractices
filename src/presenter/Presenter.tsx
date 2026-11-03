@@ -3,8 +3,8 @@ import { meta, sections } from '../content'
 import { celebrate } from '../components/confetti'
 import { ThemeMenu } from '../components/ThemeMenu'
 import { navigate } from '../router'
-import { deckFor, formatDuration, fullDeck, indexIn, secondsFrom, slideSeconds, totalSeconds, type Length, type Slide } from './deck'
-import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, readLength, saveLength, type Design, type Transition } from './controls'
+import { deckFor, defaultTalk, formatDuration, fullDeck, inDeckOrder, indexIn, secondsFrom, slideSeconds, totalSeconds, type Length, type Slide } from './deck'
+import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, isDefaultTalk, readLength, readTalk, saveLength, saveTalk, type Design, type Transition } from './controls'
 import { SlideView } from './Slide'
 import './presenter.css'
 
@@ -22,6 +22,7 @@ type Overlay = 'none' | 'overview' | 'help'
 const TRANSITION_KEY = 'cfg-transition'
 const DESIGN_KEY = 'cfg-design'
 const navOf = (id?: string) => sections.find((s) => s.id === id)?.nav
+const TALK_LABEL = LENGTHS.find((l) => l.id === 'short')?.label ?? 'Short talk'
 
 const SHORTCUTS: [string, string][] = [
   ['→  Space  PgDn', 'Next point or slide'],
@@ -65,7 +66,8 @@ function save(key: string, value: string) {
 
 export function Presenter({ slide }: { slide: number }) {
   const [length, setLength] = useState<Length>(readLength)
-  const deck = deckFor(length)
+  const [talkIds, setTalkIds] = useState<string[]>(readTalk)
+  const deck = deckFor(length, talkIds)
   const LAST = deck.length - 1
   const clamp = (n: number) => Math.min(Math.max(n, 0), LAST)
   const index = clamp(slide - 1)
@@ -110,6 +112,8 @@ export function Presenter({ slide }: { slide: number }) {
     } else if (index < LAST) {
       go(index + 1, 0)
       if (deck[index + 1].kind === 'end' || index + 1 === LAST) celebrate({ size: 'big' })
+      // The plot twist lands once the peel and the strike-through have played.
+      if (deck[index + 1].kind === 'live') window.setTimeout(() => celebrate({ size: 'big' }), 2900)
     }
   }
   const prev = () => (step > 0 ? go(index, step - 1) : index > 0 && go(index - 1, deck[index - 1].steps))
@@ -127,12 +131,29 @@ export function Presenter({ slide }: { slide: number }) {
   // Switch between the short talk and the full deck, staying on the same slide (or the next one in the talk).
   function chooseLength(l: Length, at = current.id) {
     if (l === length && at === current.id) return
-    const to = indexIn(deckFor(l), at)
+    const to = indexIn(deckFor(l, talkIds), at)
     setLength(l)
     saveLength(l)
     setBlank(false)
     setPos({ index: to, step: 0, dir: pos.dir })
     navigate({ kind: 'present', slide: to + 1 }, { replace: true })
+  }
+
+  // Change which slides the short talk plays. While presenting it, stay on this slide, or move to the next one left in it.
+  function chooseTalk(ids: string[]) {
+    setTalkIds(ids)
+    saveTalk(ids)
+    if (length !== 'short') return
+    const talk = deckFor('short', ids)
+    const to = indexIn(talk, current.id)
+    setPos({ index: to, step: talk[to].id === current.id ? step : 0, dir: pos.dir })
+    navigate({ kind: 'present', slide: to + 1 }, { replace: true })
+  }
+
+  // The talk always keeps at least one slide.
+  function toggleInTalk(id: string) {
+    const ids = talkIds.includes(id) ? talkIds.filter((t) => t !== id) : inDeckOrder([...talkIds, id])
+    if (ids.length) chooseTalk(ids)
   }
 
   function cycleTransition() {
@@ -313,7 +334,7 @@ export function Presenter({ slide }: { slide: number }) {
                 <select value={length} onChange={(e) => chooseLength(e.target.value as Length)}>
                   {LENGTHS.map((l) => (
                     <option key={l.id} value={l.id}>
-                      {l.label} ({deckFor(l.id).length})
+                      {l.label} ({deckFor(l.id, talkIds).length})
                     </option>
                   ))}
                 </select>
@@ -439,6 +460,9 @@ export function Presenter({ slide }: { slide: number }) {
             deck={deck}
             length={length}
             current={current.id}
+            talk={deckFor('short', talkIds)}
+            onToggle={toggleInTalk}
+            onReset={isDefaultTalk(talkIds) ? undefined : () => chooseTalk(defaultTalk)}
             onPick={(id) => {
               setOverlay('none')
               // A slide the short talk skips switches to the full deck at that slide.
@@ -481,11 +505,26 @@ export function Presenter({ slide }: { slide: number }) {
   )
 }
 
-function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; length: Length; current: string; onPick: (id: string) => void; onClose: () => void }) {
+interface OverviewProps {
+  deck: Slide[]
+  length: Length
+  current: string
+  // The short talk, whichever deck is playing, so it can be edited from here.
+  talk: Slide[]
+  onToggle: (id: string) => void
+  // Back to the talk.json slides; missing when the talk already plays them.
+  onReset?: () => void
+  onPick: (id: string) => void
+  onClose: () => void
+}
+
+function Overview({ deck, length, current, talk, onToggle, onReset, onPick, onClose }: OverviewProps) {
   const active = useRef<HTMLButtonElement>(null)
-  // The short talk still shows every slide, with the ones it skips dimmed, so any of them is one click away.
-  const shown = length === 'short' ? fullDeck : deck
-  const label = LENGTHS.find((l) => l.id === length)?.label
+  const [editing, setEditing] = useState(false)
+  // While editing, or presenting the short talk, the overview shows every slide, with the ones the talk skips dimmed.
+  const listed = editing ? talk : deck
+  const shown = editing || length === 'short' ? fullDeck : deck
+  const label = editing ? TALK_LABEL : LENGTHS.find((l) => l.id === length)?.label
 
   useEffect(() => {
     active.current?.focus({ preventScroll: true })
@@ -493,23 +532,37 @@ function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; l
   }, [])
 
   return (
-    <div className="presenter__overlay presenter__overlay--overview" role="dialog" aria-modal="true" aria-label="All slides">
+    <div className={`presenter__overlay presenter__overlay--overview${editing ? ' is-editing' : ''}`} role="dialog" aria-modal="true" aria-label="All slides">
       <div className="overview__head">
         <h2>
           {label}{' '}
           <span className="overview__total">
-            · {deck.length} slides, about {formatDuration(totalSeconds(deck))} to read
+            · {listed.length} slides, about {formatDuration(totalSeconds(listed))} to read
           </span>
         </h2>
-        <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
-          Close
-          <kbd>Esc</kbd>
-        </button>
+        <div className="overview__actions">
+          {editing && onReset && (
+            <button type="button" className="btn btn--outline btn--sm" onClick={onReset} title="Go back to the slides listed in talk.json">
+              Reset
+            </button>
+          )}
+          <button type="button" className={`btn btn--sm ${editing ? 'btn--primary' : 'btn--outline'}`} onClick={() => setEditing(!editing)} aria-pressed={editing}>
+            {editing ? 'Done' : `Edit ${TALK_LABEL.toLowerCase()}`}
+          </button>
+          <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
+            Close
+            <kbd>Esc</kbd>
+          </button>
+        </div>
       </div>
-      {length === 'short' && <p className="overview__note">Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.</p>}
+      {editing ? (
+        <p className="overview__note">Click a slide to add it to the {TALK_LABEL.toLowerCase()} or take it out. Your pick is saved in this browser.</p>
+      ) : (
+        length === 'short' && <p className="overview__note">Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.</p>
+      )}
       <ol className="overview">
         {shown.map((s, i) => {
-          const at = deck.findIndex((d) => d.id === s.id)
+          const at = listed.findIndex((d) => d.id === s.id)
           const skipped = at === -1
           const isCurrent = s.id === current
           return (
@@ -519,10 +572,12 @@ function Overview({ deck, length, current, onPick, onClose }: { deck: Slide[]; l
                 type="button"
                 className={`overview__card overview__card--${s.kind}${isCurrent ? ' is-current' : ''}${skipped ? ' is-skipped' : ''}`}
                 aria-current={isCurrent ? 'true' : undefined}
-                onClick={() => onPick(s.id)}
+                aria-pressed={editing ? !skipped : undefined}
+                onClick={() => (editing ? onToggle(s.id) : onPick(s.id))}
               >
                 <span className="overview__meta">
-                  <span className="overview__num">{skipped ? <span className="overview__full">Full deck</span> : at + 1}</span>
+                  {editing && <span className="overview__check" aria-hidden="true" />}
+                  <span className="overview__num">{skipped ? <span className="overview__full">{editing ? 'Left out' : 'Full deck'}</span> : at + 1}</span>
                   <span className="overview__time">
                     <span className="visually-hidden">Time to read: </span>
                     {formatDuration(slideSeconds(s))}

@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type ReactElement } from 'react'
-import { beyond, commands, contextSources, glossary, memoryFiles, meta, modes, opening, rules, section, sections, security, takeaways, templates, workflow } from '../content'
+import { beyond, commands, contextSources, glossary, memoryFiles, meta, modes, opening, playbook, rules, section, sections, security, takeaways, templates, workflow } from '../content'
 import { ACTION_LABEL, GROUPS, RULE_GROUPS } from '../content/labels'
-import type { Finding, RuleGroup, TermGroup } from '../content/types'
+import type { Finding, Item, RuleGroup, TermGroup } from '../content/types'
 import { href } from '../router'
 import { Checklist } from './Checklist'
 import { celebrate } from './confetti'
@@ -426,6 +426,119 @@ export function Beyond() {
   )
 }
 
+function ItemCards({ items }: { items: Item[] }) {
+  return (
+    <div className="grid grid--3">
+      {items.map((i) => (
+        <article key={i.id} id={i.id} className="card card--tight">
+          <h4>{i.title}</h4>
+          <p>
+            <RichText text={i.body} />
+          </p>
+          <Source item={i} />
+        </article>
+      ))}
+    </div>
+  )
+}
+
+export function TeamPlaybook() {
+  return (
+    <Section info={section('playbook')}>
+      <h3 className="subhead">Custom agents to set up</h3>
+      <div className="grid grid--3">
+        {playbook.agents.map((a) => (
+          <article key={a.id} id={a.id} className="card card--tight">
+            <h4>{a.title}</h4>
+            <span className="tag">{a.tools}</span>
+            <p>{a.body}</p>
+            <Source item={a} />
+          </article>
+        ))}
+      </div>
+      <p className="callout">
+        <RichText text={playbook.agentNote} />
+      </p>
+
+      <h3 className="subhead">Where AI helps in our stack</h3>
+      <div className="grid grid--3">
+        {playbook.stack.map((a) => (
+          <article key={a.id} id={a.id} className="card card--tight">
+            <span className="tag">{a.platform}</span>
+            <h4>{a.title}</h4>
+            <ul>
+              {a.strengths.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+            <p>{a.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <h3 className="subhead">Guardrails in the pipeline</h3>
+      <ItemCards items={playbook.guardrails.filter((g) => g.group === 'pipeline')} />
+      <h3 className="subhead">Guardrails in how we work</h3>
+      <ItemCards items={playbook.guardrails.filter((g) => g.group === 'people')} />
+
+      <h3 className="subhead">When to write or update a rule</h3>
+      <p className="muted">
+        Rules live in the files from <a href={href({ kind: 'section', id: 'team-memory' })}>Team memory</a>. Write them when there is a reason, not all at once.
+      </p>
+      <ol className="steps">
+        {playbook.triggers.map((t, i) => (
+          <li key={t.id} id={t.id} className="step">
+            <span className="step__num" aria-hidden="true">
+              {i + 1}
+            </span>
+            <div className="step__body">
+              <h4>{t.title}</h4>
+              <p>{t.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <h3 className="subhead">MCP servers: yes, from an allow-list</h3>
+      <p className="muted">{playbook.mcpIntro}</p>
+      <ItemCards items={playbook.mcpServers} />
+      <article className="card subhead">
+        <h4>Rules for every server</h4>
+        <ul>
+          {playbook.mcpRules.map((r) => (
+            <li key={r.id} id={r.id}>
+              <strong>{r.title}</strong> {r.body} <Source item={r} />
+            </li>
+          ))}
+        </ul>
+      </article>
+
+      <h3 className="subhead">Skills the team needs</h3>
+      <ItemCards items={playbook.skills} />
+
+      <h3 className="subhead">Always done by a human</h3>
+      <ItemCards items={playbook.manual} />
+      <p className="callout">{playbook.manualNote}</p>
+
+      <h3 className="subhead">How we roll it out</h3>
+      <div className="grid grid--3">
+        {playbook.rollout.map((r) => (
+          <article key={r.id} id={r.id} className="card card--tight">
+            <span className="tag">{r.when}</span>
+            <h4>{r.title}</h4>
+            <p>{r.body}</p>
+            <ul>
+              {r.steps.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </Section>
+  )
+}
+
 export function WrapUp() {
   const toast = useToast()
   return (
@@ -481,5 +594,6 @@ export const SECTION_PAGES: Record<string, () => ReactElement> = {
   quiz: Practice,
   security: Security,
   beyond: Beyond,
+  playbook: TeamPlaybook,
   'wrap-up': WrapUp,
 }

@@ -10,6 +10,7 @@ import {
   meta,
   modes,
   opening,
+  playbook,
   quiz,
   rules,
   sections,
@@ -23,7 +24,7 @@ import {
   workflow,
 } from '../content'
 import { ACTION_LABEL, GROUPS, RULE_GROUPS } from '../content/labels'
-import type { Command, Factor, Finding, FunFact, GlossaryTerm, QuizQuestion, Rule, SceneId, SlideStory, Takeaway } from '../content/types'
+import type { Command, Factor, Finding, FunFact, GlossaryTerm, Item, QuizQuestion, Rule, SceneId, SlideStory, Takeaway } from '../content/types'
 import { diagramSteps, diagramText, type DiagramId } from '../components/diagramData'
 
 export interface Card {
@@ -111,10 +112,13 @@ function diagramSlide(section: string, eyebrow: string, title: string, diagram: 
   return { kind: 'diagram', id: `diagram-${diagram}`, section, eyebrow, title, diagram, steps: diagramSteps(diagram) }
 }
 
-function cardSlides(section: string, title: string, cards: Card[], size = 3): Slide[] {
+// `key` names the slides when a section has more than one run of cards.
+function cardSlides(section: string, title: string, cards: Card[], size = 3, key = section): Slide[] {
   const parts = chunk(cards, size)
-  return parts.map((c, i) => ({ kind: 'cards', id: `${section}-cards-${i}`, section, title, part: part(i, parts.length), cards: c, steps: c.length }))
+  return parts.map((c, i) => ({ kind: 'cards', id: `${key}-cards-${i}`, section, title, part: part(i, parts.length), cards: c, steps: c.length }))
 }
+
+const card = (i: Item): Card => ({ id: i.id, title: i.title, body: i.body })
 
 function build(): Slide[] {
   const deck: Slide[] = [
@@ -290,6 +294,44 @@ function build(): Slide[] {
         )
         break
 
+      case 'playbook': {
+        deck.push(
+          ...cardSlides(
+            s.id,
+            'Custom agents to set up',
+            [...playbook.agents.map((a) => ({ ...card(a), kicker: a.tools })), { id: 'pb-least-privilege', title: 'Least privilege', body: playbook.agentNote, kicker: 'Every agent' }],
+            3,
+            'pb-agents',
+          ),
+          ...cardSlides(s.id, 'Where AI helps in our stack', playbook.stack.map((a) => ({ ...card(a), kicker: a.platform, list: a.strengths })), 3, 'pb-stack'),
+          ...cardSlides(s.id, 'Guardrails in the pipeline', playbook.guardrails.filter((g) => g.group === 'pipeline').map(card), 3, 'pb-pipeline'),
+          ...cardSlides(s.id, 'Guardrails in how we work', playbook.guardrails.filter((g) => g.group === 'people').map(card), 3, 'pb-people'),
+        )
+        const triggers = chunk(playbook.triggers, 4)
+        let start = 1
+        triggers.forEach((items, j) => {
+          deck.push({ kind: 'steps', id: `pb-triggers-${j}`, section: s.id, title: 'When to write or update a rule', part: part(j, triggers.length), start, items: items.map(card), steps: items.length })
+          start += items.length
+        })
+        deck.push(
+          ...cardSlides(s.id, 'MCP servers worth connecting', playbook.mcpServers.map(card), 3, 'pb-mcp'),
+          {
+            kind: 'detail',
+            id: 'pb-mcp-rules',
+            section: s.id,
+            eyebrow: s.nav,
+            title: 'MCP: yes, from an allow-list',
+            body: playbook.mcpIntro,
+            points: playbook.mcpRules.map((r) => ({ label: r.title, text: r.body })),
+            steps: playbook.mcpRules.length,
+          },
+          ...cardSlides(s.id, 'Skills the team needs', playbook.skills.map(card), 4, 'pb-skills'),
+          ...cardSlides(s.id, 'Always done by a human', playbook.manual.map(card), 3, 'pb-manual'),
+          ...cardSlides(s.id, 'How we roll it out', playbook.rollout.map((r) => ({ ...card(r), kicker: r.when, list: r.steps })), 3, 'pb-rollout'),
+        )
+        break
+      }
+
       case 'wrap-up':
         deck.push({ kind: 'summary', id: 'summary', section: s.id, title: s.title, items: takeaways, steps: takeaways.length })
         break
@@ -396,23 +438,40 @@ function timed(slides: Slide[]): Slide[] {
 }
 
 // ---------- Full deck and short talk ----------
-// The full deck keeps every slide for reading. The short talk plays only the slides listed in talk.json,
-// in deck order, and works out its own "New word" notes, quiz numbers and timings.
+// The full deck keeps every slide for reading. The short talk plays only the slides listed in talk.json, or the
+// ones picked in the overview, in deck order, and works out its own "New word" notes, quiz numbers and timings.
 export type Length = 'short' | 'full'
 
 const story = storied(build())
+if (import.meta.env?.DEV) for (const id of talk.slides) if (!story.some((s) => s.id === id)) console.warn(`[deck] talk.json lists "${id}", which is not a slide.`)
 
-function shortTalk(): Slide[] {
-  const wanted = new Set(talk.slides)
-  if (import.meta.env?.DEV) for (const id of wanted) if (!story.some((s) => s.id === id)) console.warn(`[deck] talk.json lists "${id}", which is not a slide.`)
+function shortTalk(ids: readonly string[]): Slide[] {
+  const wanted = new Set(ids)
   const picked = story.filter((s) => wanted.has(s.id))
   const quizzes = picked.filter((s) => s.kind === 'quiz')
-  return picked.map((s) => (s.kind === 'quiz' ? { ...s, number: quizzes.indexOf(s) + 1, total: quizzes.length } : s))
+  return timed(withNewWords(picked.map((s) => (s.kind === 'quiz' ? { ...s, number: quizzes.indexOf(s) + 1, total: quizzes.length } : s))))
 }
 
 export const fullDeck = timed(withNewWords(story))
-export const shortDeck = timed(withNewWords(shortTalk()))
-export const deckFor = (length: Length) => (length === 'short' ? shortDeck : fullDeck)
+
+// Slide ids that are in the deck, in deck order, so the same pick always reads the same.
+export function inDeckOrder(ids: Iterable<unknown>): string[] {
+  const wanted = new Set(ids)
+  return story.filter((s) => wanted.has(s.id)).map((s) => s.id)
+}
+
+export const defaultTalk = inDeckOrder(talk.slides)
+
+// The last short talk worked out, so re-renders with the same pick don't redo it.
+let lastTalk = { key: '', slides: [] as Slide[] }
+
+export function shortDeck(ids: readonly string[] = defaultTalk): Slide[] {
+  const key = ids.join(' ')
+  if (key !== lastTalk.key) lastTalk = { key, slides: shortTalk(ids) }
+  return lastTalk.slides
+}
+
+export const deckFor = (length: Length, talkIds?: readonly string[]) => (length === 'short' ? shortDeck(talkIds) : fullDeck)
 
 export const slideSeconds = (slide: Slide) => slide.readSeconds ?? 0
 

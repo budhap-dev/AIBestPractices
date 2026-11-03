@@ -78,6 +78,12 @@
     "intro": "Smaller features that save time every day, from commit messages to pull request reviews."
   },
   {
+    "id": "playbook",
+    "nav": "Team playbook",
+    "title": "How our team works with AI",
+    "intro": "Habits make one developer good with AI. A team also needs shared agents, guardrails, rules and a clear line for what stays manual. Here is ours, for our React, React Native and Node.js repos."
+  },
+  {
     "id": "wrap-up",
     "nav": "Wrap-up",
     "title": "Seven habits to take away",
