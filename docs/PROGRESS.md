@@ -34,9 +34,10 @@ Phase: all phases done (PR 1 app, PR 2 polish + docs).
 - Finale: "Thank you for your patience" is now the last slide (both decks). The peel copies the "One more thing…" slide and no longer replays when the slide animates out or is revisited, which had flashed "Questions?".
 
 - Nov 2026: Team playbook section (playbook.json) before Wrap-up: page plus 19 deck slides (agents, stack, guardrails, rule triggers, MCP, skills, always manual, rollout), each with an Asha/Ben story. 9 of them join the short talk (now 35 slides, ~19 min). cardSlides takes an id key so a section can have several card runs. RichText no longer styles "Node.js" as a file name. Checked with headless Chrome: new slides fit at 1280x720 and 800x600; page has no overflow at 360/768/1280.
+- Nov 2026: Hosting moved to Vercel (vercel.json); GitHub Pages workflow removed and Pages turned off, so no URL exposes the GitHub account. repoUrl/buildPrompt dropped from meta.json. Finale: “PowerPoint” is struck through and “It’s a web app.” springs in with a shimmer and confetti; the prompt slide shows build-this-app.md in place (?raw, scrollable, copy button) instead of a GitHub link and QR.
 
 ## Next
 - Confirm the Figma and error-tracking MCP servers (VERIFY.md), and fill the pilot squads and owners in playbook.json.
-- Set `siteUrl` in meta.json once the guide is hosted, so the phone QR code points at the real address.
+- Optional: set `siteUrl` in meta.json to the Vercel address, so the phone QR code is right when presenting from localhost.
 - Fill company, owner and policy link in src/content/meta.json.
 - Check the print cheat sheet in a real browser print preview.

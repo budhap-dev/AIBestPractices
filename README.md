@@ -47,7 +47,7 @@ Every slide has a picture from a shared set of hand-coded SVG scenes. Every teac
 
 The deck looks like a presentation: the slide sits on a stage with a footer and slide number, and **D** (or the design picker) switches between five slide designs: Classic, Bold, Paper, Blueprint and Spotlight. Designs work with every colour theme, in light and dark.
 
-After **Questions?** there is a surprise: press → to find out. Its last slides are **One prompt can build this app**, linking to [prompts/build-this-app.md](prompts/build-this-app.md), and a **Thank you for your patience** slide.
+After **Questions?** there is a surprise: press → to find out. The “One more thing…” slide peels away, “PowerPoint” is struck through and **It’s a web app.** springs in with confetti, then live numbers count up from the app itself. Its last slides are **One prompt can build this app**, which shows the whole of [prompts/build-this-app.md](prompts/build-this-app.md) on the slide (scroll it or copy it, no link to the repo), and a **Thank you for your patience** slide.
 
 | Key | Does |
 |---|---|
@@ -87,7 +87,15 @@ Other scripts: `npm run build` (type-check and build to `dist/`), `npm run lint`
 
 ## Host it
 
-`npm run build` produces a fully static `dist/` folder with relative paths. Routing uses the URL hash, so the host needs no rewrite rules. Copy it to any internal static host or sub-folder. There's no backend, analytics or external CDN.
+The guide is hosted on **Vercel**, not GitHub Pages, so its address doesn't expose the GitHub account. [vercel.json](vercel.json) pins the build: `npm ci`, `npm run build`, output `dist/`.
+
+```bash
+npx vercel deploy --prod
+```
+
+The first run links the folder to a Vercel project (kept in `.vercel/`, which is git-ignored). Or connect the repo in the Vercel dashboard to deploy every push to `main`.
+
+`npm run build` produces a fully static `dist/` folder with relative paths. Routing uses the URL hash, so any static host works with no rewrite rules. There's no backend, analytics or external CDN.
 
 ## Edit the content
 
@@ -95,7 +103,7 @@ All text lives in typed JSON files in [`src/content/`](src/content). You don't n
 
 | File | Holds |
 |---|---|
-| `meta.json` | Company name, owner, end users, demo audience, reading speed, last-reviewed date, AI policy link, repository link, and `siteUrl` for the "open it on your phone" QR code (empty uses the current address) |
+| `meta.json` | Company name, owner, end users, demo audience, reading speed, last-reviewed date, AI policy link, and `siteUrl` for the "open it on your phone" QR code (empty uses the current address) |
 | `sections.json` | Section order, nav labels, titles and intros |
 | `opening.json` | The Why it matters story: the old way, research figures with sources, the catch and the five factors |
 | `context.json`, `modes.json`, `commands.json` | Mental model cards, chat modes, cheat sheet rows |

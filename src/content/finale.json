@@ -5,8 +5,11 @@
   },
   "live": {
     "eyebrow": "Plot twist",
-    "title": "This was never a slide deck",
-    "body": "It is a web app. Every number below is counted from the app itself, right now.",
+    "title": "This isn’t a PowerPoint. It’s a web app.",
+    "lead": "This isn’t a",
+    "not": "PowerPoint",
+    "is": "It’s a web app.",
+    "body": "Every slide you just saw is a page in this app. Every number below is counted from the app itself, right now.",
     "stats": [
       {
         "id": "slides",
@@ -47,9 +50,8 @@
   "prompt": {
     "eyebrow": "And the best part",
     "title": "One prompt can build this app",
-    "body": "The stack, the content, every section, presenter mode, the diagrams, the themes and the accessibility rules, written down as a single prompt you can read and reuse.",
-    "link": "Read the prompt on GitHub",
-    "scan": "Scan to read the prompt"
+    "body": "The stack, the content, every section, presenter mode, the diagrams, the themes and the accessibility rules, written down as a single prompt. Here it is: scroll to read it, or copy it and try it yourself.",
+    "label": "The prompt"
   },
   "thanks": {
     "eyebrow": "That’s a wrap",

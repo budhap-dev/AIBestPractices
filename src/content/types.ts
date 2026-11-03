@@ -26,9 +26,6 @@ export interface Meta {
   lastReviewed: string
   policyUrl: string
   copilotVersionNote: string
-  // Where the source lives, for the deck's last slide. The build prompt path is relative to it.
-  repoUrl: string
-  buildPrompt: string
   // Public address of the guide for the "open it on your phone" QR code. Empty: use the current page.
   siteUrl: string
 }

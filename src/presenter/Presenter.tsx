@@ -110,6 +110,8 @@ export function Presenter({ slide }: { slide: number }) {
     } else if (index < LAST) {
       go(index + 1, 0)
       if (deck[index + 1].kind === 'end' || index + 1 === LAST) celebrate({ size: 'big' })
+      // The plot twist lands once the peel and the strike-through have played.
+      if (deck[index + 1].kind === 'live') window.setTimeout(() => celebrate({ size: 'big' }), 2900)
     }
   }
   const prev = () => (step > 0 ? go(index, step - 1) : index > 0 && go(index - 1, deck[index - 1].steps))
