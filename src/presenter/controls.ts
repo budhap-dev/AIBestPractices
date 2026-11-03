@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { talk } from '../content'
-import type { Length, Slide } from './deck'
+import { defaultTalk, inDeckOrder, type Length, type Slide } from './deck'
 
 // Slide transitions and designs live in the presenter, but the finale lets people change them from a slide.
 export const TRANSITIONS = [
@@ -51,6 +51,32 @@ export function saveLength(length: Length) {
     localStorage.setItem(LENGTH_KEY, length)
   } catch {
     // Storage blocked: the choice lasts for this visit.
+  }
+}
+
+const TALK_KEY = 'cfg-talk'
+
+export const isDefaultTalk = (ids: readonly string[]) => ids.join(' ') === defaultTalk.join(' ')
+
+// The slides in the short talk: the ones picked in the overview, or else the ones talk.json lists.
+// Slides that have since left the deck are dropped; if none are left, the talk.json pick returns.
+export function readTalk(): string[] {
+  try {
+    const saved: unknown = JSON.parse(localStorage.getItem(TALK_KEY) ?? 'null')
+    const ids = Array.isArray(saved) ? inDeckOrder(saved) : []
+    return ids.length ? ids : defaultTalk
+  } catch {
+    return defaultTalk
+  }
+}
+
+// Picking exactly the talk.json slides forgets the saved pick, so later edits to talk.json show up here.
+export function saveTalk(ids: readonly string[]) {
+  try {
+    if (isDefaultTalk(ids)) localStorage.removeItem(TALK_KEY)
+    else localStorage.setItem(TALK_KEY, JSON.stringify(ids))
+  } catch {
+    // Storage blocked: the pick lasts for this visit.
   }
 }
 

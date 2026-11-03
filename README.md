@@ -39,7 +39,7 @@ Most sections end with **Did you know?** facts, each with a docs link. Each page
 
 Select **Present** in the top bar, or **Present the guide** on the home page, to run the guide as a slide deck. Starting from a section page opens the deck at that section. The deck is built from the same content files, so it stays in sync with the guide.
 
-The deck opens as a **short talk**: 35 slides, about 19 minutes of reading (allow 35 to 40 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the team playbook, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 123 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. Edit the running order in `src/content/talk.json`.
+The deck opens as a **short talk**: 35 slides, about 19 minutes of reading (allow 35 to 40 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the team playbook, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 123 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. To change which slides the short talk plays, open the overview and choose **Edit short talk**: click a slide to add it or take it out, and the count and reading time update as you go. Your pick is saved in this browser, and **Reset** goes back to the slides listed in `src/content/talk.json`, which sets the default for everyone.
 
 Each press of → reveals the next point on a slide, then moves to the next slide. Quiz slides show the options one by one and reveal the answer last.
 
@@ -115,7 +115,7 @@ All text lives in typed JSON files in [`src/content/`](src/content). You don't n
 | `glossary.json` | Key terms in three groups (AI, Copilot, coding): one-line definition, full definition, everyday comparison, and `match` patterns that detect the word in any text |
 | `stories.json` | For each slide id: its picture (`scene`), a one-line `hook` for section openers, and Asha's `helps` and Ben's `wrong` lines for teaching slides (30 words each at most; use the names, never pronouns) |
 | `finale.json` | The words on the surprise ending |
-| `talk.json` | The slide ids the short talk presents, in deck order. New word notes, quiz numbers and timings are worked out for the talk on its own |
+| `talk.json` | The slide ids the short talk presents by default, in deck order (presenters can change their own pick from the overview). New word notes, quiz numbers and timings are worked out for the talk on its own |
 | `promptCost.json` | The vague and focused prompt scenarios (illustrative token counts) and the prompt anatomy |
 | `diagrams.json` | Text and numbers for every diagram: request flow, modes staircase, long-chat flowchart, team memory, then and now, context stack, daily loop, approval gate and prefixes |
 | `facts.json` | Did you know? facts, each tied to a section and a source |
