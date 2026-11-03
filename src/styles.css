@@ -226,6 +226,12 @@ pre {
   border-radius: 4px;
 }
 
+/* Headings and items get focus from script after navigation so screen readers announce them;
+   they aren't controls, so no ring. */
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
