@@ -18,6 +18,7 @@ Professional, calm, developer-tool look. Light/dark (follow the OS, with a toggl
 7. Prompt templates with placeholders: bug fix, feature, refactor, tests, explain code, code review, commit message.
 8. Security: secrets, customer data, content exclusions, public-code matching / code referencing, link to [AI POLICY URL].
 9. Beyond the editor: Copilot PR review, commit messages, terminal.
+10. Team playbook (playbook.json): custom agents, React / React Native / Node.js strengths and risks, pipeline and people guardrails, when to write rules, MCP allow-list, team skills, always-manual work, rollout.
 
 ## §4 Interactive
 a. Context meter: actions (attach file, paste big log, follow-up, agent runs tests) fill a bar and lower a quality gauge. "New chat" and "Summarise" show what they keep. A cost counter bills each model call on the whole window, scaled by a relative model price (illustrative numbers, labelled as such).

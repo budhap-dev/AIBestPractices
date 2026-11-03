@@ -9,7 +9,7 @@ const CODE = [
   String.raw`(?<=\s)#(?=[\s,.])`, // a lone "#"
   String.raw`(?<![\w])@[a-z]\w*`, // @vscode
   String.raw`\.github/[\w/*.-]*`, // .github/prompts/*.prompt.md
-  String.raw`[\w*./-]*\.(?:md|tsx?|jsx?|json|ya?ml)\b`, // AGENTS.md, src/lib/log.ts
+  String.raw`(?<![\w*./-])(?!Node\.js\b)[\w*./-]*\.(?:md|tsx?|jsx?|json|ya?ml)\b`, // AGENTS.md, src/lib/log.ts, but not Node.js
   String.raw`(?<![\w])\.env\b`,
   String.raw`\b[a-z]+(?:\.[a-zA-Z]+){2,}\b(?<!\.(?:com|org|io|net))`, // chat.tools.global.autoApprove
   String.raw`\bnpm (?:run )?[\w:-]+`,

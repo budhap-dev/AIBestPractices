@@ -30,6 +30,7 @@ Each section has its own page, with previous and next links at the bottom. Pages
 | Test yourself | A scenario quiz. |
 | Security | An **approval gate** diagram, approvals, auto-approve, sandboxing, content exclusion and public code. |
 | Beyond the editor | Commit messages, terminal chat, smart actions, PR review and the cloud agent. |
+| Team playbook | The team layer for our React, React Native and Node.js repos: custom agents to set up, where AI helps in each stack, guardrails in the pipeline and in how we work, when to write or update a rule, which MCP servers to allow, the skills we need, what always stays manual, and the rollout plan. |
 | Wrap-up | Seven takeaways, each linking back to its section. |
 
 Most sections end with **Did you know?** facts, each with a docs link. Each page header carries its section's picture. Small wins get confetti: a right quiz answer, a finished checklist and the end of the deck. Confetti, pictures and diagram animations are still when the system asks for reduced motion.
@@ -38,7 +39,7 @@ Most sections end with **Did you know?** facts, each with a docs link. Each page
 
 Select **Present** in the top bar, or **Present the guide** on the home page, to run the guide as a slide deck. Starting from a section page opens the deck at that section. The deck is built from the same content files, so it stays in sync with the guide.
 
-The deck opens as a **short talk**: 26 slides, about 13 minutes of reading (allow 25 to 30 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 104 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. Edit the running order in `src/content/talk.json`.
+The deck opens as a **short talk**: 35 slides, about 19 minutes of reading (allow 35 to 40 minutes live), covering the opening story, the key diagrams, three quiz scenarios, the approval gate, the team playbook, the takeaways and the surprise ending. Press **S**, or use the picker in the toolbar, to switch to the **full deck** of 123 slides and back. You stay on the same slide, or move to the next one in the talk. Nothing is cut from the guide or the full deck: they stay for people to read afterwards. In the overview (**O**), slides the short talk skips are dimmed, and picking one switches to the full deck at that slide. Edit the running order in `src/content/talk.json`.
 
 Each press of → reveals the next point on a slide, then moves to the next slide. Quiz slides show the options one by one and reveal the answer last.
 
@@ -62,7 +63,7 @@ After **Questions?** there is a surprise: press → to find out. Its last slides
 | ? | Show the shortcuts |
 | Esc | Leave presenter mode, back to the current section's page |
 
-Every slide shows an estimated time to read in the bottom bar, with the reading time left in the deck. The overview shows each slide's time and the total: about 13 minutes for the short talk, 55 minutes for the full deck. Times assume 200 words per minute; change `readingWordsPerMinute` in `meta.json` to suit your audience.
+Every slide shows an estimated time to read in the bottom bar, with the reading time left in the deck. The overview shows each slide's time and the total: about 19 minutes for the short talk, 66 minutes for the full deck. Times assume 200 words per minute; change `readingWordsPerMinute` in `meta.json` to suit your audience.
 
 On touch screens, swipe left or right. The toolbar hides after a few seconds without mouse movement. Slide layouts live in `src/presenter/deck.ts`.
 

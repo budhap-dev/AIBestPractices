@@ -134,6 +134,45 @@ export interface Takeaway extends Item {
   section: string
 }
 
+// ---------- Team playbook ----------
+export interface PlaybookAgent extends Item {
+  // What the agent may do, shown as a tag.
+  tools: string
+}
+
+// One of our stacks. The body says what to watch for.
+export interface StackArea extends Item {
+  platform: string
+  strengths: string[]
+}
+
+export interface Guardrail extends Item {
+  // Enforced by tooling, or by how people work.
+  group: 'pipeline' | 'people'
+}
+
+export interface RolloutPhase extends Item {
+  when: string
+  steps: string[]
+}
+
+export interface Playbook {
+  agents: PlaybookAgent[]
+  agentNote: string
+  stack: StackArea[]
+  guardrails: Guardrail[]
+  // When to write or update a rules file.
+  triggers: Item[]
+  mcpIntro: string
+  mcpServers: Item[]
+  mcpRules: Item[]
+  skills: Item[]
+  // Work a person always decides and does.
+  manual: Item[]
+  manualNote: string
+  rollout: RolloutPhase[]
+}
+
 // ---------- Prompt cost ----------
 export interface PromptRound {
   you: string

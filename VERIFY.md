@@ -6,6 +6,8 @@ Checked against the official VS Code and GitHub Copilot docs on 14 Oct 2026. The
 |---|---|---|
 | `@workspace` | `commands.json` → `part-workspace` | Not mentioned in the current VS Code Copilot docs. Whole-project context is now done with `#codebase` and the agent's search tools. No deprecation notice found. |
 | Cycle inline suggestions (⌥] / Alt+]) | `commands.json` → `sc-cycle` | Not on the current suggestions page or the cheat sheet. Older docs gave these shortcuts. |
+| Figma MCP server | `playbook.json` → `pb-mcp-figma` | Added without a docs check. Confirm Figma's official MCP server and link it. |
+| Error-tracking MCP server (Sentry) | `playbook.json` → `pb-mcp-errors` | Added without a docs check. Confirm Sentry's official MCP server, or name the tool the team uses. |
 
 ## Also worth rechecking
 
