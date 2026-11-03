@@ -1,0 +1,87 @@
+{
+  "agents": [
+    { "id": "pb-planner", "title": "Planner", "tools": "Read only", "body": "Turns a ticket into steps, the files to touch and the risks. Makes no edits, so it is safe in any repo.", "tags": ["custom agents", "plan", "read-only"], "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents" },
+    { "id": "pb-implementer", "title": "Implementer", "tools": "Edits and runs, with approval", "body": "Follows the agreed plan one step at a time and runs lint, typecheck and tests after each step.", "tags": ["custom agents", "agent", "tests"], "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents" },
+    { "id": "pb-tester", "title": "Test writer", "tools": "Edits and runs, with approval", "body": "Adds Jest and Testing Library tests for new and changed code. Its instructions keep it to test files.", "tags": ["custom agents", "tests", "jest"], "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents" },
+    { "id": "pb-reviewer", "title": "Reviewer", "tools": "Read only", "body": "Checks a diff against our rules, the security checklist and missing tests. It comments; it never approves.", "tags": ["custom agents", "review", "read-only"], "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents" },
+    { "id": "pb-upgrader", "title": "Upgrader", "tools": "Edits and runs, with approval", "body": "Version bumps, codemods and migrations for React, React Native and Node.js, in small pull requests.", "tags": ["custom agents", "upgrade", "migration"], "sourceUrl": "https://code.visualstudio.com/docs/agent-customization/custom-agents" }
+  ],
+  "agentNote": "Least privilege: give each agent only the tools its job needs, and define them once in .github/agents/*.agent.md so the whole team shares them.",
+
+  "stack": [
+    { "id": "pb-react", "platform": "Web", "title": "React", "strengths": ["Components from a clear spec", "Testing Library unit tests", "Refactors and prop types"], "body": "Watch for needless effects and re-renders, missing labels and focus handling, and made-up props on our design system.", "tags": ["react", "web", "accessibility"] },
+    { "id": "pb-react-native", "platform": "Mobile", "title": "React Native", "strengths": ["Screen and navigation scaffolding", "Styles and layout from a design", "Tests for hooks and logic"], "body": "Watch for iOS and Android differences, native modules and permissions, and APIs from another React Native version. Test on real devices.", "tags": ["react native", "mobile", "ios", "android"] },
+    { "id": "pb-node", "platform": "API", "title": "Node.js", "strengths": ["Routes, validation schemas and types", "API tests and fixtures", "Scripts and data transforms"], "body": "Watch for endpoints with no auth or input checks, unhandled async errors, and unfamiliar packages from npm, so check each one exists and is maintained.", "tags": ["node", "api", "packages"] }
+  ],
+
+  "guardrails": [
+    { "id": "pb-branch", "group": "pipeline", "title": "Branch protection", "body": "No direct pushes to main. Every pull request needs a human approval, whoever or whatever wrote it.", "tags": ["branch protection", "review"], "sourceUrl": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" },
+    { "id": "pb-ci", "group": "pipeline", "title": "CI quality gates", "body": "Lint, typecheck, unit tests and coverage must pass before merge. AI-written code goes through the same gates.", "tags": ["ci", "tests", "lint"] },
+    { "id": "pb-scanning", "group": "pipeline", "title": "Security scanning", "body": "Secret scanning, dependency review and static analysis on every pull request.", "tags": ["secret scanning", "dependencies", "security"], "sourceUrl": "https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning" },
+    { "id": "pb-approvals", "group": "pipeline", "title": "Command approvals on", "body": "Agents ask before running terminal commands. No global auto-approve; sandbox terminal commands where you can.", "tags": ["approvals", "auto-approve", "sandbox"], "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals" },
+    { "id": "pb-secrets", "group": "pipeline", "title": "Secrets out of the workspace", "body": "Keep .env files, keys and signing configs out of the agent’s reach. Content exclusion doesn’t cover Agent mode.", "tags": ["secrets", "content exclusion"], "sourceUrl": "https://docs.github.com/en/copilot/concepts/context/content-exclusion" },
+    { "id": "pb-tokens", "group": "pipeline", "title": "Least-privilege tokens", "body": "Agents and MCP servers get scoped, read-only access by default, and never write access to production.", "tags": ["tokens", "mcp", "access"] },
+    { "id": "pb-public-code", "group": "pipeline", "title": "Public code filter", "body": "Block suggestions that match public code, or allow them with references and check the licence.", "tags": ["public code", "licence"], "sourceUrl": "https://docs.github.com/en/copilot/concepts/completions/code-referencing" },
+    { "id": "pb-trace", "group": "pipeline", "title": "Traceability", "body": "Label AI-assisted pull requests and link the agent session, so reviewers know where to look.", "tags": ["labels", "review"] },
+
+    { "id": "pb-tools", "group": "people", "title": "Approved tools only", "body": "Company-licensed AI tools and accounts. No personal accounts on company code.", "tags": ["policy", "accounts"] },
+    { "id": "pb-data", "group": "people", "title": "Keep data out of prompts", "body": "No secrets, credentials, customer data or personal data in prompts, screenshots or pasted logs.", "tags": ["privacy", "secrets", "data"] },
+    { "id": "pb-own", "group": "people", "title": "You own what you merge", "body": "Be able to explain every line. “The AI wrote it” is never an answer in review.", "tags": ["ownership", "review"] },
+    { "id": "pb-disclose", "group": "people", "title": "Say when AI helped", "body": "Mention significant AI help in the pull request description so reviewers can focus.", "tags": ["disclosure", "pull request"] },
+    { "id": "pb-deps", "group": "people", "title": "New dependencies are a human call", "body": "Check the package exists, is maintained and has a compatible licence before adding it.", "tags": ["dependencies", "packages", "npm"] },
+    { "id": "pb-second", "group": "people", "title": "Second reviewer for high-risk code", "body": "Auth, payments and personal-data changes need a reviewer from the owning team.", "tags": ["review", "auth", "payments"] }
+  ],
+
+  "triggers": [
+    { "id": "pb-t-onboard", "title": "Onboarding a repo", "body": "Before anyone uses agents in it: stack, commands, folder map and no-go zones.", "tags": ["instructions", "onboarding"] },
+    { "id": "pb-t-twice", "title": "The same correction twice", "body": "If you fix the same AI mistake twice, it belongs in the rules.", "tags": ["instructions", "mistakes"] },
+    { "id": "pb-t-convention", "title": "A new convention or design decision", "body": "When the team agrees a pattern, such as state management or the error format, write it down.", "tags": ["instructions", "conventions"] },
+    { "id": "pb-t-upgrade", "title": "A framework upgrade", "body": "A new React, React Native or Node.js version: name the APIs agents should use.", "tags": ["instructions", "upgrade"] },
+    { "id": "pb-t-sensitive", "title": "Entering a sensitive area", "body": "Auth, payments, personal data or native modules: add path-specific rules first.", "tags": ["instructions", "applyTo", "security"] },
+    { "id": "pb-t-autonomy", "title": "Before giving more autonomy", "body": "Before turning on the cloud agent or wider auto-approvals in a repo.", "tags": ["instructions", "cloud agent", "auto-approve"] },
+    { "id": "pb-t-incident", "title": "After an incident or review finding", "body": "Turn the lesson into a rule so it doesn’t happen again.", "tags": ["instructions", "incident"] },
+    { "id": "pb-t-quarter", "title": "Every quarter", "body": "Prune stale rules. Keep the files short and true: the always-on ones are sent with every request.", "tags": ["instructions", "tokens"] }
+  ],
+
+  "mcpIntro": "Each MCP server is a new door into our systems. Add one only when a real task needs it.",
+  "mcpServers": [
+    { "id": "pb-mcp-github", "title": "GitHub", "body": "Issues, pull requests and Actions logs as context, without copy and paste.", "tags": ["mcp", "github", "issues"], "sourceUrl": "https://github.com/github/github-mcp-server" },
+    { "id": "pb-mcp-tracker", "title": "Issue tracker", "body": "Acceptance criteria straight from the ticket. Use the tracker’s official server.", "tags": ["mcp", "tickets"] },
+    { "id": "pb-mcp-figma", "title": "Figma", "body": "Design specs for React and React Native components.", "tags": ["mcp", "figma", "design"], "verify": true },
+    { "id": "pb-mcp-playwright", "title": "Playwright", "body": "Lets the agent open the web app in a real browser and check its own change.", "tags": ["mcp", "playwright", "browser"], "sourceUrl": "https://github.com/microsoft/playwright-mcp" },
+    { "id": "pb-mcp-errors", "title": "Error tracking", "body": "Read-only error traces, for example from Sentry, so bug fixes start from real data.", "tags": ["mcp", "sentry", "errors"], "verify": true },
+    { "id": "pb-mcp-db", "title": "Database, read only", "body": "Schema and sample queries on a non-production database, for Node.js work.", "tags": ["mcp", "database"] }
+  ],
+  "mcpRules": [
+    { "id": "pb-mcp-allow", "title": "Allow-list only.", "body": "Official vendor servers, pinned to a version, after a security review.", "tags": ["mcp", "policy", "security"], "sourceUrl": "https://code.visualstudio.com/docs/copilot/customization/mcp-servers" },
+    { "id": "pb-mcp-scope", "title": "Least privilege.", "body": "Read-only, scoped tokens. Never write access to production.", "tags": ["mcp", "tokens"] },
+    { "id": "pb-mcp-untrusted", "title": "Untrusted output, approvals on.", "body": "Tickets and web pages can carry hidden instructions, so any tool that writes asks first.", "tags": ["mcp", "prompt injection", "approvals"], "sourceUrl": "https://code.visualstudio.com/docs/agents/run/approvals" }
+  ],
+
+  "skills": [
+    { "id": "pb-s-framing", "title": "Problem framing", "body": "Turn a ticket into a goal, constraints and done-criteria.", "tags": ["skills", "prompt"] },
+    { "id": "pb-s-context", "title": "Context curation", "body": "Give the agent the right files, not the whole repo.", "tags": ["skills", "context"] },
+    { "id": "pb-s-review", "title": "Critical review", "body": "Read diffs line by line and spot plausible but wrong code.", "tags": ["skills", "review"] },
+    { "id": "pb-s-testing", "title": "Testing", "body": "Write and judge tests that prove behaviour, not just coverage.", "tags": ["skills", "tests"] },
+    { "id": "pb-s-security", "title": "Security basics", "body": "OWASP Top 10, secure storage on mobile, secrets and the software supply chain.", "tags": ["skills", "security"] },
+    { "id": "pb-s-architecture", "title": "Architecture sense", "body": "Keep generated code inside our patterns and boundaries.", "tags": ["skills", "architecture"] },
+    { "id": "pb-s-rules", "title": "Writing rules", "body": "Turn team knowledge into short, checkable instructions.", "tags": ["skills", "instructions"] },
+    { "id": "pb-s-stop", "title": "Knowing when to stop", "body": "Write it yourself when the agent loops or guesses.", "tags": ["skills", "agent"] }
+  ],
+
+  "manual": [
+    { "id": "pb-m-merge", "title": "Final approval and merge", "body": "Copilot code review leaves comments, but it doesn’t count as an approval. A person approves and merges.", "tags": ["manual", "review", "merge"], "sourceUrl": "https://docs.github.com/en/copilot/concepts/agents/code-review" },
+    { "id": "pb-m-sensitive", "title": "Auth, payments and personal data", "body": "AI can draft. The owning team reads every line and decides.", "tags": ["manual", "auth", "payments", "privacy"] },
+    { "id": "pb-m-secrets", "title": "Secrets and environment config", "body": "Set by a person in the secrets store, never pasted into a prompt.", "tags": ["manual", "secrets"] },
+    { "id": "pb-m-release", "title": "Migrations, releases and rollbacks", "body": "AI can draft the script. A person runs it on staging, then production. No agent signs or ships an app build.", "tags": ["manual", "release", "migration"] },
+    { "id": "pb-m-decisions", "title": "Dependencies and architecture", "body": "AI can list the options. The team decides and records why.", "tags": ["manual", "dependencies", "architecture"] },
+    { "id": "pb-m-incidents", "title": "Production incidents", "body": "AI can help read logs and traces. People decide and act.", "tags": ["manual", "incident"] }
+  ],
+  "manualNote": "AI may draft or explain in these areas. A person reviews every line, makes the call and presses the button.",
+
+  "rollout": [
+    { "id": "pb-r-base", "when": "Weeks 1–2", "title": "Set the base", "body": "Tools, rules and guardrails in place before heavier agent use.", "steps": ["Approve the AI tools and the MCP allow-list", "Add a rules file to every React, React Native and Node.js repo", "Turn on branch protection, secret scanning and CI gates"], "tags": ["rollout"] },
+    { "id": "pb-r-pilot", "when": "Weeks 3–6", "title": "Pilot", "body": "Learn which agents and rules help in our repos.", "steps": ["Two squads use the Planner, Implementer and Reviewer agents", "Log repeat AI mistakes and turn them into rules", "Fortnightly demo: one win, one miss"], "tags": ["rollout", "pilot"] },
+    { "id": "pb-r-scale", "when": "Week 7 onward", "title": "Scale and measure", "body": "Measure outcomes, not usage.", "steps": ["Roll out to all squads", "Cloud agent for low-risk tickets only", "Track cycle time, escaped defects and review rework", "Review the rules every quarter"], "tags": ["rollout", "metrics"] }
+  ]
+}

@@ -442,6 +442,100 @@
     "helps": "Asha clicks Explain error on a failing check and has the cause in a minute.",
     "wrong": "Ben scrolls through 3,000 lines of CI log looking for the one red line."
   },
+  "section-playbook": {
+    "scene": "roles",
+    "hook": "Asha’s team agreed its AI rules once. Ben’s team argues about them in every review."
+  },
+  "pb-agents-cards-0": {
+    "scene": "roles",
+    "helps": "Asha starts each ticket with the read-only Planner, fixes the plan, then hands it to the Implementer.",
+    "wrong": "Ben gives one all-powerful agent the whole ticket. It rewrites three files nobody asked about."
+  },
+  "pb-agents-cards-1": {
+    "scene": "magnifier",
+    "helps": "Asha runs the Reviewer agent before asking a colleague, so the human review starts from the real questions.",
+    "wrong": "Ben treats the review agent’s comments as an approval and merges. Nobody actually read the change."
+  },
+  "pb-stack-cards-0": {
+    "scene": "stack",
+    "helps": "Asha pins the React Native version in the rules and tests every screen on a real iPhone and Android phone.",
+    "wrong": "Ben accepts a permissions API from an older React Native version. It builds, then crashes on Android."
+  },
+  "pb-pipeline-cards-0": {
+    "scene": "branch",
+    "helps": "Asha’s repo blocks merges until CI and a reviewer pass, so a confident but wrong change stops at the gate.",
+    "wrong": "Ben’s repo allows direct pushes to main. An agent’s quick fix reaches users before anyone reads it."
+  },
+  "pb-pipeline-cards-1": {
+    "scene": "gate",
+    "helps": "Asha keeps approvals on and the .env file out of the agent’s reach. The agent asks before every command.",
+    "wrong": "Ben auto-approves everything to save clicks. While debugging, the agent prints the API keys into the chat."
+  },
+  "pb-pipeline-cards-2": {
+    "scene": "scales",
+    "helps": "Asha checks the licence when a suggestion matches public code, and labels the pull request as AI-assisted.",
+    "wrong": "Ben ships a matched snippet without checking the licence. Legal finds it a year later."
+  },
+  "pb-people-cards-0": {
+    "scene": "shield",
+    "helps": "Asha uses the company Copilot account and swaps customer names for fake data before asking.",
+    "wrong": "Ben pastes a customer’s order history into a personal AI account to debug a refund."
+  },
+  "pb-people-cards-1": {
+    "scene": "scales",
+    "helps": "Asha notes in the pull request which parts the agent wrote, and asks the payments team for a second review.",
+    "wrong": "Ben merges a package the agent added that nobody had heard of. It is a look-alike of a popular one."
+  },
+  "pb-triggers-0": {
+    "scene": "book",
+    "helps": "The second time the agent calls fetch instead of the API client, Asha adds a rule. It never happens again.",
+    "wrong": "Ben corrects the same mistake every week, in every chat, and wonders why the agent never learns."
+  },
+  "pb-triggers-1": {
+    "scene": "broom",
+    "helps": "Asha prunes the rules every quarter, so the always-on file stays short and every line still holds.",
+    "wrong": "Ben’s rules file grows to ten pages of stale advice. It is sent with every request, and half of it is wrong."
+  },
+  "pb-mcp-cards-0": {
+    "scene": "folder",
+    "helps": "Asha connects the GitHub server with a read-only token, so the agent reads the issue itself.",
+    "wrong": "Ben pastes ticket text, screenshots and logs into the chat by hand, and misses an acceptance criterion."
+  },
+  "pb-mcp-cards-1": {
+    "scene": "magnifier",
+    "helps": "Asha lets the agent check its UI change in a real browser before asking for review.",
+    "wrong": "Ben connects the database server with the production admin password. One wrong query from an outage."
+  },
+  "pb-mcp-rules": {
+    "scene": "shield",
+    "helps": "Asha treats text from tickets and web pages as data. When a ticket says “ignore your rules”, the approval prompt catches it.",
+    "wrong": "Ben installs an unvetted server and approves everything. A hidden line in a web page sends the agent off course."
+  },
+  "pb-skills-cards-0": {
+    "scene": "target",
+    "helps": "Asha spends the time AI saves on framing and review, and catches the plausible bug before it ships.",
+    "wrong": "Ben stops reading diffs closely because the code looks right. Review skills fade, and so does quality."
+  },
+  "pb-skills-cards-1": {
+    "scene": "clock",
+    "helps": "After two failed attempts, Asha stops the agent and writes the tricky part by hand in ten minutes.",
+    "wrong": "Ben retries the same prompt for an hour, paying for every round, then writes it by hand anyway."
+  },
+  "pb-manual-cards-0": {
+    "scene": "gate",
+    "helps": "Asha lets the agent draft the auth change, then reads every line and asks the owning team to approve.",
+    "wrong": "Ben lets the agent tidy up session handling. Users stay logged in after resetting their password."
+  },
+  "pb-manual-cards-1": {
+    "scene": "terminal",
+    "helps": "Asha runs the agent-drafted migration on staging first, then on production, by hand.",
+    "wrong": "Ben lets the agent run the migration straight on production. It has no rollback step."
+  },
+  "pb-rollout-cards-0": {
+    "scene": "flag",
+    "helps": "Asha’s team sets the base first, pilots with two squads and measures review rework, not prompt counts.",
+    "wrong": "Ben’s team turns everything on for everyone on day one, then spends a month cleaning up."
+  },
   "section-wrap-up": {
     "scene": "flag",
     "hook": "Seven habits separate Asha’s week from Ben’s."
