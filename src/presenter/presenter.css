@@ -2454,6 +2454,112 @@ html.presenting body {
   color: var(--text-3);
 }
 
+/* The eye on each overview card opens that slide at full size. */
+.overview li {
+  position: relative;
+}
+
+.overview__peek {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.overview__peek:hover,
+.overview__peek:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.overview__peek svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Leave the eye room next to a long title. */
+.overview__title {
+  padding-right: 32px;
+}
+
+/* ---------- Slide preview: one slide at full size, every point shown ---------- */
+.preview {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  background: var(--deck-bg);
+  animation: overlay-in 0.25s var(--ease-out) both;
+}
+
+.preview__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px clamp(12px, 2.5vw, 24px);
+}
+
+.preview__status {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.preview__time {
+  color: var(--text-2);
+}
+
+.preview__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  container: stage / size;
+}
+
+.preview__nav {
+  justify-content: center;
+  padding: 6px 0 12px;
+}
+
+/* The tick box reads on the accent button too. */
+.preview__toggle {
+  gap: 8px;
+}
+
+.preview__toggle .overview__check {
+  display: grid;
+}
+
+.preview__toggle[aria-pressed='true'] .overview__check {
+  border-color: currentColor;
+}
+
+/* The tick takes the button's text colour, which follows the theme. */
+.preview__toggle[aria-pressed='true'] .overview__check::after {
+  content: '';
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+}
+
 /* Mid-size windows: the pickers drop their icons and the bar drops the product name, keeping the section. */
 @media (max-width: 1000px) {
   .presenter__select-icon,

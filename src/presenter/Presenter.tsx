@@ -4,7 +4,7 @@ import { celebrate } from '../components/confetti'
 import { ThemeMenu } from '../components/ThemeMenu'
 import { navigate } from '../router'
 import { deckFor, defaultTalk, formatDuration, fullDeck, inDeckOrder, indexIn, secondsFrom, slideSeconds, totalSeconds, type Length, type Slide } from './deck'
-import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, isDefaultTalk, readLength, readTalk, saveLength, saveTalk, type Design, type Transition } from './controls'
+import { DESIGNS, DeckControlsContext, LENGTHS, TRANSITIONS, isDefaultTalk, readLength, readTalk, saveLength, saveTalk, useDeckControls, type Design, type Transition } from './controls'
 import { SlideView } from './Slide'
 import './presenter.css'
 
@@ -525,71 +525,206 @@ function Overview({ deck, length, current, talk, onToggle, onReset, onPick, onCl
   const listed = editing ? talk : deck
   const shown = editing || length === 'short' ? fullDeck : deck
   const label = editing ? TALK_LABEL : LENGTHS.find((l) => l.id === length)?.label
+  // The slide open in the preview, as a position in `shown`.
+  const [preview, setPreview] = useState<number | null>(null)
+  const grid = useRef<HTMLOListElement>(null)
 
   useEffect(() => {
     active.current?.focus({ preventScroll: true })
     active.current?.scrollIntoView({ block: 'center' })
   }, [])
 
+  // Back in the overview, land on the last slide previewed, so browsing on from there is easy.
+  // Focus waits for the render that lifts `inert` from the overview.
+  const returnTo = useRef<string | null>(null)
+  function closePreview() {
+    returnTo.current = preview === null ? null : (shown[preview]?.id ?? null)
+    setPreview(null)
+  }
+
+  useEffect(() => {
+    const id = returnTo.current
+    if (preview !== null || !id) return
+    returnTo.current = null
+    const card = grid.current?.querySelector<HTMLElement>(`[data-slide="${CSS.escape(id)}"] .overview__card`)
+    card?.focus({ preventScroll: true })
+    card?.scrollIntoView({ block: 'nearest' })
+  }, [preview])
+
   return (
-    <div className={`presenter__overlay presenter__overlay--overview${editing ? ' is-editing' : ''}`} role="dialog" aria-modal="true" aria-label="All slides">
-      <div className="overview__head">
-        <h2>
-          {label}{' '}
-          <span className="overview__total">
-            · {listed.length} slides, about {formatDuration(totalSeconds(listed))} to read
-          </span>
-        </h2>
+    <>
+      <div className={`presenter__overlay presenter__overlay--overview${editing ? ' is-editing' : ''}`} role="dialog" aria-modal="true" aria-label="All slides" inert={preview !== null}>
+        <div className="overview__head">
+          <h2>
+            {label}{' '}
+            <span className="overview__total">
+              · {listed.length} slides, about {formatDuration(totalSeconds(listed))} to read
+            </span>
+          </h2>
+          <div className="overview__actions">
+            {editing && onReset && (
+              <button type="button" className="btn btn--outline btn--sm" onClick={onReset} title="Go back to the slides listed in talk.json">
+                Reset
+              </button>
+            )}
+            <button type="button" className={`btn btn--sm ${editing ? 'btn--primary' : 'btn--outline'}`} onClick={() => setEditing(!editing)} aria-pressed={editing}>
+              {editing ? 'Done' : `Edit ${TALK_LABEL.toLowerCase()}`}
+            </button>
+            <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
+              Close
+              <kbd>Esc</kbd>
+            </button>
+          </div>
+        </div>
+        {editing ? (
+          <p className="overview__note">
+            Click a slide to add it to the {TALK_LABEL.toLowerCase()} or take it out. Use the eye to see a slide in full first. Your pick is saved in this browser.
+          </p>
+        ) : (
+          length === 'short' && <p className="overview__note">Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.</p>
+        )}
+        <ol className="overview" ref={grid}>
+          {shown.map((s, i) => {
+            const at = listed.findIndex((d) => d.id === s.id)
+            const skipped = at === -1
+            const isCurrent = s.id === current
+            return (
+              <li key={s.id} data-slide={s.id} style={{ '--i': Math.min(i, 30) } as CSSProperties}>
+                <button
+                  ref={isCurrent ? active : undefined}
+                  type="button"
+                  className={`overview__card overview__card--${s.kind}${isCurrent ? ' is-current' : ''}${skipped ? ' is-skipped' : ''}`}
+                  aria-current={isCurrent ? 'true' : undefined}
+                  aria-pressed={editing ? !skipped : undefined}
+                  onClick={() => (editing ? onToggle(s.id) : onPick(s.id))}
+                >
+                  <span className="overview__meta">
+                    {editing && <span className="overview__check" aria-hidden="true" />}
+                    <span className="overview__num">{skipped ? <span className="overview__full">{editing ? 'Left out' : 'Full deck'}</span> : at + 1}</span>
+                    <span className="overview__time">
+                      <span className="visually-hidden">Time to read: </span>
+                      {formatDuration(slideSeconds(s))}
+                    </span>
+                  </span>
+                  <span className="overview__section">{navOf(s.section) ?? meta.product}</span>
+                  <span className="overview__title">{s.title}</span>
+                </button>
+                <button type="button" className="overview__peek" onClick={() => setPreview(i)} aria-label={`Preview: ${s.title}`} title="Preview">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+      {preview !== null && shown[preview] && (
+        <Preview
+          slides={shown}
+          at={preview}
+          listed={listed}
+          editing={editing}
+          onMove={setPreview}
+          onToggle={onToggle}
+          onPick={onPick}
+          onClose={closePreview}
+        />
+      )}
+    </>
+  )
+}
+
+interface PreviewProps {
+  // The slides to browse, in deck order, and the one on show.
+  slides: Slide[]
+  at: number
+  // The slides being presented (or, while editing, the short talk), for the slide number and the in-or-out state.
+  listed: Slide[]
+  editing: boolean
+  onMove: (at: number) => void
+  onToggle: (id: string) => void
+  onPick: (id: string) => void
+  onClose: () => void
+}
+
+// One slide at full size with every point revealed, so a presenter can judge it before picking it.
+function Preview({ slides, at, listed, editing, onMove, onToggle, onPick, onClose }: PreviewProps) {
+  const controls = useDeckControls()
+  const main = useRef<HTMLButtonElement>(null)
+  const slide = slides[at]
+  const pos = listed.findIndex((d) => d.id === slide.id)
+  const inList = pos !== -1
+  const move = (by: number) => onMove(Math.min(Math.max(at + by, 0), slides.length - 1))
+
+  // Runs before the presenter's own keys, so ← → browse the preview and Esc only closes it.
+  const onKey = useEffectEvent((e: KeyboardEvent) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return
+    const by = { ArrowRight: 1, PageDown: 1, ArrowLeft: -1, PageUp: -1 }[e.key]
+    if (by === undefined && e.key !== 'Escape') return
+    e.preventDefault()
+    e.stopPropagation()
+    if (by) move(by)
+    else onClose()
+  })
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => onKey(e)
+    window.addEventListener('keydown', handler, true)
+    main.current?.focus({ preventScroll: true })
+    return () => window.removeEventListener('keydown', handler, true)
+  }, [])
+
+  const status = inList ? `Slide ${pos + 1} of ${listed.length}` : editing ? `Left out of the ${TALK_LABEL.toLowerCase()}` : 'Full deck only'
+
+  return (
+    <div className="preview" role="dialog" aria-modal="true" aria-label={`Preview: ${slide.title}`}>
+      <div className="preview__bar">
+        <p className="preview__status" aria-live="polite">
+          <strong>{status}</strong>
+          <span className="preview__time"> · {formatDuration(slideSeconds(slide))} read</span>
+        </p>
         <div className="overview__actions">
-          {editing && onReset && (
-            <button type="button" className="btn btn--outline btn--sm" onClick={onReset} title="Go back to the slides listed in talk.json">
-              Reset
+          {editing ? (
+            <button ref={main} type="button" className={`btn btn--sm preview__toggle ${inList ? 'btn--primary' : 'btn--outline'}`} onClick={() => onToggle(slide.id)} aria-pressed={inList}>
+              <span className="overview__check" aria-hidden="true" />
+              In the {TALK_LABEL.toLowerCase()}
+            </button>
+          ) : (
+            <button ref={main} type="button" className="btn btn--primary btn--sm" onClick={() => onPick(slide.id)}>
+              Present from here
             </button>
           )}
-          <button type="button" className={`btn btn--sm ${editing ? 'btn--primary' : 'btn--outline'}`} onClick={() => setEditing(!editing)} aria-pressed={editing}>
-            {editing ? 'Done' : `Edit ${TALK_LABEL.toLowerCase()}`}
-          </button>
           <button type="button" className="btn btn--outline btn--sm" onClick={onClose}>
-            Close
+            Back to overview
             <kbd>Esc</kbd>
           </button>
         </div>
       </div>
-      {editing ? (
-        <p className="overview__note">Click a slide to add it to the {TALK_LABEL.toLowerCase()} or take it out. Your pick is saved in this browser.</p>
-      ) : (
-        length === 'short' && <p className="overview__note">Dimmed slides are in the full deck only. Pick one to switch to the full deck at that slide.</p>
-      )}
-      <ol className="overview">
-        {shown.map((s, i) => {
-          const at = listed.findIndex((d) => d.id === s.id)
-          const skipped = at === -1
-          const isCurrent = s.id === current
-          return (
-            <li key={s.id} style={{ '--i': Math.min(i, 30) } as CSSProperties}>
-              <button
-                ref={isCurrent ? active : undefined}
-                type="button"
-                className={`overview__card overview__card--${s.kind}${isCurrent ? ' is-current' : ''}${skipped ? ' is-skipped' : ''}`}
-                aria-current={isCurrent ? 'true' : undefined}
-                aria-pressed={editing ? !skipped : undefined}
-                onClick={() => (editing ? onToggle(s.id) : onPick(s.id))}
-              >
-                <span className="overview__meta">
-                  {editing && <span className="overview__check" aria-hidden="true" />}
-                  <span className="overview__num">{skipped ? <span className="overview__full">{editing ? 'Left out' : 'Full deck'}</span> : at + 1}</span>
-                  <span className="overview__time">
-                    <span className="visually-hidden">Time to read: </span>
-                    {formatDuration(slideSeconds(s))}
-                  </span>
-                </span>
-                <span className="overview__section">{navOf(s.section) ?? meta.product}</span>
-                <span className="overview__title">{s.title}</span>
-              </button>
-            </li>
-          )
-        })}
-      </ol>
+      <div className="preview__stage">
+        {/* The footer counts slides in the talk being built, as the audience would see it. */}
+        <DeckControlsContext.Provider value={controls && { ...controls, slides: listed }}>
+          <section key={slide.id} className="slide" aria-label={slide.title}>
+            <SlideView slide={slide} step={slide.steps} number={inList ? pos + 1 : undefined} still />
+          </section>
+        </DeckControlsContext.Provider>
+      </div>
+      <div className="presenter__nav preview__nav">
+        <button type="button" className="btn btn--icon" onClick={() => move(-1)} disabled={at === 0} aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+        <span className="presenter__count">
+          {at + 1} / {slides.length}
+        </span>
+        <button type="button" className="btn btn--icon" onClick={() => move(1)} disabled={at === slides.length - 1} aria-label="Next slide">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }
