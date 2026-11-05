@@ -21,6 +21,7 @@ import openingJson from './opening.json'
 import storiesJson from './stories.json'
 import finaleJson from './finale.json'
 import talkJson from './talk.json'
+import marksJson from './marks.json'
 import playbookJson from './playbook.json'
 import type {
   ApprovalGate,
@@ -55,6 +56,7 @@ import type {
   ThenNow,
   Template,
   WorkflowStep,
+  Ink,
 } from './types'
 
 export const meta = metaJson as Meta
@@ -105,6 +107,7 @@ export const finale = finaleJson
 export const playbook = playbookJson as Playbook
 // The slides to present in a short live session; the full deck keeps everything.
 export const talk = talkJson as { label: string; note: string; slides: string[] }
+export const marks = marksJson as { note: string; slides: Record<string, Partial<Record<Ink, string[]>>> }
 
 export function section(id: string): SectionInfo {
   const found = sections.find((s) => s.id === id)

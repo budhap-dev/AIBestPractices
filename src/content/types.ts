@@ -46,6 +46,9 @@ export interface Mode extends Item {
   example: string
 }
 
+// The colour of pen for a ring on a slide: the right move, a trap, a caveat, a term to remember.
+export type Ink = 'good' | 'bad' | 'warn' | 'key'
+
 export type CommandGroup = 'slash' | 'participant' | 'context' | 'shortcut' | 'setting'
 
 export interface Command extends Item {

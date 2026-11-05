@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from 'react'
+import { Marked } from './Ring'
 
 // Content is plain text, so code-like tokens are found by pattern and styled on the slide:
 // slash commands, #context, @participants, file names and paths, settings ids, npm commands and shortcuts.
@@ -17,7 +18,7 @@ const CODE = [
 
 const TOKEN = new RegExp(`(${KEYS})|(${CODE})`, 'g')
 
-export function RichText({ text }: { text: string }): ReactNode {
+function styled(text: string): ReactNode {
   const parts: ReactNode[] = []
   let last = 0
   for (const m of text.matchAll(TOKEN)) {
@@ -29,4 +30,8 @@ export function RichText({ text }: { text: string }): ReactNode {
   if (last === 0) return text
   if (last < text.length) parts.push(text.slice(last))
   return parts.map((p, i) => <Fragment key={i}>{p}</Fragment>)
+}
+
+export function RichText({ text }: { text: string }): ReactNode {
+  return <Marked text={text} render={styled} />
 }

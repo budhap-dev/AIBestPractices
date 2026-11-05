@@ -3,6 +3,7 @@ import { diagrams, promptCost } from '../content'
 import { ACTION_LABEL } from '../content/labels'
 import { costRows, costTotal, formatTokens, scenarioHours, sum, type DiagramId } from './diagramData'
 import { RichText } from './RichText'
+import { Marked, Ring } from './Ring'
 import { CopyButton } from './ui'
 
 // Diagrams reveal one part per step. In the deck the presenter's → sets `step`;
@@ -80,8 +81,12 @@ function RequestFlow({ step }: { step: number }) {
             <span className="dg-req__num" aria-hidden="true">
               {i + 1}
             </span>
-            <strong className="dg-req__title">{s.title}</strong>
-            <span className="dg-req__body">{s.body}</span>
+            <strong className="dg-req__title">
+              <Marked text={s.title} />
+            </strong>
+            <span className="dg-req__body">
+              <Marked text={s.body} />
+            </span>
             {s.show === 'packed' && (
               <ul className="dg-req__packed">
                 {r.packed.map((p, j) => (
@@ -105,7 +110,7 @@ function RequestFlow({ step }: { step: number }) {
       </ol>
       <p className={reveal(step, r.steps.length - 1, 'dg-req__loop')} style={at(r.steps.length)}>
         <span aria-hidden="true">↻ </span>
-        {r.loop}
+        <Marked text={r.loop} />
       </p>
       <figcaption className="dg__note">{r.tokensNote}</figcaption>
     </figure>
@@ -164,14 +169,18 @@ function Snowball({ step, compact }: { step: number; compact?: boolean }) {
               <strong>
                 <CountUp to={costTotal(s)} active={step > totalsAt} />
               </strong>{' '}
-              tokens in total. {s.outcome}
+              tokens in total. <Marked text={s.outcome} />
             </p>
           </section>
         ))}
       </div>
       {second && (
         <p className={reveal(step, totalsAt + 1, 'dg-snow__verdict')} style={at(totalsAt + 1)}>
-          Same fix, about <strong>{ratio}×</strong> the tokens.
+          Same fix, about{' '}
+          <strong>
+            <Ring seed="snowball-ratio" ink="bad">{ratio}×</Ring>
+          </strong>{' '}
+          the tokens.
         </p>
       )}
       <figcaption className="dg__note">{promptCost.note}</figcaption>
@@ -239,15 +248,17 @@ function ModesLadder({ step }: { step: number }) {
         {rungs.map((m, i) => (
           <li key={m.mode} className={reveal(step, i, 'dg-modes__rung')} style={at(i, { '--lvl': (i + 1) / rungs.length })}>
             <span className="dg-modes__name">{m.mode}</span>
-            <span className="dg-modes__does">{m.does}</span>
+            <span className="dg-modes__does">
+              <Marked text={m.does} />
+            </span>
             <span className="dg-modes__changes">
-              <span className="dg-modes__key">Changes</span> {m.changes}
+              <span className="dg-modes__key">Changes</span> <Marked text={m.changes} />
             </span>
             <span className="dg-modes__cost">
               <span className="dg-modes__meter" aria-hidden="true">
                 <span />
               </span>
-              {m.cost} cost
+              <Marked text={m.cost} /> cost
             </span>
           </li>
         ))}
@@ -267,7 +278,7 @@ function ChatFlow({ step }: { step: number }) {
           <li key={q.question} className="dg-flow__row">
             <p className={reveal(step, i * 2, 'dg-flow__q')} style={at(i * 2)}>
               <span className="dg-flow__diamond" aria-hidden="true" />
-              {q.question}
+              <Marked text={q.question} />
               {i > 0 && <span className="dg-flow__no">No</span>}
             </p>
             <p className={reveal(step, i * 2 + 1, `dg-flow__out dg-flow__out--${q.yes}`)} style={at(i * 2 + 1)}>
@@ -283,7 +294,9 @@ function ChatFlow({ step }: { step: number }) {
       <p className={reveal(step, last, `dg-flow__out dg-flow__out--${f.otherwise} dg-flow__out--last`)} style={at(last)}>
         <span className="dg-flow__yes">No</span>
         <strong>{ACTION_LABEL[f.otherwise]}</strong>
-        <span className="dg-flow__detail">{f.otherwiseDetail}</span>
+        <span className="dg-flow__detail">
+          <Marked text={f.otherwiseDetail} />
+        </span>
       </p>
     </figure>
   )
@@ -312,7 +325,7 @@ function MemoryLanes({ step }: { step: number }) {
             <tbody key={lane.label} className={`dg-memory__lane dg-memory__lane--${li + 1}`}>
               <tr>
                 <th colSpan={m.requests.length + 1} scope="colgroup" className="dg-memory__lane-label">
-                  {lane.label}
+                  <Marked text={lane.label} />
                 </th>
               </tr>
               {lane.files.map((f) => (
@@ -332,7 +345,9 @@ function MemoryLanes({ step }: { step: number }) {
           ))}
         </table>
       </div>
-      <figcaption className="dg__note">{m.note}</figcaption>
+      <figcaption className="dg__note">
+        <Marked text={m.note} />
+      </figcaption>
     </figure>
   )
 }
@@ -369,13 +384,13 @@ function ThenNow({ step }: { step: number }) {
               </span>
             </span>
             <span className="dg-then__total">
-              {totals[i]} {d.unit}
+              <Marked text={`${totals[i]} ${d.unit}`} />
             </span>
           </li>
         ))}
       </ol>
       <p className={reveal(step, d.scenarios.length, 'dg-then__verdict')} style={at(d.scenarios.length)}>
-        {d.verdict}
+        <Marked text={d.verdict} />
       </p>
       <figcaption className="dg__note">{d.note}</figcaption>
       <div className="visually-hidden">
@@ -426,7 +441,7 @@ function ContextStack({ step }: { step: number }) {
       <ol className="dg-stack__cols">
         {d.requests.map((r, i) => (
           <li key={r.label} className={reveal(step, i, 'dg-stack__col')} style={at(i)}>
-            <span className="dg-stack__total">{formatTokens(totals[i])}</span>
+            <span className="dg-stack__total">{i === totals.length - 1 ? <Ring seed="stack-total" ink="bad">{formatTokens(totals[i])}</Ring> : formatTokens(totals[i])}</span>
             <span className="dg-stack__pile" style={{ '--h': totals[i] / max } as CSSProperties}>
               {r.blocks.map((b) => (
                 <span key={b.kind} className={`dg-stack__block dg-stack--${b.kind}`} style={{ flexGrow: b.tokens }} title={`${label(b.kind)}: ${formatTokens(b.tokens)} tokens`}>
@@ -440,7 +455,9 @@ function ContextStack({ step }: { step: number }) {
           </li>
         ))}
       </ol>
-      <figcaption className="dg__note">{d.note}</figcaption>
+      <figcaption className="dg__note">
+        <Marked text={d.note} />
+      </figcaption>
     </figure>
   )
 }
@@ -464,7 +481,9 @@ function DailyLoop({ step, compact }: { step: number; compact?: boolean }) {
             style={{ '--p': Math.min(step, n) / n } as CSSProperties}
           />
         </svg>
-        <p className="dg-loop__centre">{d.centre}</p>
+        <p className="dg-loop__centre">
+          <Marked text={d.centre} />
+        </p>
         <ol className="dg-loop__steps">
           {d.steps.map((s, i) => {
             const a = (i / n) * Math.PI * 2
@@ -477,7 +496,9 @@ function DailyLoop({ step, compact }: { step: number; compact?: boolean }) {
                 <span className="dg-loop__num" aria-hidden="true">
                   {i + 1}
                 </span>
-                <span>{s}</span>
+                <span>
+                  <Marked text={s} />
+                </span>
               </li>
             )
           })}
@@ -485,7 +506,7 @@ function DailyLoop({ step, compact }: { step: number; compact?: boolean }) {
       </div>
       <p className={reveal(step, n, 'dg-loop__back')} style={at(n)}>
         <span aria-hidden="true">↻ </span>
-        {d.back}
+        <Marked text={d.back} />
       </p>
     </figure>
   )
@@ -499,16 +520,20 @@ function ApprovalGate({ step }: { step: number }) {
       <ol className="dg-gate__lane">
         <li className={reveal(step, 0, 'dg-gate__card dg-gate__card--ask')} style={at(0)}>
           <strong>{d.ask.title}</strong>
-          <span>{d.ask.body}</span>
+          <span>
+            <Marked text={d.ask.body} />
+          </span>
           <code className="dg-gate__cmd">{d.ask.command}</code>
         </li>
         <li className={reveal(step, 1, 'dg-gate__card dg-gate__card--check')} style={at(1)}>
           <strong>{d.check.title}</strong>
-          <span>{d.check.body}</span>
+          <span>
+            <Marked text={d.check.body} />
+          </span>
           <span className="dg-gate__options">
             {d.check.options.map((o) => (
               <span key={o} className="dg-gate__option">
-                {o}
+                <Marked text={o} />
               </span>
             ))}
           </span>
@@ -541,7 +566,9 @@ function Prefixes({ step }: { step: number }) {
             </span>
             <span className="dg-prefix__text">
               <strong>{p.name}</strong>
-              <span>{p.does}</span>
+              <span>
+                <Marked text={p.does} />
+              </span>
             </span>
             <span className="dg-prefix__box">
               <span className="visually-hidden">For example: </span>

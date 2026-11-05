@@ -2571,3 +2571,126 @@ html.presenting body {
     content: none;
   }
 }
+
+/* ---------- Hand-drawn rings ----------
+   A pen circle around the words that matter, drawn just after the point appears (Ring.tsx, marks.json). */
+/* The pen's colour says what the words are: green the right move, red a trap, amber a caveat, blue a term to
+   remember. Blue stays blue in every colour theme. Amber is nudged darker on light slides so a thin line still shows. */
+.ring--good {
+  --ring-ink: var(--good);
+}
+
+.ring--bad {
+  --ring-ink: var(--bad);
+}
+
+.ring--warn {
+  --ring-ink: color-mix(in srgb, var(--warn) 45%, var(--dg-4));
+}
+
+.ring--key {
+  --ring-ink: var(--dg-1);
+}
+
+.ringed {
+  position: relative;
+  display: inline-block;
+  margin-inline: 0.3em;
+  background: none;
+  color: inherit;
+}
+
+/* Big type lines up with the text above and below it. */
+.slide__hero .ringed,
+.deck-stat__figure .ringed {
+  margin-inline: 0;
+}
+
+.ring {
+  --ring-x: 0.75em;
+  --ring-y: 0.14em;
+  position: absolute;
+  left: calc(var(--ring-x) * -1);
+  top: calc(var(--ring-y) * -1);
+  z-index: 1;
+  width: calc(100% + var(--ring-x) * 2);
+  height: calc(100% + var(--ring-y) * 2);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ring path {
+  fill: none;
+  stroke: var(--ring-ink);
+  stroke-width: clamp(1.5px, 0.11em, 4px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  animation: ring-draw 0.8s cubic-bezier(0.45, 0.1, 0.35, 1) calc(var(--ring-wait, 1.2s) + var(--ring-n, 0) * 0.75s) both;
+}
+
+@keyframes ring-draw {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  1% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* Rings on a point wait for that point to appear. Diagram parts have their own stagger (--i). */
+.frag .ring {
+  --ring-wait: 0.55s;
+}
+
+.dg-r .ring {
+  --ring-wait: calc(0.55s + var(--i, 0) * 140ms);
+}
+
+.frag:not(.is-in) .ring path,
+.dg-r:not(.is-in) .ring path {
+  animation: none;
+  opacity: 0;
+}
+
+.ring--drawn path {
+  animation: none;
+}
+
+/* The right quiz answer: the whole row gets circled. */
+.deck-quiz li {
+  position: relative;
+}
+
+.deck-quiz .ring {
+  --ring-x: 0.5em;
+  --ring-y: 0.34em;
+}
+
+.slide__hero .ring,
+.deck-stat__figure .ring {
+  --ring-x: 0.36em;
+  --ring-y: 0.05em;
+}
+
+/* The web-app reveal: after the strike-through and the answer springing in. */
+.reveal__is {
+  position: relative;
+}
+
+.has-peel .reveal__is .ring {
+  --ring-wait: 3.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring path {
+    animation: none;
+  }
+}
