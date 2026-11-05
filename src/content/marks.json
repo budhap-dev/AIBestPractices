@@ -1,0 +1,928 @@
+{
+  "note": "The words a presenter would circle, by slide id, grouped by the colour of the pen. good (green): the right move or the payoff. bad (red): a trap, risk or cost. warn (amber): a caveat, be careful. key (blue): a term or fact to remember. On the slide each one gets a hand-drawn ring, drawn just after the point it sits in appears. Copy the words exactly as they appear on the slide; every match on the slide is ringed, so pick words that appear once. Keep them short: one or two per point. Stat figures, the right quiz answer and the web-app reveal are ringed without being listed.",
+  "slides": {
+    "title": {
+      "key": [
+        "every day"
+      ]
+    },
+    "section-why": {
+      "bad": [
+        "quietly double it"
+      ],
+      "warn": [
+        "only when they are used well"
+      ]
+    },
+    "why-then": {
+      "bad": [
+        "One search result at a time",
+        "slow to type",
+        "The first thing to slip",
+        "run it again, repeat"
+      ],
+      "key": [
+        "you fix what they find"
+      ]
+    },
+    "diagram-then-now": {
+      "good": [
+        "7 hours"
+      ],
+      "bad": [
+        "13 hours",
+        "pays it back"
+      ],
+      "key": [
+        "16 hours"
+      ]
+    },
+    "why-catch": {
+      "bad": [
+        "believed afterwards",
+        "lower delivery stability"
+      ],
+      "warn": [
+        "distrust the accuracy"
+      ]
+    },
+    "why-factors": {
+      "good": [
+        "two files that matter",
+        "what done looks like",
+        "Agent to change",
+        "Read every change",
+        "A fresh chat per task"
+      ]
+    },
+    "why-handover": {
+      "good": [
+        "the right side"
+      ]
+    },
+    "section-key-terms": {
+      "key": [
+        "plain English"
+      ]
+    },
+    "diagram-request": {
+      "warn": [
+        "Every chunk counts",
+        "carries them all"
+      ],
+      "key": [
+        "packs the context",
+        "repeats steps 2 to 5"
+      ]
+    },
+    "key-terms-cards-0": {
+      "good": [
+        "fewer rounds"
+      ],
+      "warn": [
+        "never seen your project",
+        "each request costs more"
+      ]
+    },
+    "key-terms-cards-1": {
+      "bad": [
+        "answers get worse"
+      ],
+      "key": [
+        "no other memory",
+        "three-quarters of a word"
+      ]
+    },
+    "key-terms-cards-2": {
+      "warn": [
+        "sent again"
+      ],
+      "key": [
+        "A junior developer",
+        "added to the context"
+      ]
+    },
+    "key-terms-cards-3": {
+      "bad": [
+        "A confident answer"
+      ],
+      "warn": [
+        "bigger contexts"
+      ]
+    },
+    "section-mental-model": {
+      "bad": [
+        "pay for every word"
+      ],
+      "warn": [
+        "re-sends everything"
+      ]
+    },
+    "mental-model-cards-0": {
+      "good": [
+        "the two files that matter"
+      ],
+      "bad": [
+        "still count"
+      ]
+    },
+    "mental-model-cards-1": {
+      "bad": [
+        "thousands of tokens"
+      ],
+      "warn": [
+        "every line is sent every time"
+      ]
+    },
+    "mental-model-cards-2": {
+      "bad": [
+        "early details get fuzzy"
+      ],
+      "warn": [
+        "every model call"
+      ]
+    },
+    "diagram-context-stack": {
+      "key": [
+        "wiped only when"
+      ]
+    },
+    "facts-mental-model": {
+      "key": [
+        "drag an image",
+        "Add Element to Chat"
+      ]
+    },
+    "section-prompt-cost": {
+      "bad": [
+        "snowballs"
+      ],
+      "warn": [
+        "re-sends the whole chat"
+      ]
+    },
+    "diagram-snowball": {
+      "good": [
+        "tests passing"
+      ],
+      "bad": [
+        "two wrong fixes"
+      ]
+    },
+    "diagram-anatomy": {
+      "good": [
+        "#refresh.ts",
+        "after 15 minutes",
+        "The failing test",
+        "Change only",
+        "the auth tests pass"
+      ]
+    },
+    "section-modes": {
+      "good": [
+        "the right role",
+        "saves a round of rework"
+      ]
+    },
+    "diagram-modes": {
+      "good": [
+        "Lowest"
+      ],
+      "bad": [
+        "Highest"
+      ],
+      "warn": [
+        "Your code"
+      ],
+      "key": [
+        "Nothing until you agree"
+      ]
+    },
+    "mode-ask": {
+      "good": [
+        "without changing anything"
+      ],
+      "key": [
+        "understand code"
+      ]
+    },
+    "mode-plan": {
+      "good": [
+        "before any code changes"
+      ],
+      "key": [
+        "more than one or two files"
+      ]
+    },
+    "mode-agent": {
+      "good": [
+        "the plan is agreed"
+      ],
+      "warn": [
+        "the most expensive"
+      ]
+    },
+    "mode-edit": {
+      "good": [
+        "Use Agent"
+      ],
+      "warn": [
+        "is deprecated"
+      ]
+    },
+    "section-cheat-sheet": {
+      "key": [
+        "worth remembering"
+      ]
+    },
+    "diagram-prefixes": {
+      "key": [
+        "a saved prompt",
+        "exactly the context",
+        "a specialist"
+      ]
+    },
+    "cheat-slash-0": {
+      "good": [
+        "The cheapest habit",
+        "Add a focus"
+      ],
+      "warn": [
+        "not a way to save tokens"
+      ],
+      "key": [
+        "before any code changes"
+      ]
+    },
+    "cheat-slash-1": {
+      "key": [
+        "/fix",
+        "/tests"
+      ]
+    },
+    "cheat-slash-2": {
+      "good": [
+        "Fewer tools"
+      ],
+      "key": [
+        "/init",
+        "writes the prompt file"
+      ]
+    },
+    "cheat-slash-3": {
+      "key": [
+        "/<prompt-name>",
+        "/help"
+      ]
+    },
+    "cheat-context-0": {
+      "good": [
+        "Better than pasting"
+      ],
+      "key": [
+        "#problems",
+        "#terminalLastCommand"
+      ]
+    },
+    "cheat-context-1": {
+      "good": [
+        "Even leaner"
+      ],
+      "key": [
+        "#terminalSelection",
+        "#changes"
+      ]
+    },
+    "cheat-context-2": {
+      "good": [
+        "the one page you need"
+      ],
+      "warn": [
+        "token-hungry"
+      ]
+    },
+    "cheat-participant-0": {
+      "warn": [
+        "Older guides"
+      ],
+      "key": [
+        "@vscode",
+        "@terminal"
+      ]
+    },
+    "cheat-shortcut-0": {
+      "good": [
+        "Small context"
+      ],
+      "key": [
+        "Same effect as /clear"
+      ]
+    },
+    "cheat-shortcut-1": {
+      "warn": [
+        "Not in the current docs"
+      ],
+      "key": [
+        "one word at a time"
+      ]
+    },
+    "cheat-setting-0": {
+      "good": [
+        "small discount"
+      ],
+      "warn": [
+        "don’t rely on it"
+      ],
+      "key": [
+        "Compact Conversation"
+      ]
+    },
+    "cheat-setting-1": {
+      "good": [
+        "Reopen an old chat"
+      ],
+      "key": [
+        "inspect what it stored"
+      ]
+    },
+    "facts-cheat-sheet": {
+      "warn": [
+        "in preview"
+      ],
+      "key": [
+        "a window of its own"
+      ]
+    },
+    "section-workflow": {
+      "key": [
+        "Seven steps"
+      ]
+    },
+    "diagram-daily-loop": {
+      "good": [
+        "One task, one chat",
+        "clean whiteboard"
+      ]
+    },
+    "workflow-steps-0": {
+      "good": [
+        "One task, one chat",
+        "Agent to change",
+        "instead of pasting output"
+      ]
+    },
+    "workflow-steps-1": {
+      "good": [
+        "a few lines",
+        "one step at a time"
+      ],
+      "bad": [
+        "a whole agent run"
+      ]
+    },
+    "workflow-steps-2": {
+      "good": [
+        "Read every change",
+        "Commit small"
+      ],
+      "warn": [
+        "can’t explain a line"
+      ]
+    },
+    "diagram-chat-flow": {
+      "good": [
+        "Short prompts"
+      ],
+      "warn": [
+        "about half full"
+      ],
+      "key": [
+        "Has the task changed?"
+      ]
+    },
+    "workflow-cards-0": {
+      "good": [
+        "only the decisions",
+        "brief replies"
+      ],
+      "bad": [
+        "the same mistake"
+      ],
+      "warn": [
+        "past about half"
+      ]
+    },
+    "facts-workflow": {
+      "key": [
+        "queue a follow-up",
+        "Generate alt text"
+      ]
+    },
+    "section-dos-donts": {
+      "good": [
+        "good results cheaply"
+      ]
+    },
+    "dd-context-cost-0": {
+      "good": [
+        "about half full",
+        "Attach the file directly"
+      ],
+      "bad": [
+        "re-sent and billed",
+        "you pay for it each time",
+        "2,000-line log"
+      ],
+      "warn": [
+        "Automatic compaction guesses"
+      ]
+    },
+    "dd-context-cost-1": {
+      "good": [
+        "small discount",
+        "add exactly what’s needed",
+        "tiny context"
+      ],
+      "bad": [
+        "cost more per token",
+        "Every retry"
+      ]
+    },
+    "dd-prompting-0": {
+      "good": [
+        "Correcting a plan",
+        "Keep the file short"
+      ],
+      "bad": [
+        "part of the context",
+        "Vague prompts"
+      ],
+      "warn": [
+        "can’t read your mind"
+      ]
+    },
+    "dd-prompting-1": {
+      "good": [
+        "same tested prompt",
+        "Reply in 5 lines"
+      ],
+      "warn": [
+        "sent on every request"
+      ]
+    },
+    "dd-reviewing-0": {
+      "good": [
+        "You own the code",
+        "one commit away",
+        "Review, then commit"
+      ],
+      "bad": [
+        "isn’t evidence",
+        "can’t explain it",
+        "invent functions"
+      ]
+    },
+    "dd-security-0": {
+      "bad": [
+        "Prompts leave your machine",
+        "disables critical security",
+        "still be read"
+      ],
+      "warn": [
+        "not forever",
+        "doesn’t override it"
+      ]
+    },
+    "facts-dos-donts": {
+      "warn": [
+        "can’t undo terminal commands"
+      ]
+    },
+    "section-team-memory": {
+      "good": [
+        "Write it down once"
+      ],
+      "warn": [
+        "sent with every request"
+      ]
+    },
+    "diagram-memory": {
+      "good": [
+        "keep them short"
+      ],
+      "warn": [
+        "Every request"
+      ]
+    },
+    "team-memory-cards-0": {
+      "key": [
+        "Always on",
+        "Only when matching files"
+      ]
+    },
+    "team-memory-cards-1": {
+      "key": [
+        "can’t edit",
+        "other AI tools",
+        "repeatable procedure"
+      ]
+    },
+    "facts-team-memory": {
+      "key": [
+        "share organisation spaces"
+      ]
+    },
+    "section-templates": {
+      "good": [
+        "land first time",
+        "how you will know it is done"
+      ]
+    },
+    "tpl-bug": {
+      "good": [
+        "Reproduce first"
+      ]
+    },
+    "tpl-feature": {
+      "good": [
+        "one step at a time"
+      ]
+    },
+    "tpl-refactor": {
+      "good": [
+        "the tests prove it"
+      ]
+    },
+    "tpl-tests": {
+      "good": [
+        "Name the cases"
+      ]
+    },
+    "tpl-explain": {
+      "key": [
+        "level of detail"
+      ]
+    },
+    "tpl-review": {
+      "good": [
+        "second pair of eyes"
+      ]
+    },
+    "tpl-error": {
+      "good": [
+        "by reference"
+      ]
+    },
+    "tpl-commit": {
+      "key": [
+        "sparkle button"
+      ]
+    },
+    "facts-templates": {
+      "key": [
+        "edit any request"
+      ]
+    },
+    "section-quiz": {
+      "key": [
+        "Pick an answer"
+      ]
+    },
+    "q-switch": {
+      "bad": [
+        "re-sent and billed"
+      ]
+    },
+    "q-long": {
+      "good": [
+        "keeps what you choose"
+      ]
+    },
+    "q-log": {
+      "good": [
+        "Reference the output"
+      ]
+    },
+    "q-strikes": {
+      "good": [
+        "A fresh chat"
+      ]
+    },
+    "q-model": {
+      "good": [
+        "free and exact"
+      ]
+    },
+    "q-plan": {
+      "good": [
+        "costs a few lines"
+      ]
+    },
+    "q-conventions": {
+      "good": [
+        "keep them short"
+      ]
+    },
+    "q-secret": {
+      "bad": [
+        "never go into prompts"
+      ]
+    },
+    "q-exclusion": {
+      "warn": [
+        "doesn’t apply"
+      ]
+    },
+    "q-review": {
+      "warn": [
+        "Trust, but verify"
+      ]
+    },
+    "section-security": {
+      "good": [
+        "keep approvals on"
+      ]
+    },
+    "diagram-approval": {
+      "good": [
+        "shows it to you first",
+        "Allow once"
+      ],
+      "bad": [
+        "removes the gate"
+      ],
+      "key": [
+        "the command you expected"
+      ]
+    },
+    "security-cards-0": {
+      "bad": [
+        "leave your machine",
+        "not a security boundary"
+      ],
+      "key": [
+        "each tool call"
+      ]
+    },
+    "security-cards-1": {
+      "warn": [
+        "in preview",
+        "not Edit or Agent modes"
+      ],
+      "key": [
+        "licence"
+      ]
+    },
+    "facts-security": {
+      "bad": [
+        "run arbitrary code"
+      ]
+    },
+    "section-beyond": {
+      "good": [
+        "save time every day"
+      ]
+    },
+    "beyond-cards-0": {
+      "good": [
+        "so you can check it first",
+        "One click"
+      ],
+      "key": [
+        "sparkle button"
+      ]
+    },
+    "beyond-cards-1": {
+      "good": [
+        "without writing a prompt"
+      ],
+      "warn": [
+        "doesn’t count as an approval"
+      ],
+      "key": [
+        "small, well-described issues"
+      ]
+    },
+    "facts-beyond": {
+      "warn": [
+        "experimental"
+      ],
+      "key": [
+        "Explain error"
+      ]
+    },
+    "section-playbook": {
+      "key": [
+        "a clear line"
+      ]
+    },
+    "pb-agents-cards-0": {
+      "good": [
+        "Makes no edits",
+        "one step at a time"
+      ],
+      "key": [
+        "test files"
+      ]
+    },
+    "pb-agents-cards-1": {
+      "good": [
+        "small pull requests",
+        "only the tools its job needs"
+      ],
+      "warn": [
+        "it never approves"
+      ]
+    },
+    "pb-stack-cards-0": {
+      "good": [
+        "Test on real devices"
+      ],
+      "bad": [
+        "made-up props"
+      ],
+      "warn": [
+        "check each one exists"
+      ]
+    },
+    "pb-pipeline-cards-0": {
+      "good": [
+        "human approval",
+        "same gates"
+      ],
+      "bad": [
+        "No direct pushes"
+      ],
+      "key": [
+        "Secret scanning"
+      ]
+    },
+    "pb-pipeline-cards-1": {
+      "bad": [
+        "No global auto-approve",
+        "never write access"
+      ],
+      "warn": [
+        "doesn’t cover Agent mode"
+      ]
+    },
+    "pb-pipeline-cards-2": {
+      "good": [
+        "Label AI-assisted"
+      ],
+      "warn": [
+        "check the licence"
+      ]
+    },
+    "pb-people-cards-0": {
+      "good": [
+        "explain every line"
+      ],
+      "bad": [
+        "No personal accounts",
+        "No secrets"
+      ]
+    },
+    "pb-people-cards-1": {
+      "warn": [
+        "Check the package"
+      ],
+      "key": [
+        "significant AI help",
+        "owning team"
+      ]
+    },
+    "pb-triggers-0": {
+      "good": [
+        "write it down"
+      ],
+      "bad": [
+        "same AI mistake twice"
+      ],
+      "warn": [
+        "no-go zones"
+      ],
+      "key": [
+        "name the APIs"
+      ]
+    },
+    "pb-triggers-1": {
+      "good": [
+        "doesn’t happen again",
+        "Prune stale rules"
+      ],
+      "warn": [
+        "Before turning on"
+      ],
+      "key": [
+        "path-specific rules"
+      ]
+    },
+    "pb-mcp-cards-0": {
+      "good": [
+        "without copy and paste"
+      ],
+      "key": [
+        "Acceptance criteria",
+        "Design specs"
+      ]
+    },
+    "pb-mcp-cards-1": {
+      "good": [
+        "check its own change"
+      ],
+      "warn": [
+        "non-production"
+      ],
+      "key": [
+        "Read-only"
+      ]
+    },
+    "pb-mcp-rules": {
+      "good": [
+        "pinned to a version"
+      ],
+      "bad": [
+        "Never write access",
+        "hidden instructions"
+      ],
+      "warn": [
+        "a new door"
+      ]
+    },
+    "pb-skills-cards-0": {
+      "good": [
+        "right files",
+        "prove behaviour"
+      ],
+      "bad": [
+        "plausible but wrong"
+      ],
+      "key": [
+        "goal, constraints"
+      ]
+    },
+    "pb-skills-cards-1": {
+      "good": [
+        "checkable instructions"
+      ],
+      "warn": [
+        "loops or guesses"
+      ],
+      "key": [
+        "OWASP Top 10",
+        "our patterns"
+      ]
+    },
+    "pb-manual-cards-0": {
+      "good": [
+        "A person approves",
+        "reads every line"
+      ],
+      "bad": [
+        "never pasted"
+      ]
+    },
+    "pb-manual-cards-1": {
+      "good": [
+        "A person runs it",
+        "records why",
+        "People decide"
+      ]
+    },
+    "pb-rollout-cards-0": {
+      "good": [
+        "outcomes, not usage"
+      ],
+      "warn": [
+        "before heavier agent use"
+      ],
+      "key": [
+        "one win, one miss"
+      ]
+    },
+    "section-wrap-up": {
+      "key": [
+        "remember nothing else"
+      ]
+    },
+    "summary": {
+      "good": [
+        "/clear between tasks",
+        "Agent to change",
+        "instead of walls of text",
+        "before any code changes",
+        "Short instruction files"
+      ],
+      "bad": [
+        "all the ones before it",
+        "never paste secrets"
+      ]
+    },
+    "build-prompt": {
+      "key": [
+        "One prompt"
+      ]
+    }
+  }
+}

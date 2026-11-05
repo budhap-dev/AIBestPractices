@@ -6,6 +6,7 @@ import {
   facts,
   finale,
   glossary,
+  marks,
   memoryFiles,
   meta,
   modes,
@@ -453,6 +454,14 @@ function shortTalk(ids: readonly string[]): Slide[] {
 }
 
 export const fullDeck = timed(withNewWords(story))
+
+if (import.meta.env?.DEV) {
+  for (const [id, inks] of Object.entries(marks.slides)) {
+    const slide = fullDeck.find((s) => s.id === id)
+    if (!slide) console.warn(`[deck] marks.json lists "${id}", which is not a slide.`)
+    else for (const p of Object.values(inks).flat()) if (!slideText(slide).some((t) => t.includes(p))) console.warn(`[deck] marks.json: "${p}" is not on slide "${id}".`)
+  }
+}
 
 // Slide ids that are in the deck, in deck order, so the same pick always reads the same.
 export function inDeckOrder(ids: Iterable<unknown>): string[] {

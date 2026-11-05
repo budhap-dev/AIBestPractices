@@ -1,5 +1,5 @@
-import type { CSSProperties, ReactNode } from 'react'
-import { facts, finale, glossary, meta, sections } from '../content'
+import { useMemo, type CSSProperties, type ReactNode } from 'react'
+import { facts, finale, glossary, marks, meta, sections } from '../content'
 import { CountUp, DiagramView } from '../components/Diagrams'
 import { DIAGRAM_IDS } from '../components/diagramData'
 import { Avatar, Illustration, SCENE_IDS } from '../components/Illustrations'
@@ -9,6 +9,7 @@ import { PALETTES, setTheme, useTheme, type Mode } from '../theme'
 import { DESIGNS, TRANSITIONS, useDeckControls, type Design, type Transition } from './controls'
 import { formatDuration, fullDeck, totalSeconds, type NewWord, type Slide } from './deck'
 import { RichText } from '../components/RichText'
+import { Marked, Ring, RingContext, RingLine, ringsFor } from '../components/Ring'
 // Shown on the last finale slide, so the audience reads the prompt without leaving the app.
 import buildPrompt from '../../prompts/build-this-app.md?raw'
 
@@ -51,14 +52,17 @@ function NewWords({ words }: { words?: NewWord[] }) {
     <div className="newwords intro">
       <p className="newwords__label">{words.length > 1 ? 'New words' : 'New word'}</p>
       <ul>
-        {words.map((w) => (
-          <li key={w.id} className="newword">
-            <dfn>{w.title}</dfn>
-            <span className="newword__short">
-              <RichText text={w.short} />
-            </span>
-          </li>
-        ))}
+        {/* A definition is a side note, so a phrase marked for the slide doesn't ring here too. */}
+        <RingContext.Provider value={null}>
+          {words.map((w) => (
+            <li key={w.id} className="newword">
+              <dfn>{w.title}</dfn>
+              <span className="newword__short">
+                <RichText text={w.short} />
+              </span>
+            </li>
+          ))}
+        </RingContext.Provider>
       </ul>
     </div>
   )
@@ -173,13 +177,16 @@ function LiveControls() {
 export function SlideView({ slide, step, number, still }: { slide: Slide; step: number; number?: number; still?: boolean }) {
   // The slides being presented: the short talk or the full deck.
   const slides = useDeckControls()?.slides ?? fullDeck
+  const rings = useMemo(() => ringsFor(marks.slides[slide.id], still), [slide.id, still])
   let body: ReactNode
   switch (slide.kind) {
     case 'title':
       body = (
         <div className="slide__center slide--title-body">
           <p className="slide__eyebrow intro">{meta.company} · Engineering</p>
-          <h1 className="slide__hero intro">{meta.headline}</h1>
+          <h1 className="slide__hero intro">
+            <Marked text={meta.headline} />
+          </h1>
           <p className="slide__lede intro">{meta.tagline}</p>
           <p className="slide__audience intro">
             <strong>For</strong> {meta.demoAudience}
@@ -216,7 +223,9 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
             {String(slide.number).padStart(2, '0')}
           </span>
           <p className="slide__eyebrow intro">{navOf(slide.section)}</p>
-          <h2 className="slide__hero intro">{slide.title}</h2>
+          <h2 className="slide__hero intro">
+            <Marked text={slide.title} />
+          </h2>
           <p className={frag(step, 0, 'slide__lede')}>
             <RichText text={slide.intro} />
           </p>
@@ -309,7 +318,9 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
                       </span>
                     </>
                   ) : (
-                    <code>{r.code}</code>
+                    <code>
+                      <Marked text={r.code} />
+                    </code>
                   )}
                 </dt>
                 <dd>
@@ -408,6 +419,7 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
                   <RichText text={o.text} />
                 </span>
                 {revealed && o.correct && <span className="visually-hidden"> (correct answer)</span>}
+                {revealed && o.correct && <RingLine seed={q.id} ink="good" />}
               </li>
             ))}
           </ol>
@@ -463,9 +475,15 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
           <div className={`deck-stats deck-stats--${slide.tone}`}>
             {slide.findings.map((f, i) => (
               <article key={f.id} className={frag(step, i, 'deck-stat')}>
-                <p className="deck-stat__figure">{f.figure}</p>
+                <p className="deck-stat__figure">
+                  <Ring seed={f.id} ink={slide.tone === 'up' ? 'good' : 'bad'}>
+                    {f.figure}
+                  </Ring>
+                </p>
                 <h3>{f.title}</h3>
-                <p>{f.body}</p>
+                <p>
+                  <Marked text={f.body} />
+                </p>
                 <p className="deck-stat__source">{f.source}</p>
               </article>
             ))}
@@ -548,7 +566,10 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
               <span className="reveal__lead">
                 {finale.live.lead} <s className="reveal__not">{finale.live.not}</s>.
               </span>
-              <span className="reveal__is">{finale.live.is}</span>
+              <span className="reveal__is">
+                {finale.live.is}
+                <RingLine seed={finale.live.is} ink="good" />
+              </span>
             </h2>
           </header>
           <p className="slide__lede reveal__body">{finale.live.body}</p>
@@ -611,7 +632,7 @@ export function SlideView({ slide, step, number, still }: { slide: Slide; step: 
     <div className={`slide__frame slide__frame--${slide.kind}${slide.kind === 'live' && !still ? ' has-peel' : ''}`}>
       {slide.scene && <Illustration scene={slide.scene} className="slide__art intro" />}
       <div className={`slide__inner slide--${slide.kind}${slide.scene ? ' has-art' : ''}${slide.story?.helps && slide.story.wrong ? ' has-story' : ''}`}>
-        {body}
+        <RingContext.Provider value={rings}>{body}</RingContext.Provider>
         <Story slide={slide} step={step} />
       </div>
       {framed && number !== undefined && (

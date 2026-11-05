@@ -43,6 +43,8 @@ The deck opens as a **short talk**: 35 slides, about 19 minutes of reading (allo
 
 Each press of → reveals the next point on a slide, then moves to the next slide. Quiz slides show the options one by one and reveal the answer last.
 
+The words that matter get a **hand-drawn ring**: a pen circle that draws itself just after the point appears, one after another when a point has several, as if the presenter had just circled them. It runs anticlockwise, and each phrase gets its own slightly different ring: some nearly level, some leaning up or down, none quite closing. The colour of the pen says what the words are: **green** for the right move or the payoff, **red** for a trap, risk or cost, **amber** for a caveat, **blue** for a term or fact to remember. Stat figures (green for the research, red for the catch), the right quiz answer and the web-app reveal (both green) get one too. Stepping back onto a slide shows its rings already drawn, and with reduced motion they appear without animating. To choose what gets circled, edit `src/content/marks.json`.
+
 Every slide has a picture from a shared set of hand-coded SVG scenes. Every teaching slide ends with a two-line story about two developers: **Asha**, who has the habit (**How it helps**), and **Ben**, who falls into the trap (**Wrong practice**). The story is the last thing revealed. The first slide that uses a glossary word shows a **New word** note with its one-line definition, so no word appears before it is explained.
 
 The deck looks like a presentation: the slide sits on a stage with a footer and slide number, and **D** (or the design picker) switches between five slide designs: Classic, Bold, Paper, Blueprint and Spotlight. Designs work with every colour theme, in light and dark.
@@ -116,6 +118,7 @@ All text lives in typed JSON files in [`src/content/`](src/content). You don't n
 | `stories.json` | For each slide id: its picture (`scene`), a one-line `hook` for section openers, and Asha's `helps` and Ben's `wrong` lines for teaching slides (30 words each at most; use the names, never pronouns) |
 | `finale.json` | The words on the surprise ending |
 | `talk.json` | The slide ids the short talk presents by default, in deck order (presenters can change their own pick from the overview). New word notes, quiz numbers and timings are worked out for the talk on its own |
+| `marks.json` | The words to circle on each slide, by slide id and colour of pen (`good`, `bad`, `warn`, `key`), copied exactly as they appear. Every match on the slide is ringed, so pick words that appear once and keep them short. In development the console warns about any that aren't on the slide |
 | `promptCost.json` | The vague and focused prompt scenarios (illustrative token counts) and the prompt anatomy |
 | `diagrams.json` | Text and numbers for every diagram: request flow, modes staircase, long-chat flowchart, team memory, then and now, context stack, daily loop, approval gate and prefixes |
 | `facts.json` | Did you know? facts, each tied to a section and a source |
